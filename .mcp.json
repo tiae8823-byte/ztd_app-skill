@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "sequentialthinking": {
+      "command": "node",
+      "args": ["C:\\Users\\Administrator\\.claude\\mcp-servers\\servers\\src\\sequentialthinking\\dist\\index.js"]
+    },
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time"]
+    },
+    "context7": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-2f597024-3916-46b4-b331-7c0e96eba224"]
+    },
+    "lifecoach": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "lifecoach-mcp-server"],
+      "env": {}
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "PYTHONIOENCODING": "utf-8"
+      }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer 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"
+      }
+    }
+  }
+}

@@ -30,7 +30,7 @@ public class NavigationTests : IDisposable
         var taskManager = new TaskManager(taskRepo);
         var noteManager = new NoteManager(noteRepo);
 
-        var ideaViewModel = new IdeaViewModel(ideaManager);
+        var ideaViewModel = new IdeaViewModel(ideaManager, taskManager, noteManager);
         var todoViewModel = new TodoViewModel(taskManager);
         var todayViewModel = new TodayViewModel(taskManager);
         var notesViewModel = new NotesViewModel(noteManager);

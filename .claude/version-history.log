@@ -16,3 +16,40 @@
 
 Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
 20260227-205004 - chore: 更新 PRD - 标记想法收集功能完成
+20260227-210748 - refactor: 切换到 WPF 技术栈
+
+从 WinUI 3 迁移到 WPF，解决编译兼容性问题：
+- 更新项目配置使用 UseWPF
+- 重写 App.xaml 和 MainWindow.xaml 为 WPF 语法
+- 移除对 WindowsAppSDK 的依赖
+- 添加 System.IO using 指令
+
+WPF 成功编译生成可执行文件。
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
+20260227-211030 - chore: 配置自包含发布
+20260227-211313 - docs: 添加详细的手动测试清单到 feat 技能
+20260227-211459 - docs: 完整测试套件 - 单元测试 + UI自动化测试 + 手动测试清单
+20260227-211604 - docs: 添加 feat 技能使用说明
+20260227-212057 - docs: 添加增量集成测试阶段到 feat 技能
+20260227-230054 - feat: UI重构 - 侧边栏导航与多页面切换
+
+- 添加侧边栏导航系统，支持5个功能页面切换
+- 实现独立数据存储：想法、任务、笔记分离
+- 修复删除按钮绑定路径错误
+- 添加 TaskManager、NoteManager 服务
+- 添加 Task、Note 数据模型
+- 更新 DatabaseService 支持多表
+- 添加 NavigationTests、IdeaViewModelTests 单元测试
+- 应用 Anthropic 品牌样式
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260227-230458 - test: 增强 UI 自动化测试
+
+- 添加 ITestOutputHelper 日志输出
+- 添加导航功能测试
+- 增强删除按钮测试，验证数量变化
+- 添加删除按钮绑定验证测试
+- 优化测试稳定性
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>

@@ -35,7 +35,7 @@ public partial class WeeklyReviewViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void RefreshData()
+    public void RefreshData()
     {
         LoadReviewData();
     }

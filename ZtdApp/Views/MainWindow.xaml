@@ -65,28 +65,73 @@
                                 <ItemsControl ItemsSource="{Binding Ideas}" Margin="0,20,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Style="{StaticResource CardBorder}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                                        <TextBlock Text="{Binding Content}"
-                                                                   TextWrapping="Wrap"
-                                                                   FontSize="{StaticResource FontSizeMedium}"
-                                                                   Margin="0,0,0,4"/>
-                                                        <TextBlock Text="{Binding CreatedAtDisplay}"
-                                                                   Foreground="{StaticResource BrandMidGray}"
-                                                                   Opacity="0.8"
-                                                                   FontSize="{StaticResource FontSizeSmall}"/>
+                                            <Border Style="{StaticResource CardBorder}" Cursor="Hand">
+                                                <StackPanel>
+                                                    <!-- 卡片头部：内容 + 删除按钮 -->
+                                                    <Grid>
+                                                        <Grid.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick"
+                                                                        Command="{Binding DataContext.ToggleExpandCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding}"/>
+                                                        </Grid.InputBindings>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                            <TextBlock Text="{Binding Content}"
+                                                                       TextWrapping="Wrap"
+                                                                       FontSize="{StaticResource FontSizeMedium}"
+                                                                       Margin="0,0,0,4"/>
+                                                            <TextBlock Text="{Binding CreatedAtDisplay}"
+                                                                       Foreground="{StaticResource BrandMidGray}"
+                                                                       Opacity="0.8"
+                                                                       FontSize="{StaticResource FontSizeSmall}"/>
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1"
+                                                                Content="删除"
+                                                                Command="{Binding DataContext.DeleteIdeaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                CommandParameter="{Binding Id}"
+                                                                Style="{StaticResource DeleteButton}"/>
+                                                    </Grid>
+
+                                                    <!-- 操作按钮区域（展开时显示） -->
+                                                    <StackPanel Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                Margin="0,10,0,0">
+                                                        <Border BorderBrush="{StaticResource BrandLightGray}"
+                                                                BorderThickness="0,1,0,0"
+                                                                Padding="0,10,0,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Button Command="{Binding DataContext.ConvertToTodoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        Style="{StaticResource SecondaryButton}"
+                                                                        Width="100"
+                                                                        Height="36"
+                                                                        VerticalContentAlignment="Center"
+                                                                        Margin="0,0,8,0">
+                                                                    <TextBlock Text="待办" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+                                                                </Button>
+                                                                <Button Command="{Binding DataContext.ConvertToNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        Style="{StaticResource SecondaryButton}"
+                                                                        Width="100"
+                                                                        Height="36"
+                                                                        VerticalContentAlignment="Center"
+                                                                        Margin="0,0,8,0">
+                                                                    <TextBlock Text="笔记" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+                                                                </Button>
+                                                                <Button Command="{Binding DataContext.QuickCompleteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        Style="{StaticResource SecondaryButton}"
+                                                                        Width="100"
+                                                                        Height="36"
+                                                                        VerticalContentAlignment="Center">
+                                                                    <TextBlock Text="快速完成" TextWrapping="NoWrap" VerticalAlignment="Center"/>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </Border>
                                                     </StackPanel>
-                                                    <Button Grid.Column="1"
-                                                            Content="删除"
-                                                            Command="{Binding DataContext.DeleteIdeaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                            CommandParameter="{Binding Id}"
-                                                            Style="{StaticResource DeleteButton}"/>
-                                                </Grid>
+                                                </StackPanel>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

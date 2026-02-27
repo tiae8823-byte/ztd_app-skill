@@ -1,0 +1,2 @@
+D:\开发项目集\ztd_app-skill\ZtdApp\bin\Release\net8.0-windows\win-x64\publish\ZtdApp.pdb
+D:\开发项目集\ztd_app-skill\ZtdApp\bin\Release\net8.0-windows\win-x64\publish\ZtdApp.exe

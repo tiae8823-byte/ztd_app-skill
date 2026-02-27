@@ -6,6 +6,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/BrandColors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

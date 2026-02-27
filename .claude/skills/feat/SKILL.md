@@ -1,11 +1,11 @@
 ---
 name: feat
-description: Implement single feature using Build-Test-Commit cycle. Use when implementing features, or when user says "实现功能", "开发功能", "写代码".
+description: Implement single feature using Design-Build-Test-Commit cycle. Use when implementing features, or when user says "实现功能", "开发功能", "写代码".
 ---
 
 # 功能实现技能
 
-采用 **Build-Test-Commit** 循环实现**单个**功能。
+采用 **Design-Build-Test-Commit** 循环实现**单个**功能，确保 UI 风格一致。
 
 ## 核心理念
 
@@ -15,17 +15,20 @@ description: Implement single feature using Build-Test-Commit cycle. Use when im
 - 验证通过后立即 commit
 - PRD 是活的，可以随时加功能
 - **进度自动保存**：随时中断，下次可以继续
+- **UI 风格一致**：每个功能都遵循统一的设计规范
 
-**Build-Test-Commit 循环**：
+**Design-Build-Test-Commit 循环**：
 ```
-写代码 → 写测试 → 编译+手动测试 → Commit
-   ↓         ↓          ↓            ↓
- 修改      修改        修复        回滚
-   ↓         ↓          ↓            ↓
-保存进度  保存进度    保存进度   清除进度
-   ↓         ↓          ↓            ↓
-feat-progress.json (各阶段自动更新)
+UI设计(自动) → 写代码 → 写测试 → 编译+手动测试 → Commit
+      ↓             ↓         ↓            ↓            ↓
+    修改         修改      修改        修复        回滚
+    ↓             ↓         ↓          ↓            ↓
+  保存进度      保存进度  保存进度   保存进度   清除进度
+    ↓             ↓         ↓          ↓            ↓
+  feat-progress.json (各阶段自动更新)
 ```
+
+> **说明**: Design 阶段由 AI 自动判断组件和样式，用户只需确认 Y/N
 
 ## 可用 MCP 工具
 
@@ -34,6 +37,75 @@ feat-progress.json (各阶段自动更新)
 | `mcp__context7__resolve-library-id` + `mcp__context7__query-docs` | 查询框架 API 用法 |
 | `mcp__github__search_code` | 搜索参考实现 |
 | `mcp__sequential-thinking__sequentialthinking` | 复杂功能设计 |
+
+## 设计规范参考（无需自己设计 UI）
+
+### 推荐设计系统
+
+| 设计系统 | 适用场景 | 参考链接 |
+|---------|---------|---------|
+| **Apple Human Interface Guidelines** | iOS/macOS 风格，简洁优雅 | https://developer.apple.com/design/human-interface-guidelines/ |
+| **Google Material Design** | Android/Android 风格，色彩丰富 | https://m3.material.io/ |
+| **Anthropic 品牌风格** | 当前项目已配置，直接使用 | `ZtdApp/Styles/BrandColors.xaml` |
+
+### Anthropic 品牌样式（当前项目）
+
+#### 颜色系统
+| 资源键 | 颜色值 | 用途 |
+|--------|--------|------|
+| `BrandDark` | `#141413` | 主文本、深色背景 |
+| `BrandLight` | `#faf9f5` | 浅色背景、深色文字 |
+| `BrandMidGray` | `#b0aea5` | 次要文本、说明 |
+| `BrandLightGray` | `#e8e6dc` | 卡片背景、边框 |
+| `BrandOrange` | `#d97757` | 主按钮、主强调色 |
+| `BrandBlue` | `#6a9bcc` | 次要按钮、信息提示 |
+| `BrandGreen` | `#788c5d` | 成功状态、完成标记 |
+
+#### 内置样式
+| 样式名称 | 目标类型 | 用途 |
+|---------|---------|------|
+| `MainWindowStyle` | Window | 主窗口背景和前景色 |
+| `Button` | Button | 主按钮（橙色，圆角） |
+| `SecondaryButton` | Button | 次要按钮（蓝色） |
+| `DeleteButton` | Button | 删除按钮（灰色，悬停变红） |
+| `TextBox` | TextBox | 输入框（聚焦变橙色） |
+| `TextBlock` | TextBlock | 文本基础样式 |
+| `HeadingTextBlock` | TextBlock | 标题（24pt，粗体） |
+| `SubheadingTextBlock` | TextBlock | 副标题（灰色） |
+| `CardBorder` | Border | 卡片容器（圆角背景） |
+
+#### 字号系统
+| 资源键 | 大小 | 用途 |
+|--------|------|------|
+| `FontSizeSmall` | 12pt | 辅助文本、时间戳 |
+| `FontSizeMedium` | 14pt | 正文、按钮文字 |
+| `FontSizeLarge` | 18pt | 小标题 |
+| `FontSizeTitle` | 24pt | 页面标题 |
+| `FontSizeHeading` | 28pt | 大标题 |
+
+### 通用设计原则（适用于所有风格）
+
+#### 间距系统
+| 元素 | 标准间距 | 紧凑间距 | 宽松间距 |
+|------|---------|---------|---------|
+| 组件内边距 | 12-16px | 8-10px | 20-24px |
+| 组件间距 | 8-12px | 4-6px | 16-20px |
+| 页面边距 | 20-24px | 12-16px | 32-40px |
+
+#### 圆角系统
+| 元素 | 圆角半径 |
+|------|---------|
+| 按钮 | 6-8px |
+| 输入框 | 6-8px |
+| 卡片 | 8-12px |
+| 弹窗 | 12-16px |
+
+#### 阴影系统
+| 深度 | 用途 |
+|------|------|
+| 浅阴影 | 卡片、浮层 |
+| 中阴影 | 下拉菜单 |
+| 深阴影 | 模态弹窗 |
 
 ## 与 PRD 的联动
 
@@ -57,11 +129,9 @@ feat-progress.json (各阶段自动更新)
   │                       用户选择一个功能
   │                            │
   │                            ▼
-  │                       保存进度 (status: build)
+  │                       Design 阶段 → Build → Test → Verify → Commit
   │                            │
-  │                            ▼
-  │                       Build-Test-Commit
-  │                            │
+  │                       ├─ Design → 保存进度 (status: build, 记录设计)
   │                       ├─ Build → 保存进度 (status: test, 记录文件)
   │                       ├─ Test → 保存进度 (status: verify, 记录测试)
   │                       ├─ Verify → 保存进度 (status: commit)
@@ -86,7 +156,8 @@ feat-progress.json (各阶段自动更新)
 📋 检测到未完成的功能：
 
 当前功能: 想法收集
-状态: verify（已完成: build, test）
+状态: verify（已完成: design, build, test）
+设计方案: 垂直布局, Button, TextBox, CardBorder
 最后记录: Test阶段完成，等待编译验证
 创建时间: 2026-02-27 14:30
 
@@ -123,17 +194,35 @@ MVP 功能：
 做哪个功能？（输入序号或名称）
 ```
 
-### 3. 实现单个功能
+### 3. Design 阶段 - UI 设计（自动化）
 
-**确认要实现的功能**：
-```
-🔨 开始实现: [功能名称]
+**Design 阶段由 AI 自动完成**，用户只需确认。
 
-涉及内容:
-- [后端部分]
-- [前端部分]
+**AI 自动判断逻辑**：
+- 根据 PRD 中的功能描述，判断需要哪些 UI 组件
+- 自动从 `BrandColors.xaml` 选择对应样式
+- 生成 UI 布局方案
+- 展示给用户确认
 
-开始？
+**确认提示**：
+```markdown
+🎨 UI 设计: [功能名称]
+
+自动生成的设计方案:
+
+页面布局: [垂直/水平/网格布局]
+使用组件: Button x2, TextBox x2, CardBorder
+使用样式: Button (橙色), TextBox (聚焦橙色), CardBorder (圆角)
+
+布局草图:
+┌─────────────────────────┐
+│  [标题]                 │
+│                         │
+│  [输入框]               │
+│  [按钮]                 │
+└─────────────────────────┘
+
+是否符合预期？(Y/N，或提出修改意见)
 ```
 
 **用户确认后，保存进度**：
@@ -142,19 +231,25 @@ MVP 功能：
 {
   "currentFeature": {
     "name": "功能名称",
-    "status": "build",
-    "createdAt": "2026-02-27T14:30:00Z",
-    "description": "开始实现功能",
-    "filesCreated": [],
-    "testsCreated": []
+    "status": "design",
+    "designLayout": "垂直布局",
+    "designComponents": ["Button", "TextBox", "CardBorder"],
+    "designSketch": "[布局草图]",
+    "lastCheckpoint": "UI 设计完成，等待用户确认"
   }
 }
 ```
 
+---
+
+### 4. Build 阶段 - 编写代码
+
+**Build 时必须遵循 Design 阶段确认的样式**：
+
 **Build - 编写代码**：
 - 按需创建文件
 - 实现功能逻辑
-- 实现前端 UI（使用 PRD 中确定的组件库）
+- **实现前端 UI（使用 Design 阶段确认的样式）**
 
 **Build 完成后，更新进度**：
 ```json
@@ -163,11 +258,15 @@ MVP 功能：
     "name": "功能名称",
     "status": "test",
     "createdAt": "2026-02-27T14:30:00Z",
-    "filesCreated": ["file1.cs", "file2.xaml", ...],
+    "filesCreated": ["Views/FeatureView.xaml", "ViewModels/FeatureViewModel.cs", ...],
     "lastCheckpoint": "Build阶段完成，已创建文件"
   }
 }
 ```
+
+---
+
+### 5. Test 阶段 - 编写测试
 
 **Test - 编写测试**：
 - 核心逻辑的单元测试
@@ -183,12 +282,16 @@ MVP 功能：
     "name": "功能名称",
     "status": "verify",
     "createdAt": "2026-02-27T14:30:00Z",
-    "filesCreated": ["file1.cs", "file2.xaml", ...],
-    "testsCreated": ["Test1.cs", "Test2.cs"],
+    "filesCreated": ["Views/FeatureView.xaml", ...],
+    "testsCreated": ["FeatureTests.cs"],
     "lastCheckpoint": "Test阶段完成，已编写测试用例"
   }
 }
 ```
+
+---
+
+### 6. Verify 阶段 - 编译并测试
 
 **Verify - 编译并测试**：
 ```bash
@@ -203,6 +306,16 @@ dotnet test --filter "FullyQualifiedName~UITests"
 
 # 启动程序进行手动测试
 ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
+```
+
+**UI 一致性检查**：
+```markdown
+✅ UI 一致性检查:
+- [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
+- [ ] 输入框聚焦状态为橙色边框
+- [ ] 卡片使用 CardBorder 样式
+- [ ] 文本使用对应字体大小资源
+- [ ] 整体风格与已有页面一致
 ```
 
 ---
@@ -222,6 +335,7 @@ ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
 | **5. 端到端流程** | 从想法添加到归档的完整路径 | 流程顺畅 |
 | **6. 性能测试** | 100+ 条数据下的表现 | 响应流畅，无明显卡顿 |
 | **7. 兼容性回归** | 确保新功能没破坏已有功能 | 已有功能正常工作 |
+| **8. UI 一致性** | 新功能 UI 与已有页面风格一致 | 颜色、间距、圆角一致 |
 
 **集成测试检查清单**：
 
@@ -233,6 +347,7 @@ ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
 - [ ] 关闭程序重启，验证数据持久化
 - [ ] 验证已有功能未被破坏
 - [ ] 完成端到端用户场景测试
+- [ ] 检查新功能 UI 风格一致性
 ```
 
 **集成测试流程**：
@@ -303,32 +418,79 @@ public void MainWindow_AddIdea_ShouldAppearInList()
 
 | 测试项 | 测试步骤 | 预期结果 |
 |--------|---------|---------|
-| **1. 启动测试** | 双击运行 `ZtdApp.exe` | 窗口正常显示，标题为 "ZTD - 想法收集" |
-| **2. 基础添加** | 1. 在输入框输入想法内容<br>2. 点击"添加想法"按钮 | 想法出现在列表中 |
-| **3. 回车快捷键** | 1. 在输入框输入想法<br>2. 按 Enter 键 | 想法被添加，无需点击按钮 |
-| **4. 多个想法** | 连续添加 3-5 个想法 | 所有想法都显示在列表中，按时间倒序排列 |
-| **5. 删除想法** | 1. 添加一个想法<br>2. 点击该想法的"删除"按钮 | 想法从列表中消失 |
-| **6. 空输入处理** | 不输入内容直接点击"添加想法" | 没有任何反应或错误提示 |
-| **7. 清空后重试** | 添加想法 → 清空输入框 → 回车 | 输入框为空时不添加 |
-| **8. 超长文本** | 输入很长的文本（>500字）后添加 | 能正常保存和显示 |
-| **9. 特殊字符** | 输入包含特殊字符的想法（!@#$%等） | 能正常保存和显示 |
-| **10. 输入框焦点** | 程序启动后 | 输入框自动获得焦点 |
-| **11. 添加后清空** | 添加想法后 | 输入框内容自动清空，焦点保持 |
-| **12. 滚动列表** | 添加 20+ 个想法 | 列表可正常滚动查看所有想法 |
-| **13. 删除多个** | 添加多个想法后逐个删除 | 每次删除都正确工作 |
-| **14. 时间显示** | 添加想法后查看列表 | 每个想法显示正确的创建时间 |
+| **1. 启动测试** | 双击运行 `ZtdApp.exe` | 窗口正常显示，标题正确 |
+| **2. 基础功能** | 执行功能主要操作 | 按预期工作 |
+| **3. UI 样式** | 检查按钮、输入框等 | 符合品牌样式 |
+| **4. 交互反馈** | 悬停、点击、聚焦 | 有正确的视觉反馈 |
+| **5. 异常输入** | 空值、超长、特殊字符 | 正确处理 |
 
-**数据持久化测试**：
-1. 添加几个想法
-2. 关闭程序
-3. 重新运行程序
-4. **验证**：之前添加的想法仍然存在
+---
 
-**异常情况测试**：
-- [ ] 程序崩溃后重启，数据是否完整？
-- [ ] 快速连续点击"添加"按钮
-- [ ] 添加想法后立即删除
-- [ ] 中文/英文/数字混合输入
+### 问题处理流程
+
+**触发时机**：手动测试后发现问题
+
+**问题分类**：
+
+| 问题类型 | 定义 | 处理建议 |
+|---------|------|---------|
+| **阻塞性问题** | 功能不可用、数据丢失、崩溃 | 必须修复 |
+| **非阻塞性问题** | UI 细节、性能优化、视觉不完美 | 可选择处理方式 |
+
+**处理选项**：
+
+```markdown
+发现问题后，提供三个选项：
+
+1. **继续修复**
+   - 返回 Build 阶段重新修改
+   - 适用于：可快速解决的问题
+
+2. **标记为已知问题**
+   - 记录到 PRD.md 的"已知问题"章节
+   - 继续 Commit，后续迭代解决
+   - 适用于：非阻塞性问题、需要更多时间研究的问题
+
+3. **直接提交**
+   - 忽略问题，继续 Commit
+   - 适用于：极小的视觉瑕疵、不影响使用的细节
+```
+
+**已知问题记录格式**（PRD.md）：
+
+```markdown
+## 已知问题
+
+### UI 优化
+- [ ] 想法操作按钮高度对齐问题（视觉细节，不影响功能）
+  - 影响：快速完成按钮高度略有不一致
+  - 优先级：低
+  - 计划：后续 UI 优化时统一处理
+
+### 性能优化
+- [ ] 大量数据加载性能（>1000条时略有卡顿）
+  - 影响：数据量大时响应稍慢
+  - 优先级：中
+  - 计划：实现虚拟化列表
+```
+
+**提示用户示例**：
+
+```markdown
+⚠️ 发现问题：操作按钮高度略有不一致
+
+问题类型：非阻塞性（UI 细节）
+影响范围：视觉效果，不影响功能使用
+
+处理选项：
+1. 继续修复 - 尝试其他解决方案
+2. 标记为已知问题 - 记录到 PRD.md，后续优化
+3. 直接提交 - 忽略此问题
+
+你的选择？(输入 1/2/3)
+```
+
+---
 
 **Commit - 提交代码**：
 ```bash
@@ -349,7 +511,7 @@ rm .claude/feat-progress.json
 /compact  清理历史消息，为下一个功能准备干净的上下文
 ```
 
-### 4. 更新 PRD.md
+### 7. 更新 PRD.md
 
 标记功能完成：
 
@@ -361,12 +523,15 @@ rm .claude/feat-progress.json
 - [ ] 发布文章
 ```
 
-### 5. 询问下一步
+### 8. 询问下一步
 
 ```
 ✅ [功能名称] 完成
 
 版本信息已记录到: .claude/version-history.log
+
+UI 风格: 使用 Anthropic 品牌样式
+设计组件: Button, TextBox, CardBorder
 
 建议运行 /compact 清理上下文，为下一个功能准备干净的环境
 
@@ -386,7 +551,7 @@ rm .claude/feat-progress.json
 AI: 好，加到 PRD 里：
     - [ ] 文章置顶
 
-    现在做置顶还是继续当前功能？
+    先做置顶还是继续当前功能？
 ```
 
 更新 PRD.md：
@@ -402,10 +567,12 @@ AI: 好，加到 PRD 里：
 ## 输出格式
 
 ```markdown
-🔨 实现功能: [功能名称]
+🎨 实现功能: [功能名称]
 
-## 设计
-[简要说明实现思路]
+## Design
+✅ 布局: [垂直/水平/网格]
+✅ 组件: [Button x2, TextBox x1, CardBorder]
+✅ 样式: [BrandColors.xaml 自动应用]
 
 ## Build
 ✅ 创建: [文件列表]
@@ -416,6 +583,7 @@ AI: 好，加到 PRD 里：
 ## Verify
 ✅ 编译成功: dotnet build --configuration Release
 ✅ 单元测试通过: dotnet test
+✅ UI 一致性检查: 通过
 ✅ 手动测试完成: 功能验证正常
 
 ## Commit
@@ -450,32 +618,26 @@ AI: 📋 当前功能清单：
 
 用户: 2
 
-AI: 🔨 开始实现: 用户登录
+AI: 🎨 UI 设计: 用户登录
 
-    涉及内容:
-    - 后端: 登录 API、JWT 生成
-    - 前端: 登录表单、状态管理
+    自动生成的设计方案:
 
-    开始？
+    页面布局: 垂直布局
+    使用组件: Button x1, TextBox x2, HeadingTextBlock
+    使用样式: Button (橙色主按钮), TextBox (聚焦橙色)
 
-用户: 开始
+    布局草图:
+    ┌─────────────────────────┐
+    │  用户登录               │
+    │  请输入你的账号          │
+    │                         │
+    │  [用户名输入框]         │
+    │  [密码输入框]           │
+    │                         │
+    │  [登录按钮]             │
+    └─────────────────────────┘
 
-AI: [Build → Test → Verify → Commit → Compact]
-
-    ✅ 用户登录 完成
-
-    编译: dotnet build --configuration Release
-    测试: dotnet test
-    手动测试: 功能验证正常
-    Commit: feat: 用户登录
-    版本记录: .claude/version-history.log
-
-    更新 PRD:
-    - [x] 用户登录 ✅ commit: abc123
-
-    建议运行 /compact 清理上下文
-
-    继续下一个？
+    是否符合预期？(Y/N)
 
 用户: 文章得能删除
 
@@ -486,24 +648,27 @@ AI: 好，加到 PRD:
 
 用户: 先做删除
 
-AI: 🔨 开始实现: 删除文章
-    ...
+AI: 🎨 UI 设计: 删除文章
+    自动生成设计方案...
 
----
+    页面布局: 独立确认对话框
+    使用组件: Button x2 (确认/取消), TextBlock
+    使用样式: Button (橙色), SecondaryButton (蓝色)
 
-用户: /feat
+    是否符合预期？(Y/N)
 
-AI: 📋 当前功能清单：
+用户: Y
 
-    MVP 功能：
-    1. [ ] 用户注册
-    2. [x] 用户登录 ✅
-    3. [ ] 发布文章
-    4. [ ] 删除文章 ← 新增
+AI: [Build → Test → Verify → Commit → Compact]
 
-    已完成：1 个
+    ✅ 删除文章 完成
 
-    做哪个？
+    设计方案: 独立对话框, Button x2, TextBlock
+    编译: dotnet build --configuration Release
+    测试: dotnet test
+    UI 一致性: 通过
+    手动测试: 功能验证正常
+    Commit: feat: 删除文章
 ```
 
 ### 进度恢复流程
@@ -514,8 +679,9 @@ AI: 📋 当前功能清单：
 AI: 📋 检测到未完成的功能：
 
     当前功能: 想法收集
-    状态: verify（已完成: build, test）
+    状态: verify（已完成: design, build, test）
     最后记录: Test阶段完成，等待编译验证
+    设计方案: 垂直布局, Button, TextBox, CardBorder
     创建时间: 2026-02-27 14:30
 
     是否继续？
@@ -526,7 +692,7 @@ AI: 📋 检测到未完成的功能：
 
 AI: 🔨 继续实现: 想法收集
 
-    当前进度: verify（已创建代码和测试）
+    当前进度: verify（已完成设计、代码、测试）
     开始编译验证...
 
 [继续 Verify → Commit 流程]
@@ -544,19 +710,15 @@ AI: 🔨 继续实现: 想法收集
 {
   "currentFeature": {
     "name": "功能名称",
-    "status": "test",              // build | test | verify | commit | completed
+    "status": "design",              // design | build | test | verify | commit | completed
     "createdAt": "2026-02-27T14:30:00Z",
     "description": "开始实现功能",
-    "filesCreated": [
-      "ZtdApp/ZtdApp.csproj",
-      "ZtdApp/Models/Idea.cs",
-      "ZtdApp/Data/DatabaseService.cs"
-    ],
-    "testsCreated": [
-      "ZtdApp.Tests/IdeaTests.cs"
-    ],
-    "lastCheckpoint": "Test阶段完成，等待编译验证",
-    "updatedAt": "2026-02-27T15:20:00Z"
+    "designLayout": "垂直布局",
+    "designComponents": ["Button", "TextBox", "CardBorder"],
+    "designSketch": "[简单的ASCII布局图]",
+    "filesCreated": [],
+    "testsCreated": [],
+    "lastCheckpoint": "UI 设计完成，等待用户确认"
   }
 }
 ```
@@ -565,17 +727,19 @@ AI: 🔨 继续实现: 想法收集
 
 | Status | 说明 | 已完成阶段 |
 |--------|------|-----------|
-| `build` | 正在编写代码 | - |
-| `test` | 已完成代码，正在写测试 | build |
-| `verify` | 已完成测试，正在编译验证 | build, test |
-| `commit` | 已完成验证，准备提交 | build, test, verify |
+| `design` | 正在进行 UI 设计 | - |
+| `build` | 设计完成，正在编写代码 | design |
+| `test` | 已完成代码，正在写测试 | design, build |
+| `verify` | 已完成测试，正在编译验证 | design, build, test |
+| `commit` | 已完成验证，准备提交 | design, build, test, verify |
 | `completed` | 功能完成 | 全部 |
 
 ### 进度保存时机
 
 | 阶段 | 操作 | 文件变更 |
 |------|------|---------|
-| 开始功能 | 创建进度文件 | status: build |
+| 开始功能 | 创建进度文件 | status: design |
+| Design 完成 | 更新进度 | status: build, designLayout, designComponents |
 | Build 完成 | 更新进度 | status: test, filesCreated |
 | Test 完成 | 更新进度 | status: verify, testsCreated |
 | Verify 完成 | 更新进度 | status: commit |
@@ -584,7 +748,7 @@ AI: 🔨 继续实现: 想法收集
 ### 进度恢复流程
 
 1. **检测进度**：`/feat` 执行时读取 `feat-progress.json`
-2. **提示用户**：显示当前功能、状态、最后记录
+2. **提示用户**：显示当前功能、状态、最后记录、设计信息
 3. **用户选择**：
    - Y: 跳转到对应阶段继续开发
    - N: 删除进度文件，重新开始
@@ -615,9 +779,12 @@ AI: 🔨 继续实现: 想法收集
 ## 注意事项
 
 - **一次只做一个功能**，不要贪多
+- **Design 阶段不可跳过**：必须确认 UI 组件和样式
+- **使用已有的 BrandColors.xaml 样式**，不要自己定义新颜色
 - 测试要覆盖核心逻辑，不追求完美
 - **每次功能完成后必须编译生成可执行版本**，确保代码可运行
 - **手动测试验证功能正常**，不要跳过
+- **UI 一致性检查**：确保新功能与已有页面风格一致
 - **每个阶段完成后立即更新进度文件**，支持中断恢复
 - commit 信息简洁清晰
 - 提交后**删除进度文件**，运行 `/compact` 清理上下文
