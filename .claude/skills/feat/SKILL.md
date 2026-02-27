@@ -190,7 +190,7 @@ MVP 功能：
 }
 ```
 
-**Verify - 编译并自动化测试**：
+**Verify - 编译并手动测试**：
 ```bash
 # 编译生成可执行版本
 dotnet build --configuration Release
@@ -198,44 +198,40 @@ dotnet build --configuration Release
 # 运行单元测试
 dotnet test
 
-# 运行 UI 自动化测试（FlaUI）
-dotnet test --filter "FullyQualifiedName~UITests"
+# 启动程序进行手动测试
+ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
 ```
 
-**UI 自动化测试要点**：
-- 正常流程：功能按预期工作
-- 异常输入：空值、超长文本、特殊字符
-- 边界情况：零个、一个、最大数量
-- 错误处理：网络失败、数据库错误
-- 数据持久化：重启后数据保留
-- 界面响应：加载状态、错误提示
-- 兼容性：已有功能未被破坏
+**手动测试清单**：
 
-**FlaUI 集成**：
-```xml
-<!-- ZtdApp.Tests/ZtdApp.Tests.csproj -->
-<PackageReference Include="FlaUI.UIA3" Version="4.0.0" />
-```
+| 测试项 | 测试步骤 | 预期结果 |
+|--------|---------|---------|
+| **1. 启动测试** | 双击运行 `ZtdApp.exe` | 窗口正常显示，标题为 "ZTD - 想法收集" |
+| **2. 基础添加** | 1. 在输入框输入想法内容<br>2. 点击"添加想法"按钮 | 想法出现在列表中 |
+| **3. 回车快捷键** | 1. 在输入框输入想法<br>2. 按 Enter 键 | 想法被添加，无需点击按钮 |
+| **4. 多个想法** | 连续添加 3-5 个想法 | 所有想法都显示在列表中，按时间倒序排列 |
+| **5. 删除想法** | 1. 添加一个想法<br>2. 点击该想法的"删除"按钮 | 想法从列表中消失 |
+| **6. 空输入处理** | 不输入内容直接点击"添加想法" | 没有任何反应或错误提示 |
+| **7. 清空后重试** | 添加想法 → 清空输入框 → 回车 | 输入框为空时不添加 |
+| **8. 超长文本** | 输入很长的文本（>500字）后添加 | 能正常保存和显示 |
+| **9. 特殊字符** | 输入包含特殊字符的想法（!@#$%等） | 能正常保存和显示 |
+| **10. 输入框焦点** | 程序启动后 | 输入框自动获得焦点 |
+| **11. 添加后清空** | 添加想法后 | 输入框内容自动清空，焦点保持 |
+| **12. 滚动列表** | 添加 20+ 个想法 | 列表可正常滚动查看所有想法 |
+| **13. 删除多个** | 添加多个想法后逐个删除 | 每次删除都正确工作 |
+| **14. 时间显示** | 添加想法后查看列表 | 每个想法显示正确的创建时间 |
 
-**UI 测试示例**：
-```csharp
-[Fact]
-public void IdeaPage_AddIdea_ShouldAppearInList()
-{
-    using var app = FlaUI.Application.Launch("bin/Release/net8.0-windows/ZtdApp.exe");
-    using var automation = new UIA3Automation();
+**数据持久化测试**：
+1. 添加几个想法
+2. 关闭程序
+3. 重新运行程序
+4. **验证**：之前添加的想法仍然存在
 
-    var window = app.GetMainWindow(automation);
-    var ideaInput = window.FindFirstDescendant(cf => cf.ByName("想法输入框"));
-    var addButton = window.FindFirstDescendant(cf => cf.ByName("添加按钮"));
-
-    ideaInput.Text = "测试想法";
-    addButton.Click();
-
-    var ideaList = window.FindFirstDescendant(cf => cf.ByName("想法列表"));
-    Assert.Contains("测试想法", ideaList.AsListBox().Items.Select(i => i.Name));
-}
-```
+**异常情况测试**：
+- [ ] 程序崩溃后重启，数据是否完整？
+- [ ] 快速连续点击"添加"按钮
+- [ ] 添加想法后立即删除
+- [ ] 中文/英文/数字混合输入
 
 **Commit - 提交代码**：
 ```bash
