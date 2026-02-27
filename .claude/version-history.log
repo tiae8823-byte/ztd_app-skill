@@ -71,3 +71,21 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 已知问题：
 - [ui-001] 操作按钮高度对齐问题（低优先级，不影响功能）
   详见 .claude/known-issues.json
+20260228-003415 - fix: 修复想法操作按钮高度对齐问题
+
+- 创建统一的 IdeaActionButton 样式
+- 使用 Content 属性替代嵌套 TextBlock
+- 确保所有按钮高度一致对齐
+- 更新 known-issues.json 标记问题已解决
+20260228-003428 - fix: 修复想法操作按钮高度对齐问题
+
+- 创建统一的 IdeaActionButton 样式
+- 使用 Content 属性替代嵌套 TextBlock
+- 确保所有按钮高度一致对齐
+- 更新 known-issues.json 标记问题已解决
+20260228-003443 - fix: 修复想法操作按钮高度对齐问题
+
+- 创建统一的 IdeaActionButton 样式
+- 使用 Content 属性替代嵌套 TextBlock
+- 确保所有按钮高度一致对齐
+- 更新 known-issues.json 标记问题已解决
