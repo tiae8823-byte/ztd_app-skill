@@ -38,6 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToIdeas()
     {
+        IdeaViewModel.LoadIdeas();
         CurrentPage = IdeaViewModel;
         CurrentTitle = "想法收集";
     }
@@ -45,6 +46,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToTodos()
     {
+        TodoViewModel.LoadTodos();
         CurrentPage = TodoViewModel;
         CurrentTitle = "待办列表";
     }
@@ -52,6 +54,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToToday()
     {
+        TodayViewModel.LoadTasks();
         CurrentPage = TodayViewModel;
         CurrentTitle = "今日待办";
     }
@@ -59,6 +62,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToNotes()
     {
+        NotesViewModel.LoadNotes();
         CurrentPage = NotesViewModel;
         CurrentTitle = "笔记库";
     }
@@ -66,6 +70,7 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToReview()
     {
+        WeeklyReviewViewModel.RefreshData();
         CurrentPage = WeeklyReviewViewModel;
         CurrentTitle = "每周回顾";
     }

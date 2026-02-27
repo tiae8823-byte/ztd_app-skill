@@ -13,7 +13,9 @@ namespace ZtdApp.Tests;
 public class IdeaViewModelTests : IDisposable
 {
     private readonly SharedMemoryDatabase2 _db;
-    private readonly IdeaManager _manager;
+    private readonly IdeaManager _ideaManager;
+    private readonly TaskManager _taskManager;
+    private readonly NoteManager _noteManager;
     private readonly IdeaViewModel _viewModel;
 
     public IdeaViewModelTests()
@@ -21,9 +23,15 @@ public class IdeaViewModelTests : IDisposable
         _db = new SharedMemoryDatabase2("IdeaViewModelTests");
         _db.Initialize();
 
-        var repository = new IdeaRepository(_db);
-        _manager = new IdeaManager(repository);
-        _viewModel = new IdeaViewModel(_manager);
+        var ideaRepository = new IdeaRepository(_db);
+        var taskRepository = new TaskRepository(_db);
+        var noteRepository = new NoteRepository(_db);
+
+        _ideaManager = new IdeaManager(ideaRepository);
+        _taskManager = new TaskManager(taskRepository);
+        _noteManager = new NoteManager(noteRepository);
+
+        _viewModel = new IdeaViewModel(_ideaManager, _taskManager, _noteManager);
     }
 
     public void Dispose()
@@ -34,10 +42,10 @@ public class IdeaViewModelTests : IDisposable
     [Fact]
     public void Constructor_ShouldLoadExistingIdeas()
     {
-        _manager.Create("已有想法1");
-        _manager.Create("已有想法2");
+        _ideaManager.Create("已有想法1");
+        _ideaManager.Create("已有想法2");
 
-        var newViewModel = new IdeaViewModel(_manager);
+        var newViewModel = new IdeaViewModel(_ideaManager, _taskManager, _noteManager);
 
         Assert.Equal(2, newViewModel.Ideas.Count);
     }
@@ -64,8 +72,8 @@ public class IdeaViewModelTests : IDisposable
     [Fact]
     public void DeleteIdea_ShouldRemoveFromList()
     {
-        _manager.Create("待删除的想法");
-        var viewModel = new IdeaViewModel(_manager);
+        _ideaManager.Create("待删除的想法");
+        var viewModel = new IdeaViewModel(_ideaManager, _taskManager, _noteManager);
         var ideaId = viewModel.Ideas[0].Id;
 
         viewModel.DeleteIdeaCommand.Execute(ideaId);
@@ -116,6 +124,92 @@ public class IdeaViewModelTests : IDisposable
     {
         Assert.NotNull(_viewModel.AddIdeaCommand);
         Assert.NotNull(_viewModel.DeleteIdeaCommand);
+        Assert.NotNull(_viewModel.ToggleExpandCommand);
+        Assert.NotNull(_viewModel.ConvertToTodoCommand);
+        Assert.NotNull(_viewModel.ConvertToNoteCommand);
+        Assert.NotNull(_viewModel.QuickCompleteCommand);
+    }
+
+    [Fact]
+    public void ToggleExpand_ShouldToggleIsExpanded()
+    {
+        _viewModel.InputContent = "测试想法";
+        _viewModel.AddIdeaCommand.Execute(null);
+        var idea = _viewModel.Ideas[0];
+
+        Assert.False(idea.IsExpanded);
+
+        _viewModel.ToggleExpandCommand.Execute(idea);
+        Assert.True(idea.IsExpanded);
+
+        _viewModel.ToggleExpandCommand.Execute(idea);
+        Assert.False(idea.IsExpanded);
+    }
+
+    [Fact]
+    public void ConvertToTodo_ShouldCreateTaskAndRemoveIdea()
+    {
+        _viewModel.InputContent = "转为待办";
+        _viewModel.AddIdeaCommand.Execute(null);
+        var ideaId = _viewModel.Ideas[0].Id;
+
+        _viewModel.ConvertToTodoCommand.Execute(ideaId);
+
+        Assert.Empty(_viewModel.Ideas);
+        var tasks = _taskManager.GetByStatus(TodoTaskStatus.Todo);
+        Assert.Single(tasks);
+        Assert.Equal("转为待办", tasks[0].Content);
+    }
+
+    [Fact]
+    public void ConvertToNote_ShouldCreateNoteAndRemoveIdea()
+    {
+        _viewModel.InputContent = "转为笔记";
+        _viewModel.AddIdeaCommand.Execute(null);
+        var ideaId = _viewModel.Ideas[0].Id;
+
+        _viewModel.ConvertToNoteCommand.Execute(ideaId);
+
+        Assert.Empty(_viewModel.Ideas);
+        var notes = _noteManager.GetAll();
+        Assert.Single(notes);
+        Assert.Equal("转为笔记", notes[0].Content);
+    }
+
+    [Fact]
+    public void QuickComplete_ShouldCreateCompletedTaskAndRemoveIdea()
+    {
+        _viewModel.InputContent = "快速完成";
+        _viewModel.AddIdeaCommand.Execute(null);
+        var ideaId = _viewModel.Ideas[0].Id;
+
+        _viewModel.QuickCompleteCommand.Execute(ideaId);
+
+        Assert.Empty(_viewModel.Ideas);
+        var completedTasks = _taskManager.GetByStatus(TodoTaskStatus.Done);
+        Assert.Single(completedTasks);
+        Assert.Equal("快速完成", completedTasks[0].Content);
+    }
+
+    [Fact]
+    public void ConvertToTodo_WithInvalidId_ShouldNotCrash()
+    {
+        _viewModel.ConvertToTodoCommand.Execute("invalid-id");
+        Assert.Empty(_viewModel.Ideas);
+    }
+
+    [Fact]
+    public void ConvertToNote_WithInvalidId_ShouldNotCrash()
+    {
+        _viewModel.ConvertToNoteCommand.Execute("invalid-id");
+        Assert.Empty(_viewModel.Ideas);
+    }
+
+    [Fact]
+    public void QuickComplete_WithInvalidId_ShouldNotCrash()
+    {
+        _viewModel.QuickCompleteCommand.Execute("invalid-id");
+        Assert.Empty(_viewModel.Ideas);
     }
 
     [Fact]
@@ -185,6 +279,24 @@ public class SharedMemoryDatabase2 : DatabaseService, IDisposable
                 Id TEXT PRIMARY KEY,
                 Content TEXT NOT NULL,
                 CreatedAt INTEGER NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS Tasks (
+                Id TEXT PRIMARY KEY,
+                Content TEXT NOT NULL,
+                Status INTEGER NOT NULL,
+                TimeTag TEXT,
+                CategoryTag TEXT,
+                CreatedAt INTEGER NOT NULL,
+                CompletedAt INTEGER
+            );
+
+            CREATE TABLE IF NOT EXISTS Notes (
+                Id TEXT PRIMARY KEY,
+                Content TEXT NOT NULL,
+                Category TEXT,
+                CreatedAt INTEGER NOT NULL,
+                UpdatedAt INTEGER NOT NULL
             )";
         command.ExecuteNonQuery();
     }

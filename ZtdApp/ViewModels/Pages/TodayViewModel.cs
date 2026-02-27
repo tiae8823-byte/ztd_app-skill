@@ -18,7 +18,7 @@ public partial class TodayViewModel : ObservableObject
     public TodayViewModel(TaskManager taskManager)
     {
         _taskManager = taskManager;
-        LoadTodayTasks();
+        LoadTasks();
     }
 
     // 无参构造函数用于设计时
@@ -35,17 +35,17 @@ public partial class TodayViewModel : ObservableObject
 
         _taskManager?.Create(InputContent, TodoTaskStatus.Today);
         InputContent = string.Empty;
-        LoadTodayTasks();
+        LoadTasks();
     }
 
     [RelayCommand]
     private void DeleteTask(string id)
     {
         _taskManager?.Delete(id);
-        LoadTodayTasks();
+        LoadTasks();
     }
 
-    public void LoadTodayTasks()
+    public void LoadTasks()
     {
         TodayTasks.Clear();
         if (_taskManager == null) return;
