@@ -22,7 +22,7 @@ public class IdeaPageUITests : IDisposable
         _automation = new UIA3Automation();
         _exePath = Path.Combine(
             Directory.GetCurrentDirectory(),
-            "..", "..", "..", "..", "ZtdApp", "bin", "Release", "net8.0-windows", "ZtdApp.exe");
+            "..", "..", "..", "..", "ZtdApp", "bin", "Release", "net8.0-windows", "win-x64", "ZtdApp.exe");
     }
 
     public void Dispose()
@@ -41,6 +41,17 @@ public class IdeaPageUITests : IDisposable
 
         var app = Application.Launch(_exePath);
         return app.GetMainWindow(_automation);
+    }
+
+    private void SetTextBoxText(AutomationElement? textBox, string text)
+    {
+        if (textBox == null) return;
+
+        var textBoxElement = textBox.AsTextBox();
+        if (textBoxElement != null)
+        {
+            textBoxElement.Text = text;
+        }
     }
 
     // ============ 正常流程测试 ============
@@ -69,7 +80,7 @@ public class IdeaPageUITests : IDisposable
         }
 
         // 输入想法内容
-        inputBox.Text = "测试想法内容";
+        SetTextBoxText(inputBox, "测试想法内容");
         addButton.Click();
 
         // 等待列表更新
@@ -104,7 +115,7 @@ public class IdeaPageUITests : IDisposable
         if (inputBox == null || addButton == null) return;
 
         // 尝试添加空内容
-        inputBox.Text = "";
+        SetTextBoxText(inputBox, "");
         addButton.Click();
 
         System.Threading.Thread.Sleep(300);
@@ -128,7 +139,7 @@ public class IdeaPageUITests : IDisposable
 
         // 添加超长内容
         var longText = new string('A', 1000);
-        inputBox.Text = longText;
+        SetTextBoxText(inputBox, longText);
         addButton.Click();
 
         System.Threading.Thread.Sleep(500);
@@ -153,7 +164,7 @@ public class IdeaPageUITests : IDisposable
         if (inputBox == null || addButton == null) return;
 
         // 添加一个想法
-        inputBox.Text = "待删除的想法";
+        SetTextBoxText(inputBox, "待删除的想法");
         addButton.Click();
 
         System.Threading.Thread.Sleep(500);
@@ -189,7 +200,7 @@ public class IdeaPageUITests : IDisposable
         // 快速连续操作
         for (int i = 0; i < 10; i++)
         {
-            inputBox.Text = $"快速想法 {i}";
+            SetTextBoxText(inputBox, $"快速想法 {i}");
             addButton.Click();
             System.Threading.Thread.Sleep(100);
         }

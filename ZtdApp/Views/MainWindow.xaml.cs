@@ -6,23 +6,36 @@ namespace ZtdApp.Views;
 
 public partial class MainWindow : Window
 {
-    public IdeaViewModel ViewModel { get; }
+    public MainWindowViewModel ViewModel { get; }
 
-    public MainWindow(IdeaViewModel viewModel)
+    public MainWindow(MainWindowViewModel viewModel)
     {
         ViewModel = viewModel;
         DataContext = ViewModel;
         InitializeComponent();
-
-        // 设置输入框焦点
-        IdeaInput.Focus();
     }
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {
-            ViewModel.AddIdeaCommand.Execute(null);
+            // 根据 CurrentPage 类型决定执行哪个命令
+            if (ViewModel.CurrentPage is ViewModels.Pages.IdeaViewModel ideaVM)
+            {
+                ideaVM.AddIdeaCommand.Execute(null);
+            }
+            else if (ViewModel.CurrentPage is ViewModels.Pages.TodoViewModel todoVM)
+            {
+                todoVM.AddTodoCommand.Execute(null);
+            }
+            else if (ViewModel.CurrentPage is ViewModels.Pages.TodayViewModel todayVM)
+            {
+                todayVM.AddTaskCommand.Execute(null);
+            }
+            else if (ViewModel.CurrentPage is ViewModels.Pages.NotesViewModel notesVM)
+            {
+                notesVM.AddNoteCommand.Execute(null);
+            }
             e.Handled = true;
         }
     }

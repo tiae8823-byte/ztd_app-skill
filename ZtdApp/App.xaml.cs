@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ZtdApp.Data;
 using ZtdApp.Services;
 using ZtdApp.ViewModels;
+using ZtdApp.ViewModels.Pages;
 using ZtdApp.Views;
 
 namespace ZtdApp;
@@ -22,13 +23,22 @@ public partial class App : Application
 
         // 数据层
         services.AddSingleton<DatabaseService>();
-        services.AddScoped<IdeaRepository>();
+        services.AddSingleton<IdeaRepository>();
+        services.AddSingleton<TaskRepository>();
+        services.AddSingleton<NoteRepository>();
 
         // 服务层
-        services.AddScoped<IdeaManager>();
+        services.AddSingleton<IdeaManager>();
+        services.AddSingleton<TaskManager>();
+        services.AddSingleton<NoteManager>();
 
         // ViewModel 层
-        services.AddScoped<IdeaViewModel>();
+        services.AddSingleton<IdeaViewModel>();
+        services.AddSingleton<TodoViewModel>();
+        services.AddSingleton<TodayViewModel>();
+        services.AddSingleton<NotesViewModel>();
+        services.AddSingleton<WeeklyReviewViewModel>();
+        services.AddSingleton<MainWindowViewModel>();
 
         return services.BuildServiceProvider();
     }
@@ -42,14 +52,8 @@ public partial class App : Application
         dbService.Initialize();
 
         // 创建主窗口
-        var viewModel = Services.GetRequiredService<IdeaViewModel>();
+        var viewModel = Services.GetRequiredService<MainWindowViewModel>();
         var mainWindow = new MainWindow(viewModel);
-
-        // 设置窗口属性
-        mainWindow.Title = "ZTD - 想法收集";
-        mainWindow.Width = 500;
-        mainWindow.Height = 700;
-        mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
         mainWindow.Show();
     }
