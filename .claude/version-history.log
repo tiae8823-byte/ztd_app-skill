@@ -53,3 +53,21 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - 优化测试稳定性
 
 Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260228-001000 - feat: 想法操作 - 删除/待办/笔记/快速完成
+
+核心功能：
+- 点击卡片展开/收起操作按钮
+- 转待办：想法转换为待办任务
+- 转笔记：想法转换为笔记
+- 快速完成：想法标记为已完成并归档
+- 删除：从列表移除想法
+
+技术实现：
+- 添加 Idea.IsExpanded 属性支持展开/收起
+- 导航时自动刷新数据（解决页面数据不同步问题）
+- 使用 Anthropic 品牌样式（SecondaryButton）
+- 单元测试：47/47 通过
+
+已知问题：
+- [ui-001] 操作按钮高度对齐问题（低优先级，不影响功能）
+  详见 .claude/known-issues.json

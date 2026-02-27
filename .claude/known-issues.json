@@ -5,7 +5,7 @@
       "title": "想法操作按钮高度对齐问题",
       "type": "ui",
       "priority": "low",
-      "status": "open",
+      "status": "resolved",
       "feature": "想法操作",
       "description": "快速完成按钮高度略小于待办和笔记按钮，视觉上不完全对齐",
       "impact": "视觉细节，不影响功能使用，所有操作正常工作",
@@ -15,12 +15,14 @@
         "使用 MinHeight → 高度不一致",
         "TextBlock + NoWrap → 当前状态（高度仍略有不一致）"
       ],
+      "solution": "创建统一的 IdeaActionButton 样式，使用 Content 属性而不是嵌套 TextBlock，确保所有按钮高度一致",
       "createdAt": "2026-02-28",
+      "resolvedAt": "2026-02-28",
       "relatedFiles": [
         "ZtdApp/Views/MainWindow.xaml",
         "ZtdApp/Styles/BrandColors.xaml"
       ],
-      "relatedCommit": null
+      "relatedCommit": "e2cdf27"
     }
   ]
 }
