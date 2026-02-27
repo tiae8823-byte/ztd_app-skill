@@ -1,0 +1,64 @@
+<Page x:Class="ZtdApp.Views.IdeaPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 输入区域 -->
+        <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,20">
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="想法收集"/>
+            <TextBlock Text="快速记录你的想法" Opacity="0.7"/>
+            <TextBox PlaceholderText="输入想法..."
+                     Text="{x:Bind ViewModel.InputContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     KeyDown="OnKeyDown"/>
+            <Button Content="添加想法"
+                    Command="{x:Bind ViewModel.AddIdeaCommand}"
+                    HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+        <!-- 列表区域 -->
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{x:Bind ViewModel.Ideas}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16"
+                                Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Text="{Binding Content}"
+                                               Style="{StaticResource BodyTextBlockStyle}"
+                                               TextWrapping="Wrap"/>
+                                    <TextBlock Text="{x:Bind ViewModel.FormatTime(CreatedAt), Mode=OneWay}"
+                                               Opacity="0.6"
+                                               Style="{StaticResource CaptionTextBlockStyle}"/>
+                                </StackPanel>
+
+                                <Button Grid.Column="1"
+                                        Content="删除"
+                                        Command="{x:Bind ViewModel.DeleteIdeaCommand}"
+                                        CommandParameter="{Binding Id}"
+                                        Margin="8,0,0,0"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Page>
