@@ -190,7 +190,7 @@ MVP 功能：
 }
 ```
 
-**Verify - 编译并手动测试**：
+**Verify - 编译并测试**：
 ```bash
 # 编译生成可执行版本
 dotnet build --configuration Release
@@ -198,11 +198,68 @@ dotnet build --configuration Release
 # 运行单元测试
 dotnet test
 
+# 运行 UI 自动化测试
+dotnet test --filter "FullyQualifiedName~UITests"
+
 # 启动程序进行手动测试
 ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
 ```
 
-**手动测试清单**：
+---
+
+### 单元测试
+
+**测试框架**：xUnit
+
+**测试范围**：
+- 核心逻辑的单元测试
+- 边界条件测试
+- 死循环防御测试
+- 日志功能测试
+
+---
+
+### UI 自动化测试
+
+**测试框架**：FlaUI.UIA3
+
+**项目配置**：
+```xml
+<!-- ZtdApp.Tests/ZtdApp.Tests.csproj -->
+<PackageReference Include="FlaUI.UIA3" Version="4.0.0" />
+```
+
+**测试要点**：
+- 正常流程：功能按预期工作
+- 异常输入：空值、超长文本、特殊字符
+- 边界情况：零个、一个、最大数量
+- 错误处理：数据库错误
+- 数据持久化：重启后数据保留
+- 界面响应：加载状态、错误提示
+
+**UI 测试示例**：
+```csharp
+[Fact]
+public void MainWindow_AddIdea_ShouldAppearInList()
+{
+    using var app = FlaUI.Application.Launch("bin/Release/net8.0-windows/ZtdApp.exe");
+    using var automation = new UIA3Automation();
+
+    var window = app.GetMainWindow(automation);
+    var ideaInput = window.FindFirstDescendant(cf => cf.ByName("IdeaInput"));
+    var addButton = window.FindFirstDescendant(cf => cf.ByName("添加想法"));
+
+    ideaInput.Text = "测试想法";
+    addButton.Click();
+
+    var ideaList = window.FindFirstDescendant(cf => cf.ByAutomationId("PART_IdeasList"));
+    Assert.Contains("测试想法", ideaList.AsListBox().Items.Select(i => i.Name));
+}
+```
+
+---
+
+### 手动测试清单
 
 | 测试项 | 测试步骤 | 预期结果 |
 |--------|---------|---------|
