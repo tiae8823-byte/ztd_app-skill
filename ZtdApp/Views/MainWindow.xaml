@@ -104,30 +104,16 @@
                                                             <StackPanel Orientation="Horizontal">
                                                                 <Button Command="{Binding DataContext.ConvertToTodoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource SecondaryButton}"
-                                                                        Width="100"
-                                                                        Height="36"
-                                                                        VerticalContentAlignment="Center"
-                                                                        Margin="0,0,8,0">
-                                                                    <TextBlock Text="待办" TextWrapping="NoWrap" VerticalAlignment="Center"/>
-                                                                </Button>
+                                                                        Style="{StaticResource IdeaActionButton}"
+                                                                        Content="待办"/>
                                                                 <Button Command="{Binding DataContext.ConvertToNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource SecondaryButton}"
-                                                                        Width="100"
-                                                                        Height="36"
-                                                                        VerticalContentAlignment="Center"
-                                                                        Margin="0,0,8,0">
-                                                                    <TextBlock Text="笔记" TextWrapping="NoWrap" VerticalAlignment="Center"/>
-                                                                </Button>
+                                                                        Style="{StaticResource IdeaActionButton}"
+                                                                        Content="笔记"/>
                                                                 <Button Command="{Binding DataContext.QuickCompleteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource SecondaryButton}"
-                                                                        Width="100"
-                                                                        Height="36"
-                                                                        VerticalContentAlignment="Center">
-                                                                    <TextBlock Text="快速完成" TextWrapping="NoWrap" VerticalAlignment="Center"/>
-                                                                </Button>
+                                                                        Style="{StaticResource IdeaActionButton}"
+                                                                        Content="快速完成"/>
                                                             </StackPanel>
                                                         </Border>
                                                     </StackPanel>
