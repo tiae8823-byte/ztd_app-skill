@@ -56,7 +56,72 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 | 快速原型 | Next.js + Supabase |
 | 工具类 | Electron / Tauri |
 
-### 3. 确定 UI 风格
+### 3. 设计技术架构
+
+**确定技术栈后，必须设计技术架构**，否则 feat 无法规范实现。
+
+**设计原则**：
+- 最适合 MVP：简单优先，避免过度设计
+- 成本最低：使用成熟方案，减少学习成本
+- 易于扩展：架构清晰，后期可迭代
+
+**设计内容**：
+- **项目目录结构**：清晰的分层划分
+- **分层架构**：UI层 / 业务逻辑层 / 数据层
+- **数据访问方式**：ORM / 原生SQL / 其他
+- **状态管理**：如何管理应用状态
+- **依赖注入**：如何管理依赖关系
+
+**输出示例**：
+```markdown
+## 技术架构
+
+### 项目目录结构
+```
+/src
+  /Models        # 数据模型
+  /Data          # 数据访问层
+  /Services      # 业务逻辑层
+  /ViewModels    # 视图模型
+  /Views         # 界面视图
+```
+
+### 分层架构
+```
+┌─────────────────────────────────┐
+│         UI 层 (Views)            │
+└─────────────┬───────────────────┘
+              │
+┌─────────────▼───────────────────┐
+│      ViewModel 层 (MVVM)         │
+└─────────────┬───────────────────┘
+              │
+┌─────────────▼───────────────────┐
+│      Service 层 (业务逻辑)       │
+└─────────────┬───────────────────┘
+              │
+┌─────────────▼───────────────────┐
+│      Data 层 (数据访问)          │
+└─────────────┬───────────────────┘
+              │
+┌─────────────▼───────────────────┐
+│      SQLite 数据库               │
+└─────────────────────────────────┘
+```
+
+### 数据流转
+[简述数据在各层之间的流转方式]
+```
+
+**技术栈选择指南**：
+
+| 技术栈 | 推荐架构 | 理由 |
+|--------|----------|------|
+| C# + WinUI 3 | MVVM + 依赖注入 | WinUI 3 官方推荐 |
+| React Native + Expo | Redux/Context + 组件化 | React 生态最佳实践 |
+| Next.js | Server Components + API Routes | Next.js 最新特性 |
+
+### 4. 确定 UI 风格
 
 简单询问偏好，直接用现成组件库：
 
@@ -64,7 +129,11 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 - 谷歌风格 → Material UI
 - 企业风格 → Ant Design
 
-### 4. 确定 MVP 功能清单
+### 5. 设计技术架构
+
+根据确定的技术栈，设计清晰的技术架构，确保 feat 实现有据可依。
+
+### 6. 确定 MVP 功能清单
 
 讨论哪些是**必须有**的，哪些是**以后加**的。
 
@@ -72,7 +141,7 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 - 最小可用形态是什么？
 - 哪些功能可以后期迭代？
 
-### 5. 生成 PRD.md
+### 7. 生成 PRD.md
 
 在 `docs/PRD.md` 创建文档：
 
@@ -102,6 +171,23 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 
 ---
 
+## 技术架构
+
+### 项目目录结构
+```
+[目录结构]
+```
+
+### 分层架构
+```
+[架构图]
+```
+
+### 数据流转
+[数据在各层之间的流转方式]
+
+---
+
 ## 功能清单
 
 ### MVP 功能（必须实现）
@@ -122,7 +208,7 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 [其他需要记录的信息]
 ```
 
-### 6. 确认
+### 7. 确认
 
 生成后询问用户：
 
@@ -132,11 +218,14 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 📋 内容摘要:
 - 核心价值: [一句话]
 - 技术栈: [前端] + [后端]
+- 技术架构: [分层/模式]
 - MVP 功能: [数量] 个
 - UI 风格: [组件库]
 
 需要调整吗？没问题的话可以开始 /feat 实现功能。
 ```
+
+### 8. 设计技术架构（可选补充）
 
 ## 对话示例
 

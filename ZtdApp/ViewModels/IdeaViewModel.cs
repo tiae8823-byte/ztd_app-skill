@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ZtdApp.Models;
@@ -48,11 +48,5 @@ public partial class IdeaViewModel : ObservableObject
         {
             Ideas.Add(idea);
         }
-    }
-
-    public string FormatTime(long timestamp)
-    {
-        var date = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).LocalDateTime;
-        return date.ToString("MM-dd HH:mm");
     }
 }

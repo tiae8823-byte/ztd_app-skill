@@ -1,0 +1,18 @@
+20260227-204937 - feat: 想法收集功能
+
+实现内容:
+- 数据模型 Idea.cs
+- 数据库服务 DatabaseService.cs + IdeaRepository.cs
+- 业务服务 IdeaManager.cs
+- 视图模型 IdeaViewModel.cs
+- UI 界面 IdeaPage.xaml + IdeaPage.xaml.cs
+- 依赖注入配置 App.xaml.cs
+
+测试覆盖:
+- 单元测试 13 个 (核心逻辑、边界条件、死循环防御、日志功能)
+- UI 自动化测试 5 个 (FlaUI)
+
+技术栈: WinUI 3 + SQLite + MVVM + xUnit + FlaUI
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
+20260227-205004 - chore: 更新 PRD - 标记想法收集功能完成

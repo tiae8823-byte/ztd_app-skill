@@ -1,5 +1,5 @@
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using ZtdApp.Data;
 using ZtdApp.Services;
 using ZtdApp.ViewModels;
@@ -14,7 +14,6 @@ public partial class App : Application
     public App()
     {
         Services = ConfigureServices();
-        InitializeComponent();
     }
 
     private IServiceProvider ConfigureServices()
@@ -34,28 +33,24 @@ public partial class App : Application
         return services.BuildServiceProvider();
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnStartup(StartupEventArgs e)
     {
+        base.OnStartup(e);
+
         // 初始化数据库
         var dbService = Services.GetRequiredService<DatabaseService>();
         dbService.Initialize();
 
         // 创建主窗口
-        var window = new Window();
         var viewModel = Services.GetRequiredService<IdeaViewModel>();
-        var ideaPage = new IdeaPage(viewModel);
-        window.Content = ideaPage;
+        var mainWindow = new MainWindow(viewModel);
 
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-        var windowId = WinRT.Interop.WindowId.CreateFromWin32(hwnd);
+        // 设置窗口属性
+        mainWindow.Title = "ZTD - 想法收集";
+        mainWindow.Width = 500;
+        mainWindow.Height = 700;
+        mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-
-        // 设置窗口大小和位置
-        appWindow.Resize(new Windows.Graphics.SizeInt32 { Width = 500, Height = 700 });
-        appWindow.Move(new Windows.Graphics.PointInt32 { X = 100, Y = 100 });
-        appWindow.Title = "ZTD - 想法收集";
-
-        window.Activate();
+        mainWindow.Show();
     }
 }
