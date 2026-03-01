@@ -39,4 +39,9 @@ public class TaskManager
     {
         _repository.UpdateStatus(id, status);
     }
+
+    public void Complete(string id)
+    {
+        _repository.Complete(id);
+    }
 }

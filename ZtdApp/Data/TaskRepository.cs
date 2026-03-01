@@ -82,4 +82,17 @@ public class TaskRepository
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();
     }
+
+    public void Complete(string id)
+    {
+        using var connection = _dbService.CreateConnection();
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "UPDATE Tasks SET Status = @status, CompletedAt = @completedAt WHERE Id = @id";
+        command.Parameters.AddWithValue("@status", (int)TodoTaskStatus.Done);
+        command.Parameters.AddWithValue("@completedAt", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+        command.Parameters.AddWithValue("@id", id);
+        command.ExecuteNonQuery();
+    }
 }
