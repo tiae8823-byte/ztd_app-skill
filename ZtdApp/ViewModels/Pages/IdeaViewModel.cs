@@ -52,12 +52,30 @@ public partial class IdeaViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ConvertToTodo(string id)
+    private void StartTagSelection(string id)
     {
         var idea = Ideas.FirstOrDefault(i => i.Id == id);
         if (idea == null) return;
+        idea.ResetTagSelection();
+        idea.IsSelectingTags = true;
+    }
 
-        _taskManager.Create(idea.Content, TodoTaskStatus.Todo);
+    [RelayCommand]
+    private void CancelTagSelection(string id)
+    {
+        var idea = Ideas.FirstOrDefault(i => i.Id == id);
+        if (idea == null) return;
+        idea.ResetTagSelection();
+    }
+
+    [RelayCommand]
+    private void ConfirmTagSelection(string id)
+    {
+        var idea = Ideas.FirstOrDefault(i => i.Id == id);
+        if (idea == null) return;
+        if (idea.SelectedTimeTag == null) return; // 时间标签必选
+
+        _taskManager.Create(idea.Content, TodoTaskStatus.Todo, idea.SelectedTimeTag, idea.SelectedCategoryTag);
         _ideaManager.Delete(id);
         LoadIdeas();
     }

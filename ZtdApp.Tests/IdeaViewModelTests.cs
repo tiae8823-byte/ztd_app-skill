@@ -125,7 +125,9 @@ public class IdeaViewModelTests : IDisposable
         Assert.NotNull(_viewModel.AddIdeaCommand);
         Assert.NotNull(_viewModel.DeleteIdeaCommand);
         Assert.NotNull(_viewModel.ToggleExpandCommand);
-        Assert.NotNull(_viewModel.ConvertToTodoCommand);
+        Assert.NotNull(_viewModel.StartTagSelectionCommand);
+        Assert.NotNull(_viewModel.CancelTagSelectionCommand);
+        Assert.NotNull(_viewModel.ConfirmTagSelectionCommand);
         Assert.NotNull(_viewModel.ConvertToNoteCommand);
         Assert.NotNull(_viewModel.QuickCompleteCommand);
     }
@@ -151,14 +153,17 @@ public class IdeaViewModelTests : IDisposable
     {
         _viewModel.InputContent = "转为待办";
         _viewModel.AddIdeaCommand.Execute(null);
-        var ideaId = _viewModel.Ideas[0].Id;
+        var idea = _viewModel.Ideas[0];
 
-        _viewModel.ConvertToTodoCommand.Execute(ideaId);
+        _viewModel.StartTagSelectionCommand.Execute(idea.Id);
+        idea.IsShortTime = true;
+        _viewModel.ConfirmTagSelectionCommand.Execute(idea.Id);
 
         Assert.Empty(_viewModel.Ideas);
         var tasks = _taskManager.GetByStatus(TodoTaskStatus.Todo);
         Assert.Single(tasks);
         Assert.Equal("转为待办", tasks[0].Content);
+        Assert.Equal("<30分钟", tasks[0].TimeTag);
     }
 
     [Fact]
@@ -194,7 +199,8 @@ public class IdeaViewModelTests : IDisposable
     [Fact]
     public void ConvertToTodo_WithInvalidId_ShouldNotCrash()
     {
-        _viewModel.ConvertToTodoCommand.Execute("invalid-id");
+        _viewModel.StartTagSelectionCommand.Execute("invalid-id");
+        _viewModel.ConfirmTagSelectionCommand.Execute("invalid-id");
         Assert.Empty(_viewModel.Ideas);
     }
 

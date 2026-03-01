@@ -12,12 +12,14 @@ public class TaskManager
         _repository = repository;
     }
 
-    public TodoTask Create(string content, TodoTaskStatus status = TodoTaskStatus.Todo)
+    public TodoTask Create(string content, TodoTaskStatus status = TodoTaskStatus.Todo, string? timeTag = null, string? categoryTag = null)
     {
         var task = new TodoTask
         {
             Content = content,
-            Status = status
+            Status = status,
+            TimeTag = timeTag,
+            CategoryTag = categoryTag
         };
         _repository.Add(task);
         return task;
