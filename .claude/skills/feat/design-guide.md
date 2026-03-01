@@ -26,29 +26,64 @@
 | `BrandBlue` | `#6a9bcc` | 次要按钮、信息提示 |
 | `BrandGreen` | `#788c5d` | 成功状态、完成标记 |
 
-### 内置样式
+### Typography 层级（Apple 风格）
+
+| 资源键 | 大小 | 用途 | 使用场景 |
+|--------|------|------|---------|
+| `FontSizeHeading` | 28px | 大标题 | ZTD logo |
+| `FontSizeTitle` | 22px | 页面标题 | 每个页面的主标题 |
+| `FontSizeLarge` | 18px | 区域标题 | 统计卡片标题 |
+| `FontSizeBody` | 15px | 正文 | 卡片内容文本、分组标题 |
+| `FontSizeMedium` | 14px | 按钮/输入框 | 按钮文字、输入框默认 |
+| `FontSizeCaption` | 13px | 说明/标签 | 页面说明、筛选标签 |
+| `FontSizeSmall` | 12px | 元数据 | 时间戳、分类标签、卡片内小按钮 |
+
+### 页面布局样式
+
+| 样式名称 | 目标类型 | 用途 |
+|---------|---------|------|
+| `PageTitleTextBlock` | TextBlock | 页面标题（22px, Bold, 居中） |
+| `PageDescriptionTextBlock` | TextBlock | 页面说明（13px, 灰色, 居中） |
+
+### 卡片内样式
+
+| 样式名称 | 目标类型 | 用途 |
+|---------|---------|------|
+| `CardBorder` | Border | 卡片容器（圆角背景） |
+| `CardContentTextBlock` | TextBlock | 卡片正文（15px, 自动换行） |
+| `CardTagTextBlock` | TextBlock | 分类标签（12px, 蓝色） |
+| `CardDateTextBlock` | TextBlock | 日期元信息（12px, 灰色） |
+| `CardActionButton` | Button | 卡片内操作按钮（蓝色, 6,6 padding, 12px） |
+| `CardDeleteButton` | Button | 卡片内删除按钮（灰色, 6,6 padding, 12px） |
+
+### 分组和筛选样式
+
+| 样式名称 | 目标类型 | 用途 |
+|---------|---------|------|
+| `GroupHeaderTextBlock` | TextBlock | 分组标题（15px, SemiBold, 灰色） |
+| `FilterChipButton` | Button | 筛选标签基础态（灰底, 13px, 需配合 DataTrigger 实现激活态） |
+
+### 按钮样式
+
+| 样式名称 | 目标类型 | 用途 |
+|---------|---------|------|
+| `Button`（默认） | Button | 主按钮（橙色，圆角） |
+| `SecondaryButton` | Button | 次要按钮（蓝色） |
+| `DeleteButton` | Button | 删除按钮（灰色，悬停变红） |
+| `IdeaActionButton` | Button | 想法操作按钮（蓝色，固定 100x36） |
+| `CardActionButton` | Button | 卡片内小操作按钮（蓝色，紧凑 padding） |
+| `CardDeleteButton` | Button | 卡片内小删除按钮（灰色，紧凑 padding） |
+| `NavButton` | Button | 导航按钮（透明底，悬停灰色） |
+| `NavButtonActive` | Button | 导航按钮激活态（橙色底） |
+
+### 其他样式
 
 | 样式名称 | 目标类型 | 用途 |
 |---------|---------|------|
 | `MainWindowStyle` | Window | 主窗口背景和前景色 |
-| `Button` | Button | 主按钮（橙色，圆角） |
-| `SecondaryButton` | Button | 次要按钮（蓝色） |
-| `DeleteButton` | Button | 删除按钮（灰色，悬停变红） |
-| `TextBox` | TextBox | 输入框（聚焦变橙色） |
-| `TextBlock` | TextBlock | 文本基础样式 |
-| `HeadingTextBlock` | TextBlock | 标题（24pt，粗体） |
-| `SubheadingTextBlock` | TextBlock | 副标题（灰色） |
-| `CardBorder` | Border | 卡片容器（圆角背景） |
-
-### 字号系统
-
-| 资源键 | 大小 | 用途 |
-|--------|------|------|
-| `FontSizeSmall` | 12pt | 辅助文本、时间戳 |
-| `FontSizeMedium` | 14pt | 正文、按钮文字 |
-| `FontSizeLarge` | 18pt | 小标题 |
-| `FontSizeTitle` | 24pt | 页面标题 |
-| `FontSizeHeading` | 28pt | 大标题 |
+| `HeadingTextBlock` | TextBlock | 通用标题（22px, Bold）— 建议优先用 PageTitleTextBlock |
+| `SubheadingTextBlock` | TextBlock | 通用副标题（灰色）— 建议优先用 PageDescriptionTextBlock |
+| `SidebarBorder` | Border | 侧边栏容器 |
 
 ---
 
@@ -81,14 +116,40 @@
 
 ---
 
+## 提升共享样式流程
+
+在 Design 阶段，如果发现以下情况，应将样式提升到 BrandColors.xaml：
+
+1. **重复出现的 UI 模式**：同样的属性组合在 2 个以上位置使用
+2. **跨模块一致性需求**：两个模块需要外观相同的组件
+3. **布局细节硬编码**：Padding、FontSize、Color 等直接写在 XAML 模板中
+
+**提升步骤**：
+1. 识别重复模式 → 在 BrandColors.xaml 创建命名样式
+2. 替换所有使用该模式的内联属性 → 引用共享样式
+3. 更新本文档的样式表 → 保持文档同步
+4. 编译验证 → 确保所有页面视觉一致
+
+**命名规范**：
+- 页面级：`Page*`（如 `PageTitleTextBlock`）
+- 卡片级：`Card*`（如 `CardContentTextBlock`, `CardActionButton`）
+- 分组级：`Group*`（如 `GroupHeaderTextBlock`）
+- 筛选级：`Filter*`（如 `FilterChipButton`）
+- 按钮：描述用途（如 `DeleteButton`, `SecondaryButton`）
+
+---
+
 ## UI 一致性检查清单
 
 在 Verify 阶段，使用此清单检查 UI 一致性：
 
+- [ ] 页面标题使用 `PageTitleTextBlock` 样式
+- [ ] 页面说明使用 `PageDescriptionTextBlock` 样式
+- [ ] 卡片容器使用 `CardBorder` 样式
+- [ ] 卡片内文本使用 `CardContentTextBlock` / `CardTagTextBlock` / `CardDateTextBlock`
+- [ ] 卡片内按钮使用 `CardActionButton` / `CardDeleteButton`
+- [ ] 筛选按钮使用 `FilterChipButton` 为基础样式
 - [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
 - [ ] 输入框聚焦状态为橙色边框
-- [ ] 卡片使用 CardBorder 样式
-- [ ] 文本使用对应字体大小资源
-- [ ] 间距符合标准间距系统
-- [ ] 圆角符合圆角系统
+- [ ] **无内联 FontSize/Padding/Color**：所有属性引用共享样式或资源键
 - [ ] 整体风格与已有页面一致

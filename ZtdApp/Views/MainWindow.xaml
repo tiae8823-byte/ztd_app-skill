@@ -51,10 +51,10 @@
                         <!-- 想法收集页面 -->
                         <DataTemplate DataType="{x:Type viewModels:IdeaViewModel}">
                             <StackPanel>
-                                <TextBlock Text="{Binding ElementName=MainWindow, Path=DataContext.CurrentTitle}"
-                                           Style="{StaticResource HeadingTextBlock}"/>
+                                <TextBlock Text="想法收集"
+                                           Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="快速记录你的想法"
-                                           Style="{StaticResource SubheadingTextBlock}"/>
+                                           Style="{StaticResource PageDescriptionTextBlock}"/>
                                 <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
                                          KeyDown="OnKeyDown"
                                          Margin="0,0,0,10"/>
@@ -81,13 +81,11 @@
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                                             <TextBlock Text="{Binding Content}"
-                                                                       TextWrapping="Wrap"
-                                                                       FontSize="{StaticResource FontSizeMedium}"
+                                                                       Style="{StaticResource CardContentTextBlock}"
                                                                        Margin="0,0,0,4"/>
                                                             <TextBlock Text="{Binding CreatedAtDisplay}"
-                                                                       Foreground="{StaticResource BrandMidGray}"
-                                                                       Opacity="0.8"
-                                                                       FontSize="{StaticResource FontSizeSmall}"/>
+                                                                       Style="{StaticResource CardDateTextBlock}"
+                                                                       Opacity="0.8"/>
                                                         </StackPanel>
                                                         <Button Grid.Column="1"
                                                                 Content="删除"
@@ -216,15 +214,9 @@
                                 <StackPanel>
                                     <!-- 标题（居中） -->
                                     <TextBlock Text="待办列表"
-                                               FontSize="22"
-                                               FontWeight="Bold"
-                                               HorizontalAlignment="Center"
-                                               Margin="0,0,0,4"/>
+                                               Style="{StaticResource PageTitleTextBlock}"/>
                                     <TextBlock Text="在想法中点击「待办」将想法转为任务"
-                                               FontSize="13"
-                                               Foreground="{StaticResource BrandMidGray}"
-                                               HorizontalAlignment="Center"
-                                               Margin="0,0,0,16"/>
+                                               Style="{StaticResource PageDescriptionTextBlock}"/>
 
                                     <!-- 筛选栏（两排居中） -->
                                     <StackPanel HorizontalAlignment="Center" Margin="0,0,0,20">
@@ -233,11 +225,9 @@
                                             <Button Content="&lt;30分钟"
                                                     Command="{Binding ToggleTimeFilterCommand}"
                                                     CommandParameter="&lt;30分钟"
-                                                    Padding="10,6" Margin="0,0,6,0" FontSize="13">
+                                                    Margin="0,0,6,0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedTimeFilter}" Value="&lt;30分钟">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -250,11 +240,9 @@
                                             <Button Content="&gt;30分钟"
                                                     Command="{Binding ToggleTimeFilterCommand}"
                                                     CommandParameter="&gt;30分钟"
-                                                    Padding="10,6" Margin="0" FontSize="13">
+                                                    Margin="0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedTimeFilter}" Value="&gt;30分钟">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -270,11 +258,9 @@
                                             <Button Content="工作"
                                                     Command="{Binding ToggleCategoryFilterCommand}"
                                                     CommandParameter="工作"
-                                                    Padding="10,6" Margin="0,0,6,0" FontSize="13">
+                                                    Margin="0,0,6,0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedCategoryFilter}" Value="工作">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -287,11 +273,9 @@
                                             <Button Content="个人"
                                                     Command="{Binding ToggleCategoryFilterCommand}"
                                                     CommandParameter="个人"
-                                                    Padding="10,6" Margin="0,0,6,0" FontSize="13">
+                                                    Margin="0,0,6,0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedCategoryFilter}" Value="个人">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -304,11 +288,9 @@
                                             <Button Content="学习"
                                                     Command="{Binding ToggleCategoryFilterCommand}"
                                                     CommandParameter="学习"
-                                                    Padding="10,6" Margin="0,0,6,0" FontSize="13">
+                                                    Margin="0,0,6,0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedCategoryFilter}" Value="学习">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -321,11 +303,9 @@
                                             <Button Content="运动"
                                                     Command="{Binding ToggleCategoryFilterCommand}"
                                                     CommandParameter="运动"
-                                                    Padding="10,6" Margin="0" FontSize="13">
+                                                    Margin="0">
                                                 <Button.Style>
-                                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding SelectedCategoryFilter}" Value="运动">
                                                                 <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
@@ -340,9 +320,7 @@
 
                                     <!-- <30分钟 分组 -->
                                     <StackPanel Visibility="{Binding HasShortTimeTasks, Converter={StaticResource BoolToVisibilityConverter}}">
-                                        <TextBlock FontSize="15" FontWeight="SemiBold"
-                                                   Foreground="{StaticResource BrandMidGray}"
-                                                   Margin="0,0,0,8">
+                                        <TextBlock Style="{StaticResource GroupHeaderTextBlock}">
                                             <Run Text="&lt;30分钟"/>
                                             <Run Text=" ("/>
                                             <Run Text="{Binding ShortTimeCount, Mode=OneWay}"/>
@@ -366,29 +344,18 @@
                                                                       Margin="0,0,10,0"/>
                                                             <TextBlock Grid.Column="1"
                                                                        Text="{Binding Content}"
-                                                                       TextWrapping="Wrap"
-                                                                       FontSize="15"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardContentTextBlock}"/>
                                                             <TextBlock Grid.Column="2"
                                                                        Text="{Binding CategoryTagDisplay}"
-                                                                       FontSize="12"
-                                                                       Foreground="{StaticResource BrandBlue}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardTagTextBlock}"/>
                                                             <TextBlock Grid.Column="3"
                                                                        Text="{Binding CreatedAtDisplay}"
-                                                                       FontSize="12"
-                                                                       Foreground="{StaticResource BrandMidGray}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardDateTextBlock}"/>
                                                             <UniformGrid Grid.Column="4" Columns="1" Width="96">
                                                                 <Button Content="删除"
                                                                         Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource DeleteButton}"
-                                                                        Padding="6,6"
-                                                                        FontSize="12"/>
+                                                                        Style="{StaticResource CardDeleteButton}"/>
                                                             </UniformGrid>
                                                         </Grid>
                                                     </Border>
@@ -400,9 +367,7 @@
                                     <!-- >30分钟 分组 -->
                                     <StackPanel Visibility="{Binding HasLongTimeTasks, Converter={StaticResource BoolToVisibilityConverter}}"
                                                 Margin="0,16,0,0">
-                                        <TextBlock FontSize="15" FontWeight="SemiBold"
-                                                   Foreground="{StaticResource BrandMidGray}"
-                                                   Margin="0,0,0,8">
+                                        <TextBlock Style="{StaticResource GroupHeaderTextBlock}">
                                             <Run Text="&gt;30分钟"/>
                                             <Run Text=" ("/>
                                             <Run Text="{Binding LongTimeCount, Mode=OneWay}"/>
@@ -421,37 +386,24 @@
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Grid.Column="0"
                                                                        Text="{Binding Content}"
-                                                                       TextWrapping="Wrap"
-                                                                       FontSize="15"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardContentTextBlock}"/>
                                                             <TextBlock Grid.Column="1"
                                                                        Text="{Binding CategoryTagDisplay}"
-                                                                       FontSize="12"
-                                                                       Foreground="{StaticResource BrandBlue}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardTagTextBlock}"/>
                                                             <TextBlock Grid.Column="2"
                                                                        Text="{Binding CreatedAtDisplay}"
-                                                                       FontSize="12"
-                                                                       Foreground="{StaticResource BrandMidGray}"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Style="{StaticResource CardDateTextBlock}"/>
                                                             <UniformGrid Grid.Column="3"
                                                                          Columns="2" Width="200">
                                                                 <Button Content="加入今日待办"
                                                                         Command="{Binding DataContext.MoveToTodayCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource SecondaryButton}"
-                                                                        Padding="6,6"
-                                                                        FontSize="12"
+                                                                        Style="{StaticResource CardActionButton}"
                                                                         Margin="0,0,4,0"/>
                                                                 <Button Content="删除"
                                                                         Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource DeleteButton}"
-                                                                        Padding="6,6"
-                                                                        FontSize="12"
+                                                                        Style="{StaticResource CardDeleteButton}"
                                                                         Margin="4,0,0,0"/>
                                                             </UniformGrid>
                                                         </Grid>
@@ -463,7 +415,7 @@
 
                                     <!-- 空状态提示 -->
                                     <TextBlock Text="暂无待办任务"
-                                               FontSize="15"
+                                               FontSize="{StaticResource FontSizeBody}"
                                                Foreground="{StaticResource BrandMidGray}"
                                                HorizontalAlignment="Center"
                                                Margin="0,40,0,0">
@@ -486,9 +438,9 @@
                         <DataTemplate DataType="{x:Type viewModels:TodayViewModel}">
                             <StackPanel>
                                 <TextBlock Text="今日待办"
-                                           Style="{StaticResource HeadingTextBlock}"/>
+                                           Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="今天要做的1-3件事"
-                                           Style="{StaticResource SubheadingTextBlock}"/>
+                                           Style="{StaticResource PageDescriptionTextBlock}"/>
                                 <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
                                          KeyDown="OnKeyDown"
                                          Margin="0,0,0,10"/>
@@ -529,9 +481,9 @@
                         <DataTemplate DataType="{x:Type viewModels:NotesViewModel}">
                             <StackPanel>
                                 <TextBlock Text="笔记库"
-                                           Style="{StaticResource HeadingTextBlock}"/>
+                                           Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="记录你的想法和笔记"
-                                           Style="{StaticResource SubheadingTextBlock}"/>
+                                           Style="{StaticResource PageDescriptionTextBlock}"/>
                                 <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
                                          KeyDown="OnKeyDown"
                                          Margin="0,0,0,10"/>
@@ -572,9 +524,9 @@
                         <DataTemplate DataType="{x:Type viewModels:WeeklyReviewViewModel}">
                             <StackPanel>
                                 <TextBlock Text="每周回顾"
-                                           Style="{StaticResource HeadingTextBlock}"/>
+                                           Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="回顾本周完成的工作"
-                                           Style="{StaticResource SubheadingTextBlock}"/>
+                                           Style="{StaticResource PageDescriptionTextBlock}"/>
                                 <Button Content="刷新数据"
                                         Command="{Binding RefreshDataCommand}"
                                         Height="44"

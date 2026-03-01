@@ -11,11 +11,13 @@
     <SolidColorBrush x:Key="BrandBlue" Color="#6a9bcc"/>
     <SolidColorBrush x:Key="BrandGreen" Color="#788c5d"/>
 
-    <!-- Typography -->
+    <!-- Typography Hierarchy (Apple-inspired) -->
     <sys:Double x:Key="FontSizeSmall">12</sys:Double>
+    <sys:Double x:Key="FontSizeCaption">13</sys:Double>
     <sys:Double x:Key="FontSizeMedium">14</sys:Double>
+    <sys:Double x:Key="FontSizeBody">15</sys:Double>
     <sys:Double x:Key="FontSizeLarge">18</sys:Double>
-    <sys:Double x:Key="FontSizeTitle">24</sys:Double>
+    <sys:Double x:Key="FontSizeTitle">22</sys:Double>
     <sys:Double x:Key="FontSizeHeading">28</sys:Double>
 
     <!-- Window Style -->
@@ -211,6 +213,81 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,8,0"/>
         <Setter Property="UseLayoutRounding" Value="True"/>
+    </Style>
+
+    <!-- Page Title (centered, 22pt, bold) -->
+    <Style x:Key="PageTitleTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <!-- Page Description (centered, 13pt, gray) -->
+    <Style x:Key="PageDescriptionTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}"/>
+        <Setter Property="Foreground" Value="{StaticResource BrandMidGray}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,16"/>
+    </Style>
+
+    <!-- Filter Chip Button (inactive base state: gray bg, 13pt) -->
+    <Style x:Key="FilterChipButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
+        <Setter Property="Foreground" Value="{StaticResource BrandDark}"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#d8d6cc"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Card Action Button (small button inside cards: 6,6 padding, 12pt) -->
+    <Style x:Key="CardActionButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+        <Setter Property="Padding" Value="6,6"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <!-- Card Delete Button (small delete inside cards: 6,6 padding, 12pt, gray) -->
+    <Style x:Key="CardDeleteButton" TargetType="Button" BasedOn="{StaticResource DeleteButton}">
+        <Setter Property="Padding" Value="6,6"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
+    </Style>
+
+    <!-- Group Header (15pt, semibold, gray) -->
+    <Style x:Key="GroupHeaderTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource BrandMidGray}"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- Card Content Text (15pt body text) -->
+    <Style x:Key="CardContentTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+    </Style>
+
+    <!-- Card Tag Text (12pt, blue) -->
+    <Style x:Key="CardTagTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
+        <Setter Property="Foreground" Value="{StaticResource BrandBlue}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+    </Style>
+
+    <!-- Card Date Text (12pt, gray) -->
+    <Style x:Key="CardDateTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
+        <Setter Property="Foreground" Value="{StaticResource BrandMidGray}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
     </Style>
 
     <!-- ComboBox Style with Rounded Corners -->

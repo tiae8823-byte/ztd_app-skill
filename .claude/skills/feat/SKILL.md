@@ -144,14 +144,20 @@ MVP 功能：
 
 ### 3. Design 阶段 - 布局设计
 
-**只做布局**，不选样式。样式在 PRD 阶段已随技术栈一起确定，直接复用。
+**只做布局**，不选样式。样式直接复用 BrandColors.xaml 中的共享样式。
 
 **流程**：
 1. AI 根据 PRD 自动生成布局方案（什么组件放哪里）
-2. 展示布局草图给用户确认
-3. 用户确认后保存进度到 feat-progress.json
+2. **匹配共享样式**：为每个组件指定 BrandColors.xaml 中的命名样式（如 `PageTitleTextBlock`、`CardBorder`、`CardDeleteButton` 等）
+3. 展示布局草图给用户确认
+4. 用户确认后保存进度到 feat-progress.json
 
-**样式规范**：使用 PRD 确定的 UI 方案，详见 [design-guide.md](design-guide.md)
+**样式规范**：使用 BrandColors.xaml 中的共享样式，详见 [design-guide.md](design-guide.md)
+
+**共享样式优先原则**：
+- **必须优先使用已有共享样式**，禁止内联写死 FontSize/Padding/Color
+- 如果现有样式不满足需求，先在 BrandColors.xaml 中新增命名样式，再在 XAML 中引用
+- 如果发现重复出现的 UI 模式（2+ 处），应提升为共享样式
 
 **确认提示**：
 ```markdown
@@ -184,7 +190,8 @@ MVP 功能：
    - 简要告知用户参考了哪些方案
 2. 按需创建文件
 3. 实现功能逻辑
-4. **实现前端 UI（使用 Design 阶段确认的样式）**
+4. **实现前端 UI（引用 BrandColors.xaml 共享样式，不内联写死属性）**
+5. **如有新 UI 模式**：先在 BrandColors.xaml 创建命名样式 → 在 XAML 中引用 → 更新 design-guide.md
 
 > **原则**：官方文档优先 → 网上成熟方案 → 自行实现。先查后写，避免重复造轮子和反复修改。
 
@@ -226,10 +233,14 @@ ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
 **UI 一致性检查**：
 ```markdown
 ✅ UI 一致性检查:
+- [ ] 页面标题使用 PageTitleTextBlock 样式
+- [ ] 页面说明使用 PageDescriptionTextBlock 样式
+- [ ] 卡片容器使用 CardBorder 样式
+- [ ] 卡片内文本使用 CardContentTextBlock / CardTagTextBlock / CardDateTextBlock
+- [ ] 卡片内按钮使用 CardActionButton / CardDeleteButton
+- [ ] 筛选按钮使用 FilterChipButton 为基础样式
 - [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
-- [ ] 输入框聚焦状态为橙色边框
-- [ ] 卡片使用 CardBorder 样式
-- [ ] 文本使用对应字体大小资源
+- [ ] **无内联 FontSize/Padding/Color** — 所有属性引用共享样式或资源键
 - [ ] 整体风格与已有页面一致
 ```
 
@@ -458,8 +469,9 @@ AI: 好，加到 PRD 里：
 ## 注意事项
 
 - **一次只做一个功能**，不要贪多
-- **Design 阶段不可跳过**：必须确认 UI 组件和样式
-- **使用已有的 BrandColors.xaml 样式**，不要自己定义新颜色
+- **Design 阶段不可跳过**：必须确认 UI 组件和共享样式匹配
+- **必须使用 BrandColors.xaml 共享样式**：禁止内联写死 FontSize/Padding/Color，所有 UI 属性通过命名样式或资源键引用
+- **新 UI 模式必须提升为共享样式**：先在 BrandColors.xaml 定义，再在 XAML 中引用，最后更新 design-guide.md
 - 测试要覆盖核心逻辑，不追求完美
 - **每次功能完成后必须编译生成可执行版本**，确保代码可运行
 - **手动测试验证功能正常**，不要跳过
