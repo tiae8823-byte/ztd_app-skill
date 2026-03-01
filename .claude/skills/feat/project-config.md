@@ -54,6 +54,7 @@ Verify 阶段使用此清单：
 - [ ] 筛选按钮使用 `FilterChipButton` 为基础样式
 - [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
 - [ ] **无内联 FontSize/Padding/Color** — 所有属性引用共享样式或资源键
+- [ ] 新增组件的交互状态（hover/pressed/focused/disabled）符合 design-guide.md 状态规则
 - [ ] 整体风格与已有页面一致
 
 ---

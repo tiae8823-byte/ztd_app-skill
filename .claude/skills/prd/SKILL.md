@@ -212,15 +212,14 @@ description: Generate MVP-focused PRD through natural conversation. Use when sta
 
 ### 7. 生成 feat 技能项目配置文件
 
-PRD 确定技术栈后，**自动生成** feat 技能所需的 3 个项目专属配置文件。这些文件让 `/feat` 能直接使用正确的构建命令、样式系统和测试框架。
+PRD 确定技术栈后，**自动生成** feat 技能所需的 2 个项目专属配置文件。这些文件让 `/feat` 能直接使用正确的构建命令和样式系统。
 
 **生成文件**：
 
 | 文件 | 内容 | 数据来源 |
 |------|------|---------|
-| `.claude/skills/feat/project-config.md` | 构建/测试/运行命令、技术栈、样式系统、UI 检查清单 | PRD 技术栈 + 技术架构 |
+| `.claude/skills/feat/project-config.md` | 构建/测试/运行命令、技术栈、样式系统、UI 检查清单、测试约定 | PRD 技术栈 + 技术架构 |
 | `.claude/skills/feat/design-guide.md` | 颜色、字号、间距、组件样式清单 | PRD UI 方案 |
-| `.claude/skills/feat/testing-guide.md` | 测试框架配置、测试策略、测试模式 | PRD 技术栈 |
 
 **project-config.md 模板**：
 ```markdown
@@ -268,22 +267,8 @@ PRD 确定技术栈后，**自动生成** feat 技能所需的 3 个项目专属
 [通用流程，不变]
 ```
 
-**testing-guide.md 模板**：
-```markdown
-# 测试策略
-
-## 测试框架
-[根据技术栈确定]
-
-## 测试模式
-[根据技术栈生成，如内存数据库、mock 策略等]
-
-## 测试分类
-- 单元测试: 核心业务逻辑
-- UI 测试: 界面交互验证
-```
-
 > **注意**：如果 `.claude/skills/feat/` 目录下已存在这些文件（如从模板复制过来的），不覆盖，而是提示用户是否更新。
+> **testing-guide.md 不由 /prd 生成**：测试方法论是通用文件，随技能模块一起复制，不需要按项目定制。项目特定的测试约定（框架、命令）写在 project-config.md 的"测试约定"章节中。
 
 ---
 
@@ -296,7 +281,6 @@ PRD 确定技术栈后，**自动生成** feat 技能所需的 3 个项目专属
 ✅ feat 项目配置已生成:
    - .claude/skills/feat/project-config.md
    - .claude/skills/feat/design-guide.md
-   - .claude/skills/feat/testing-guide.md
 
 📋 内容摘要:
 - 核心价值: [一句话]
