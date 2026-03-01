@@ -187,7 +187,7 @@ SQLite 持久化
 - [x] 想法操作 - 删除/待办/笔记/快速完成 ✅ commit: 20a58f2
 - [x] 想法操作 - 转待办时选择时间标签和分类标签（<30分钟/>30分钟 + 工作/个人/学习/运动）✅ commit: 1927459
 - [x] 待办列表 - 按标签分组，<30分钟批量勾选，>30分钟加入今日待办 ✅ commit: 0c80ad0
-- [ ] UI样式统一 - 提取共享样式到BrandColors.xaml，更新feat技能Design流程（待办列表commit后、下一功能前执行）
+- [x] UI样式统一 - 提取共享样式到BrandColors.xaml，更新feat技能Design流程 ✅ commit: 6bd73c1
 - [ ] 今日待办 - 最多3个任务，可替换，支持番茄钟
 - [ ] 番茄钟 - 自定义时间，>10秒统计，<10秒可撤回，时间到锁屏
 - [ ] 笔记库 - 一句话笔记，可编辑，可分类，记录时间
@@ -392,16 +392,12 @@ SQLite 持久化
 > 详细信息见 `.claude/known-issues.json`
 
 ### 高优先级
-- [ ] [design-002] UI样式全局统一机制缺失
-  - 影响：按钮宽度、间距、字号等布局细节写死在各模块DataTemplate中，修改一处无法传播到其他模块
-  - 解决方案：将反复出现的UI模式提升为BrandColors.xaml命名样式（如CardActionButton、PageTitle、FilterChip等），各模块引用共享样式
-  - 同时需要：更新feat技能的design-guide.md，将"提升共享样式"纳入Design阶段流程；合并解决 [design-001] 字体层级规范
-  - 计划：待办列表commit后、下一功能前执行
+- [x] [design-002] UI样式全局统一机制缺失 ✅ commit: 6bd73c1
+  - 已解决：提取 8 个共享样式到 BrandColors.xaml，更新 feat 技能流程
 
 ### 中优先级
-- [ ] [design-001] 字体层级规范缺失 - design-guide.md 需增加 Typography Hierarchy
-  - 影响：每次功能设计时需重新讨论字体大小，无统一参考
-  - 计划：待办列表验证新字号效果后，全局推广并更新 design-guide.md
+- [x] [design-001] 字体层级规范缺失 ✅ commit: 6bd73c1（与 design-002 合并解决）
+  - 已解决：Apple 风格 Typography 层级（28/22/18/15/14/13/12），已更新 design-guide.md
 
 ### 低优先级
 - [ ] [ui-002] 今日待办/笔记库/每周回顾页面有多余的输入框
