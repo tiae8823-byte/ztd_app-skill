@@ -89,3 +89,69 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - 使用 Content 属性替代嵌套 TextBlock
 - 确保所有按钮高度一致对齐
 - 更新 known-issues.json 标记问题已解决
+20260228-005110 - docs: 增强 feat 技能 - 添加问题排查与解决方案搜索策略
+
+- 添加何时应该搜索的判断标准
+- 提供详细的搜索策略（GitHub/官方文档/Stack Overflow/技术博客）
+- 添加搜索关键词技巧和处理流程
+- 用本次 UI 问题作为完整示例
+- 强调避免过度依赖搜索，平衡自主解决和搜索
+20260228-010404 - refactor: 拆分 feat 技能 - 优化结构和性能
+
+- 主文件从 958 行精简到 461 行（减少 52%）
+- 拆分为 4 个参考文件：design-guide, testing-guide, troubleshooting-guide, examples
+- 在主文件中添加明确的引用提示
+- 保留原版本为 feat-original 技能作为备份
+- 预计 Token 消耗减少 62%
+
+参考文件按需读取，提高执行效率
+20260301-163741 - feat: 想法操作 - 转待办时选择时间和分类标签
+
+点击想法「待办」按钮后，展开内联标签选择面板：
+- 时间标签必选（<30分钟 / >30分钟），互斥单选
+- 分类标签可选（工作/个人/学习/运动），圆角下拉框
+- 未选时间标签时确认无效，防止创建无标签任务
+- 取消按钮回到操作按钮行
+
+同步更新：
+- BrandColors.xaml 新增 ComboBox 圆角样式
+- feat SKILL.md 补充 known-issues.json 维护规则
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+20260301-172603 - feat: 待办列表 - 按标签分组、筛选、批量完成、加入今日待办
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260301-173847 - refactor: UI样式统一 - 提取共享样式到BrandColors.xaml
+
+- 新增 Typography 层级: FontSizeBody(15), FontSizeCaption(13), FontSizeTitle 24→22
+- 新增 8 个共享样式: PageTitleTextBlock, PageDescriptionTextBlock, FilterChipButton,
+  CardActionButton, CardDeleteButton, GroupHeaderTextBlock, CardContentTextBlock,
+  CardTagTextBlock, CardDateTextBlock
+- 所有 5 个页面标题统一为 PageTitleTextBlock 居中样式
+- 待办列表全部内联样式替换为共享样式引用
+- 更新 feat 技能: Design/Build/Verify 阶段纳入共享样式流程
+- 更新 design-guide.md: 完整样式清单 + 提升共享样式流程
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260301-173914 - docs: 标记 design-001/design-002 已解决
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260301-175455 - refactor: 技能模块化 - 分离通用流程与项目配置
+
+- feat skill.md: 去除所有 WPF 专属内容，改为引用 project-config.md
+- 新增 project-config.md: 当前项目的构建命令、样式系统、测试约定
+- prd skill: 增加第7步"生成 feat 项目配置文件"，PRD 完成后自动生成
+  project-config.md + design-guide.md + testing-guide.md
+- 新项目流程: 复制 skills → /prd → /feat，零手动配置
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260301-184925 - refactor: 拆分 feat 技能 - 优化结构和性能
+
+- 修复 testing-guide.md 文件联动不一致：统一为通用文件（不由 /prd 生成）
+- 重写 testing-guide.md 为通用测试方法论（移除 WPF 特定内容）
+- prd/SKILL.md 移除 testing-guide.md 生成，改为生成 2 个项目专属文件
+- design-guide.md 新增组件交互状态、动画规范（标准先行）、待补充区域
+- project-config.md UI 检查清单新增组件状态检查项
+- workflow-overview.md 新增常见问题 FAQ（跨项目使用、UI优化、/prd vs /feat）
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
