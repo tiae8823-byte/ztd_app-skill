@@ -30,6 +30,21 @@ UI设计(自动) → 写代码 → 写测试 → 编译+手动测试 → Commit
 
 > **说明**: Design 阶段由 AI 自动判断组件和样式，用户只需确认 Y/N
 
+## 文件结构
+
+本技能采用**通用流程 + 项目配置**分离架构：
+
+| 文件 | 性质 | 换项目时 | 说明 |
+|------|------|---------|------|
+| `skill.md` | 通用 | 不改 | 工作流程（本文件） |
+| `troubleshooting-guide.md` | 通用 | 不改 | 问题排查方法论 |
+| `examples.md` | 通用 | 不改 | 对话示例 |
+| **`project-config.md`** | **项目专属** | **由 /prd 生成** | 构建命令、样式系统、技术栈 |
+| **`design-guide.md`** | **项目专属** | **由 /prd 生成** | 设计规范和样式清单 |
+| `testing-guide.md` | 通用 | 不改 | 测试方法论和策略 |
+
+> **新项目使用**：复制 `.claude/skills/` → 运行 `/prd` → 自动生成项目专属文件 → 运行 `/feat`
+
 ## 可用 MCP 工具
 
 | MCP 工具 | 用途 |
@@ -38,23 +53,16 @@ UI设计(自动) → 写代码 → 写测试 → 编译+手动测试 → Commit
 | `mcp__github__search_code` | 搜索参考实现 |
 | `mcp__sequential-thinking__sequentialthinking` | 复杂功能设计 |
 
-## 参考文件索引
-
-本技能包含以下参考文件，在需要时读取：
-
-| 文件 | 内容 | 何时读取 |
-|------|------|---------|
-| [design-guide.md](design-guide.md) | 详细的设计规范和样式说明 | Design 阶段需要参考样式时 |
-| [testing-guide.md](testing-guide.md) | 详细的测试策略和方法 | Test 和 Verify 阶段 |
-| [troubleshooting-guide.md](troubleshooting-guide.md) | 问题排查和搜索策略 | 遇到问题需要排查时 |
-| [examples.md](examples.md) | 对话示例 | 需要了解使用方式时 |
-
 ---
 
 ## 与 PRD 的联动
 
 ```
 /feat 执行
+  │
+  ├─ 检查 project-config.md 是否存在
+  │   │
+  │   └─ 不存在 → "未找到项目配置，请先运行 /prd 生成"
   │
   ├─ 检查 feat-progress.json 是否存在且有未完成功能
   │   │
@@ -114,12 +122,13 @@ UI设计(自动) → 写代码 → 写测试 → 编译+手动测试 → Commit
 
 ---
 
-### 1. 读取 PRD
+### 1. 读取 PRD 和项目配置
 
 ```
-读取 docs/PRD.md
+读取 docs/PRD.md + project-config.md
 
-失败 → "未找到 PRD.md，请先运行 /prd 创建需求文档"
+PRD 不存在 → "未找到 PRD.md，请先运行 /prd 创建需求文档"
+project-config.md 不存在 → "未找到项目配置，请先运行 /prd 生成"
 
 成功 → 显示功能清单
 ```
@@ -144,19 +153,18 @@ MVP 功能：
 
 ### 3. Design 阶段 - 布局设计
 
-**只做布局**，不选样式。样式直接复用 BrandColors.xaml 中的共享样式。
+**只做布局**，不选样式。样式直接复用项目样式系统中的共享样式。
 
 **流程**：
-1. AI 根据 PRD 自动生成布局方案（什么组件放哪里）
-2. **匹配共享样式**：为每个组件指定 BrandColors.xaml 中的命名样式（如 `PageTitleTextBlock`、`CardBorder`、`CardDeleteButton` 等）
-3. 展示布局草图给用户确认
-4. 用户确认后保存进度到 feat-progress.json
-
-**样式规范**：使用 BrandColors.xaml 中的共享样式，详见 [design-guide.md](design-guide.md)
+1. 读取 [project-config.md](project-config.md) 和 [design-guide.md](design-guide.md) 了解样式系统
+2. AI 根据 PRD 自动生成布局方案（什么组件放哪里）
+3. **匹配共享样式**：为每个组件指定设计系统中的命名样式
+4. 展示布局草图给用户确认
+5. 用户确认后保存进度到 feat-progress.json
 
 **共享样式优先原则**：
-- **必须优先使用已有共享样式**，禁止内联写死 FontSize/Padding/Color
-- 如果现有样式不满足需求，先在 BrandColors.xaml 中新增命名样式，再在 XAML 中引用
+- **必须优先使用已有共享样式**，禁止内联写死样式属性
+- 如果现有样式不满足需求，先在样式文件中新增命名样式，再引用
 - 如果发现重复出现的 UI 模式（2+ 处），应提升为共享样式
 
 **确认提示**：
@@ -164,7 +172,7 @@ MVP 功能：
 🎨 布局设计: [功能名称]
 
 布局: [垂直/水平/网格]
-组件: Button x2, TextBox x1, CardBorder
+组件: Button x2, TextBox x1, Card
 
 ┌─────────────────────────┐
 │  [标题]                 │
@@ -190,8 +198,8 @@ MVP 功能：
    - 简要告知用户参考了哪些方案
 2. 按需创建文件
 3. 实现功能逻辑
-4. **实现前端 UI（引用 BrandColors.xaml 共享样式，不内联写死属性）**
-5. **如有新 UI 模式**：先在 BrandColors.xaml 创建命名样式 → 在 XAML 中引用 → 更新 design-guide.md
+4. **实现前端 UI（引用共享样式，不内联写死属性）**
+5. **如有新 UI 模式**：先在样式文件中创建命名样式 → 在代码中引用 → 更新 design-guide.md
 
 > **原则**：官方文档优先 → 网上成熟方案 → 自行实现。先查后写，避免重复造轮子和反复修改。
 
@@ -215,34 +223,13 @@ MVP 功能：
 
 ### 6. Verify 阶段 - 编译并测试
 
-**流程**：
-```bash
-# 编译生成可执行版本
-dotnet build --configuration Release
+**流程**：执行 [project-config.md](project-config.md) 中定义的命令：
+1. 执行**构建命令**
+2. 执行**测试命令**
+3. 执行**UI 测试命令**（如有）
+4. 执行**启动命令**，进行手动测试
 
-# 运行单元测试
-dotnet test
-
-# 运行 UI 自动化测试
-dotnet test --filter "FullyQualifiedName~UITests"
-
-# 启动程序进行手动测试
-ZtdApp\bin\Release\net8.0-windows\ZtdApp.exe
-```
-
-**UI 一致性检查**：
-```markdown
-✅ UI 一致性检查:
-- [ ] 页面标题使用 PageTitleTextBlock 样式
-- [ ] 页面说明使用 PageDescriptionTextBlock 样式
-- [ ] 卡片容器使用 CardBorder 样式
-- [ ] 卡片内文本使用 CardContentTextBlock / CardTagTextBlock / CardDateTextBlock
-- [ ] 卡片内按钮使用 CardActionButton / CardDeleteButton
-- [ ] 筛选按钮使用 FilterChipButton 为基础样式
-- [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
-- [ ] **无内联 FontSize/Padding/Color** — 所有属性引用共享样式或资源键
-- [ ] 整体风格与已有页面一致
-```
+**UI 一致性检查**：使用 [project-config.md](project-config.md) 中的 UI 一致性检查清单
 
 **详细测试策略**：见 [testing-guide.md](testing-guide.md)
 
@@ -347,9 +334,6 @@ rm .claude/feat-progress.json
 
 版本信息已记录到: .claude/version-history.log
 
-UI 风格: 使用 Anthropic 品牌样式
-设计组件: Button, TextBox, CardBorder
-
 建议运行 /compact 清理上下文，为下一个功能准备干净的环境
 
 继续下一个功能？
@@ -397,11 +381,11 @@ AI: 好，加到 PRD 里：
 {
   "currentFeature": {
     "name": "功能名称",
-    "status": "design",              // design | build | test | verify | commit | completed
+    "status": "design",
     "createdAt": "2026-02-27T14:30:00Z",
     "description": "开始实现功能",
     "designLayout": "垂直布局",
-    "designComponents": ["Button", "TextBox", "CardBorder"],
+    "designComponents": ["Button", "TextBox", "Card"],
     "designSketch": "[简单的ASCII布局图]",
     "filesCreated": [],
     "testsCreated": [],
@@ -442,10 +426,10 @@ AI: 好，加到 PRD 里：
 
 ### 进度文件管理规则
 
-- ✅ 功能完成 commit 后**必须删除**进度文件
-- ✅ 进度文件**不提交**到 git（在 .gitignore 中）
-- ✅ 用户选择"重新开始"时**立即清除**进度
-- ✅ 每个阶段完成后**立即更新**进度文件
+- 功能完成 commit 后**必须删除**进度文件
+- 进度文件**不提交**到 git（在 .gitignore 中）
+- 用户选择"重新开始"时**立即清除**进度
+- 每个阶段完成后**立即更新**进度文件
 
 ---
 
@@ -470,10 +454,10 @@ AI: 好，加到 PRD 里：
 
 - **一次只做一个功能**，不要贪多
 - **Design 阶段不可跳过**：必须确认 UI 组件和共享样式匹配
-- **必须使用 BrandColors.xaml 共享样式**：禁止内联写死 FontSize/Padding/Color，所有 UI 属性通过命名样式或资源键引用
-- **新 UI 模式必须提升为共享样式**：先在 BrandColors.xaml 定义，再在 XAML 中引用，最后更新 design-guide.md
+- **必须使用共享样式**：禁止内联写死样式属性，所有 UI 属性通过命名样式或资源引用
+- **新 UI 模式必须提升为共享样式**：先在样式文件中定义，再引用，最后更新 design-guide.md
 - 测试要覆盖核心逻辑，不追求完美
-- **每次功能完成后必须编译生成可执行版本**，确保代码可运行
+- **每次功能完成后必须编译验证**，确保代码可运行
 - **手动测试验证功能正常**，不要跳过
 - **UI 一致性检查**：确保新功能与已有页面风格一致
 - **每个阶段完成后立即更新进度文件**，支持中断恢复
