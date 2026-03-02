@@ -95,4 +95,49 @@ public class TaskRepository
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();
     }
+
+    /// <summary>
+    /// 获取本周完成的任务
+    /// </summary>
+    public List<TodoTask> GetThisWeekCompleted()
+    {
+        using var connection = _dbService.CreateConnection();
+        connection.Open();
+
+        // 计算本周开始时间（周一 00:00:00）
+        var now = DateTime.Now;
+        var weekStart = now.Date.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+        if (now.DayOfWeek == DayOfWeek.Sunday)
+        {
+            weekStart = now.Date.AddDays(-6);
+        }
+        var weekStartTimestamp = ((DateTimeOffset)weekStart).ToUnixTimeMilliseconds();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT Id, Content, Status, TimeTag, CategoryTag, CreatedAt, CompletedAt
+            FROM Tasks
+            WHERE Status = @status AND CompletedAt >= @weekStart
+            ORDER BY CompletedAt DESC";
+        command.Parameters.AddWithValue("@status", (int)TodoTaskStatus.Done);
+        command.Parameters.AddWithValue("@weekStart", weekStartTimestamp);
+
+        var tasks = new List<TodoTask>();
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            tasks.Add(new TodoTask
+            {
+                Id = reader.GetString(0),
+                Content = reader.GetString(1),
+                Status = (TodoTaskStatus)reader.GetInt32(2),
+                TimeTag = reader.IsDBNull(3) ? null : reader.GetString(3),
+                CategoryTag = reader.IsDBNull(4) ? null : reader.GetString(4),
+                CreatedAt = reader.GetInt64(5),
+                CompletedAt = reader.IsDBNull(6) ? null : reader.GetInt64(6)
+            });
+        }
+
+        return tasks;
+    }
 }

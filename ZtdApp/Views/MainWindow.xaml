@@ -918,33 +918,101 @@
                                         Width="120"
                                         HorizontalAlignment="Left"
                                         Margin="0,0,0,20"/>
-                                <ItemsControl>
-                                    <ItemsControl.Items>
-                                        <!-- 统计卡片 -->
-                                        <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
-                                            <StackPanel>
-                                                <TextBlock Text="本周完成"
-                                                           FontSize="{StaticResource FontSizeLarge}"
-                                                           FontWeight="Bold"
-                                                           Margin="0,0,0,5"/>
-                                                <TextBlock Text="{Binding CompletedTasksCount, StringFormat={}{0} 个想法}"
-                                                           FontSize="{StaticResource FontSizeTitle}"
-                                                           Foreground="{StaticResource BrandOrange}"/>
-                                            </StackPanel>
-                                        </Border>
-                                        <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
-                                            <StackPanel>
-                                                <TextBlock Text="番茄钟统计"
-                                                           FontSize="{StaticResource FontSizeLarge}"
-                                                           FontWeight="Bold"
-                                                           Margin="0,0,0,5"/>
-                                                <TextBlock Text="{Binding TotalPomodoroTime}"
-                                                           FontSize="{StaticResource FontSizeTitle}"
-                                                           Foreground="{StaticResource BrandOrange}"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </ItemsControl.Items>
-                                </ItemsControl>
+
+                                <!-- 本周完成任务卡片 -->
+                                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="本周完成"
+                                                   FontSize="{StaticResource FontSizeLarge}"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,5"/>
+                                        <TextBlock Text="{Binding CompletedTasksCount, StringFormat={}{0} 个任务}"
+                                                   FontSize="{StaticResource FontSizeTitle}"
+                                                   Foreground="{StaticResource BrandOrange}"
+                                                   Margin="0,0,0,10"/>
+
+                                        <!-- 展开/收起按钮 -->
+                                        <Button Command="{Binding ToggleTaskListCommand}"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Width="100"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,10">
+                                            <Button.Content>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="展开列表"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsTaskListExpanded}" Value="True">
+                                                                    <Setter Property="Text" Value="收起列表"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Button.Content>
+                                        </Button>
+
+                                        <!-- 任务列表 -->
+                                        <ItemsControl ItemsSource="{Binding CompletedTasks}"
+                                                      Visibility="{Binding IsTaskListExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="{StaticResource BrandLightGray}"
+                                                            BorderThickness="0,1,0,0"
+                                                            Padding="0,8,0,0"
+                                                            Margin="0,0,0,8">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0"
+                                                                       Text="{Binding Content}"
+                                                                       Style="{StaticResource CardContentTextBlock}"/>
+                                                            <TextBlock Grid.Column="1"
+                                                                       Text="{Binding CompletedAtDisplay}"
+                                                                       Style="{StaticResource CardDateTextBlock}"
+                                                                       Margin="0,0,8,0"/>
+                                                            <Button Grid.Column="2"
+                                                                    Content="删除"
+                                                                    Command="{Binding DataContext.DeleteCompletedTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding Id}"
+                                                                    Style="{StaticResource CardDeleteButton}"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 番茄钟统计卡片 -->
+                                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="番茄钟统计"
+                                                   FontSize="{StaticResource FontSizeLarge}"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,5"/>
+                                        <TextBlock Text="{Binding TotalPomodoroTime}"
+                                                   FontSize="{StaticResource FontSizeTitle}"
+                                                   Foreground="{StaticResource BrandOrange}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 本周笔记卡片 -->
+                                <Border Style="{StaticResource CardBorder}" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="本周笔记"
+                                                   FontSize="{StaticResource FontSizeLarge}"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,5"/>
+                                        <TextBlock Text="{Binding NoteCount, StringFormat={}{0} 条}"
+                                                   FontSize="{StaticResource FontSizeTitle}"
+                                                   Foreground="{StaticResource BrandOrange}"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </DataTemplate>
                     </ContentControl.Resources>

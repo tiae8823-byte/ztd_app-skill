@@ -37,7 +37,7 @@ public class NavigationTests : IDisposable
         var todoViewModel = new TodoViewModel(taskManager);
         var todayViewModel = new TodayViewModel(taskManager, _tomatoService);
         var notesViewModel = new NotesViewModel(noteManager);
-        var weeklyReviewViewModel = new WeeklyReviewViewModel(taskManager);
+        var weeklyReviewViewModel = new WeeklyReviewViewModel(taskManager, _tomatoService, noteManager);
 
         _viewModel = new MainWindowViewModel(
             ideaViewModel,
@@ -197,6 +197,19 @@ public class SharedMemoryDatabase : DatabaseService, IDisposable
                 UpdatedAt INTEGER NOT NULL
             )";
         noteCommand.ExecuteNonQuery();
+
+        // 创建 Tomatoes 表
+        var tomatoCommand = _maintainConnection.CreateCommand();
+        tomatoCommand.CommandText = @"
+            CREATE TABLE IF NOT EXISTS Tomatoes (
+                Id TEXT PRIMARY KEY,
+                TaskId TEXT,
+                Duration INTEGER NOT NULL,
+                TargetDuration INTEGER NOT NULL,
+                StartTime INTEGER NOT NULL,
+                CompletedAt INTEGER
+            )";
+        tomatoCommand.ExecuteNonQuery();
     }
 
     public void Dispose()
