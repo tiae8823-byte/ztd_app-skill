@@ -38,4 +38,9 @@ public class NoteManager
     {
         _repository.Delete(id);
     }
+
+    public int GetThisWeekCount()
+    {
+        return _repository.GetThisWeekCount();
+    }
 }

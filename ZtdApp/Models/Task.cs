@@ -42,6 +42,7 @@ public class TodoTask : INotifyPropertyChanged
 
     // WPF 数据绑定显示属性
     public string CreatedAtDisplay => FormatTime(CreatedAt);
+    public string CompletedAtDisplay => CompletedAt.HasValue ? FormatTime(CompletedAt.Value) : "";
     public string CategoryTagDisplay => CategoryTag ?? "";
 
     public event PropertyChangedEventHandler? PropertyChanged;

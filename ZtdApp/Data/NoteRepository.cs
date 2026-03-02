@@ -82,4 +82,28 @@ public class NoteRepository
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();
     }
+
+    /// <summary>
+    /// 获取本周笔记数量
+    /// </summary>
+    public int GetThisWeekCount()
+    {
+        using var connection = _dbService.CreateConnection();
+        connection.Open();
+
+        // 计算本周开始时间（周一 00:00:00）
+        var now = DateTime.Now;
+        var weekStart = now.Date.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+        if (now.DayOfWeek == DayOfWeek.Sunday)
+        {
+            weekStart = now.Date.AddDays(-6);
+        }
+        var weekStartTimestamp = ((DateTimeOffset)weekStart).ToUnixTimeMilliseconds();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM Notes WHERE CreatedAt >= @weekStart";
+        command.Parameters.AddWithValue("@weekStart", weekStartTimestamp);
+
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
 }

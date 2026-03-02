@@ -44,4 +44,9 @@ public class TaskManager
     {
         _repository.Complete(id);
     }
+
+    public List<TodoTask> GetThisWeekCompleted()
+    {
+        return _repository.GetThisWeekCompleted();
+    }
 }
