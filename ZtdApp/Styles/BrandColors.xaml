@@ -27,7 +27,7 @@
         <Setter Property="FontFamily" Value="Segoe UI, Arial"/>
     </Style>
 
-    <!-- Button Style -->
+    <!-- Button Style with Animation -->
     <Style TargetType="Button">
         <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
         <Setter Property="Foreground" Value="{StaticResource BrandLight}"/>
@@ -40,21 +40,93 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
+                    <Border x:Name="ButtonBorder"
+                            Background="{TemplateBinding Background}"
                             CornerRadius="6"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1"/>
+                        </Border.RenderTransform>
                         <ContentPresenter HorizontalAlignment="Center"
                                         VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <!-- Hover 动画 -->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#e08869"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="ButtonBorder"
+                                                       Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                       To="#e08869"
+                                                       Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleX"
+                                                        To="1.02"
+                                                        Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleY"
+                                                        To="1.02"
+                                                        Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="ButtonBorder"
+                                                       Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                       Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleX"
+                                                        To="1"
+                                                        Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleY"
+                                                        To="1"
+                                                        Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
+                        <!-- Pressed 动画 -->
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="#c46a4d"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="ButtonBorder"
+                                                       Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                       To="#c46a4d"
+                                                       Duration="0:0:0.05"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleX"
+                                                        To="0.98"
+                                                        Duration="0:0:0.05"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleY"
+                                                        To="0.98"
+                                                        Duration="0:0:0.05"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleX"
+                                                        To="1.02"
+                                                        Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="ButtonScale"
+                                                        Storyboard.TargetProperty="ScaleY"
+                                                        To="1.02"
+                                                        Duration="0:0:0.1"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource BrandLightGray}"/>
+                            <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource BrandLightGray}"/>
                             <Setter Property="Foreground" Value="{StaticResource BrandMidGray}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
