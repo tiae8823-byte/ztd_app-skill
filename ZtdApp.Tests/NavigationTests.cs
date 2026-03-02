@@ -14,6 +14,7 @@ namespace ZtdApp.Tests;
 public class NavigationTests : IDisposable
 {
     private readonly SharedMemoryDatabase _db;
+    private readonly TomatoService _tomatoService;
     private readonly MainWindowViewModel _viewModel;
 
     public NavigationTests()
@@ -25,14 +26,16 @@ public class NavigationTests : IDisposable
         var ideaRepo = new IdeaRepository(_db);
         var taskRepo = new TaskRepository(_db);
         var noteRepo = new NoteRepository(_db);
+        var tomatoRepo = new TomatoRepository(_db);
 
         var ideaManager = new IdeaManager(ideaRepo);
         var taskManager = new TaskManager(taskRepo);
         var noteManager = new NoteManager(noteRepo);
+        _tomatoService = new TomatoService(tomatoRepo);
 
         var ideaViewModel = new IdeaViewModel(ideaManager, taskManager, noteManager);
         var todoViewModel = new TodoViewModel(taskManager);
-        var todayViewModel = new TodayViewModel(taskManager);
+        var todayViewModel = new TodayViewModel(taskManager, _tomatoService);
         var notesViewModel = new NotesViewModel(noteManager);
         var weeklyReviewViewModel = new WeeklyReviewViewModel(taskManager);
 
@@ -46,6 +49,7 @@ public class NavigationTests : IDisposable
 
     public void Dispose()
     {
+        _tomatoService.Dispose();
         _db.Dispose();
     }
 

@@ -24,10 +24,6 @@ public partial class MainWindow : Window
             {
                 ideaVM.AddIdeaCommand.Execute(null);
             }
-            else if (ViewModel.CurrentPage is ViewModels.Pages.TodayViewModel todayVM)
-            {
-                todayVM.AddTaskCommand.Execute(null);
-            }
             else if (ViewModel.CurrentPage is ViewModels.Pages.NotesViewModel notesVM)
             {
                 notesVM.AddNoteCommand.Execute(null);

@@ -26,11 +26,13 @@ public partial class App : Application
         services.AddSingleton<IdeaRepository>();
         services.AddSingleton<TaskRepository>();
         services.AddSingleton<NoteRepository>();
+        services.AddSingleton<TomatoRepository>();
 
         // 服务层
         services.AddSingleton<IdeaManager>();
         services.AddSingleton<TaskManager>();
         services.AddSingleton<NoteManager>();
+        services.AddSingleton<TomatoService>();
 
         // ViewModel 层
         services.AddSingleton<IdeaViewModel>();

@@ -57,6 +57,19 @@ public class DatabaseService
                 UpdatedAt INTEGER NOT NULL
             )";
         noteCommand.ExecuteNonQuery();
+
+        // 创建 Tomatoes 表（番茄钟记录）
+        var tomatoCommand = connection.CreateCommand();
+        tomatoCommand.CommandText = @"
+            CREATE TABLE IF NOT EXISTS Tomatoes (
+                Id TEXT PRIMARY KEY,
+                TaskId TEXT,
+                Duration INTEGER NOT NULL,
+                TargetDuration INTEGER NOT NULL,
+                StartTime INTEGER NOT NULL,
+                CompletedAt INTEGER
+            )";
+        tomatoCommand.ExecuteNonQuery();
     }
 
     public virtual SqliteConnection CreateConnection()

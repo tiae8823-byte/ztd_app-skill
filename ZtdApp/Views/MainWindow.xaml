@@ -439,41 +439,162 @@
                             <StackPanel>
                                 <TextBlock Text="今日待办"
                                            Style="{StaticResource PageTitleTextBlock}"/>
-                                <TextBlock Text="今天要做的1-3件事"
-                                           Style="{StaticResource PageDescriptionTextBlock}"/>
-                                <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
-                                         KeyDown="OnKeyDown"
-                                         Margin="0,0,0,10"/>
-                                <Button Content="添加任务"
-                                        Command="{Binding AddTaskCommand}"
-                                        Height="44"
-                                        Width="120"
-                                        HorizontalAlignment="Left"/>
-                                <ItemsControl ItemsSource="{Binding TodayTasks}" Margin="0,20,0,0">
+                                <TextBlock Style="{StaticResource PageDescriptionTextBlock}">
+                                    <Run Text="今天要做的 1-3 件事"/>
+                                    <Run Text=" ("/>
+                                    <Run Text="{Binding TodayTaskCount, Mode=OneWay}"/>
+                                    <Run Text="/"/>
+                                    <Run Text="{Binding MaxTasks, Mode=OneWay}"/>
+                                    <Run Text=")"/>
+                                </TextBlock>
+
+                                <!-- 任务列表 -->
+                                <ItemsControl ItemsSource="{Binding TodayTasks}" Margin="0,10,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border Style="{StaticResource CardBorder}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0"
-                                                               Text="{Binding Content}"
-                                                               TextWrapping="Wrap"
-                                                               FontSize="{StaticResource FontSizeMedium}"
-                                                               VerticalAlignment="Center"
-                                                               Margin="0,0,10,0"/>
-                                                    <Button Grid.Column="1"
-                                                            Content="删除"
-                                                            Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                            CommandParameter="{Binding Id}"
-                                                            Style="{StaticResource DeleteButton}"/>
-                                                </Grid>
+                                                <StackPanel>
+                                                    <!-- 任务头部：内容 + 番茄钟按钮 -->
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="{Binding Task.Content}"
+                                                                   TextWrapping="Wrap"
+                                                                   FontSize="{StaticResource FontSizeMedium}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="0,0,10,0"/>
+                                                        <!-- 番茄钟按钮（展开/收起） -->
+                                                        <Button Grid.Column="1"
+                                                                Content="{Binding TimerDisplay}"
+                                                                Command="{Binding DataContext.StartTomatoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                CommandParameter="{Binding Task.Id}"
+                                                                FontSize="{StaticResource FontSizeMedium}"
+                                                                FontWeight="Bold"
+                                                                Padding="12,6"
+                                                                MinWidth="70">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+                                                                    <Style.Triggers>
+                                                                        <!-- 计时中状态：橙色 -->
+                                                                        <DataTrigger Binding="{Binding IsTomatoRunning}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
+                                                                        </DataTrigger>
+                                                                        <!-- 暂停状态：灰色 -->
+                                                                        <DataTrigger Binding="{Binding IsTomatoPaused}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource BrandMidGray}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
+                                                    </Grid>
+
+                                                    <!-- 番茄钟控制面板（计时中或暂停时显示） -->
+                                                    <StackPanel Visibility="{Binding IsTomatoRunning, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                Margin="0,12,0,0">
+                                                        <Border BorderBrush="{StaticResource BrandLightGray}"
+                                                                BorderThickness="0,1,0,0"
+                                                                Padding="0,12,0,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <!-- 计时器显示 -->
+                                                                <TextBlock Text="{Binding TimerDisplay}"
+                                                                           FontSize="24"
+                                                                           FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrandOrange}"
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="0,0,16,0"/>
+                                                                <!-- 暂停按钮 -->
+                                                                <Button Content="暂停"
+                                                                        Command="{Binding DataContext.PauseTomatoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Task.Id}"
+                                                                        Style="{StaticResource CardActionButton}"
+                                                                        Margin="0,0,6,0"/>
+                                                                <!-- 放弃按钮 -->
+                                                                <Button Content="放弃"
+                                                                        Command="{Binding DataContext.AbandonTomatoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Task.Id}"
+                                                                        Style="{StaticResource CardDeleteButton}"
+                                                                        Margin="0,0,6,0"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+
+                                                    <!-- 暂停状态面板 -->
+                                                    <StackPanel Visibility="{Binding IsTomatoPaused, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                Margin="0,12,0,0">
+                                                        <Border BorderBrush="{StaticResource BrandLightGray}"
+                                                                BorderThickness="0,1,0,0"
+                                                                Padding="0,12,0,0">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding TimerDisplay}"
+                                                                           FontSize="24"
+                                                                           FontWeight="Bold"
+                                                                           Foreground="{StaticResource BrandMidGray}"
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="0,0,16,0"/>
+                                                                <TextBlock Text="已暂停"
+                                                                           FontSize="{StaticResource FontSizeCaption}"
+                                                                           Foreground="{StaticResource BrandMidGray}"
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="0,0,16,0"/>
+                                                                <Button Content="继续"
+                                                                        Command="{Binding DataContext.StartTomatoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Task.Id}"
+                                                                        Style="{StaticResource CardActionButton}"
+                                                                        Margin="0,0,6,0"/>
+                                                                <Button Content="放弃"
+                                                                        Command="{Binding DataContext.AbandonTomatoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Task.Id}"
+                                                                        Style="{StaticResource CardDeleteButton}"
+                                                                        Margin="0,0,6,0"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+
+                                                    <!-- 操作按钮行 -->
+                                                    <Border BorderBrush="{StaticResource BrandLightGray}"
+                                                            BorderThickness="0,1,0,0"
+                                                            Padding="0,10,0,0"
+                                                            Margin="0,10,0,0">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Button Content="完成"
+                                                                    Command="{Binding DataContext.CompleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding Task.Id}"
+                                                                    Style="{StaticResource CardActionButton}"
+                                                                    Margin="0,0,6,0"/>
+                                                            <Button Content="退回待办"
+                                                                    Command="{Binding DataContext.MoveBackToTodoCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding Task.Id}"
+                                                                    Style="{StaticResource CardDeleteButton}"
+                                                                    Margin="0"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </StackPanel>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+
+                                <!-- 空状态提示 -->
+                                <TextBlock Text="从待办列表选择 >30分钟 的任务加入"
+                                           FontSize="{StaticResource FontSizeBody}"
+                                           Foreground="{StaticResource BrandMidGray}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,40,0,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TodayTaskCount}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
 
