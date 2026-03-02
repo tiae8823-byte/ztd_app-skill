@@ -738,45 +738,171 @@
 
                         <!-- 笔记库页面 -->
                         <DataTemplate DataType="{x:Type viewModels:NotesViewModel}">
-                            <StackPanel>
-                                <TextBlock Text="笔记库"
-                                           Style="{StaticResource PageTitleTextBlock}"/>
-                                <TextBlock Text="记录你的想法和笔记"
-                                           Style="{StaticResource PageDescriptionTextBlock}"/>
-                                <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
-                                         KeyDown="OnKeyDown"
-                                         Margin="0,0,0,10"/>
-                                <Button Content="添加笔记"
-                                        Command="{Binding AddNoteCommand}"
-                                        Height="44"
-                                        Width="120"
-                                        HorizontalAlignment="Left"/>
-                                <ItemsControl ItemsSource="{Binding Notes}" Margin="0,20,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Style="{StaticResource CardBorder}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0"
-                                                               Text="{Binding Content}"
-                                                               TextWrapping="Wrap"
-                                                               FontSize="{StaticResource FontSizeMedium}"
-                                                               VerticalAlignment="Center"
-                                                               Margin="0,0,10,0"/>
-                                                    <Button Grid.Column="1"
-                                                            Content="删除"
-                                                            Command="{Binding DataContext.DeleteNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                            CommandParameter="{Binding Id}"
-                                                            Style="{StaticResource DeleteButton}"/>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
+                            <Grid>
+                                <StackPanel>
+                                    <TextBlock Text="笔记库"
+                                               Style="{StaticResource PageTitleTextBlock}"/>
+                                    <TextBlock Text="记录你的想法和笔记"
+                                               Style="{StaticResource PageDescriptionTextBlock}"/>
+
+                                    <!-- 输入区域 -->
+                                    <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
+                                             KeyDown="OnKeyDown"
+                                             Margin="0,0,0,10"/>
+
+                                    <!-- 分类选择 + 添加按钮 -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <ComboBox ItemsSource="{Binding Categories}"
+                                                  SelectedItem="{Binding SelectedCategory}"
+                                                  Width="120"
+                                                  Margin="0,0,10,0">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}"/>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                        <Button Content="添加笔记"
+                                                Command="{Binding AddNoteCommand}"
+                                                Height="44"
+                                                Width="120"/>
+                                    </StackPanel>
+
+                                    <!-- 笔记列表 -->
+                                    <ItemsControl ItemsSource="{Binding Notes}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource CardBorder}" Cursor="Hand">
+                                                    <Grid>
+                                                        <Grid.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick"
+                                                                        Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"/>
+                                                        </Grid.InputBindings>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <!-- 笔记内容 -->
+                                                        <TextBlock Grid.Row="0"
+                                                                   Text="{Binding Content}"
+                                                                   Style="{StaticResource CardContentTextBlock}"
+                                                                   Margin="0,0,0,8"/>
+
+                                                        <!-- 底部：分类标签 + 时间 + 操作按钮 -->
+                                                        <Grid Grid.Row="1">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <!-- 左侧：分类 + 时间 -->
+                                                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Category, StringFormat=[{0}]}"
+                                                                           Margin="0,0,10,0">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock" BasedOn="{StaticResource CardTagTextBlock}">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Category}" Value="{x:Null}">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                                <TextBlock Text="{Binding CreatedAtDisplay}"
+                                                                           Style="{StaticResource CardDateTextBlock}"/>
+                                                            </StackPanel>
+
+                                                            <!-- 右侧：操作按钮 -->
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <Button Content="编辑"
+                                                                        Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        Style="{StaticResource CardActionButton}"
+                                                                        Margin="0,0,4,0"/>
+                                                                <Button Content="删除"
+                                                                        Command="{Binding DataContext.DeleteNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        Style="{StaticResource CardDeleteButton}"
+                                                                        Margin="4,0,0,0"/>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+
+                                <!-- 编辑对话框 -->
+                                <Grid Visibility="{Binding IsEditDialogVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Background="#80000000">
+                                    <Border Background="{StaticResource BrandLight}"
+                                            BorderBrush="{StaticResource BrandLightGray}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Width="400"
+                                            Padding="20"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                        <StackPanel>
+                                            <TextBlock Text="编辑笔记"
+                                                       FontSize="{StaticResource FontSizeLarge}"
+                                                       FontWeight="Bold"
+                                                       Margin="0,0,0,15"/>
+
+                                            <!-- 笔记内容 -->
+                                            <TextBox Text="{Binding EditContent, UpdateSourceTrigger=PropertyChanged}"
+                                                     TextWrapping="Wrap"
+                                                     AcceptsReturn="True"
+                                                     MinHeight="100"
+                                                     Margin="0,0,0,15"/>
+
+                                            <!-- 分类选择 -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                                <TextBlock Text="分类:"
+                                                           FontSize="{StaticResource FontSizeMedium}"
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,10,0"/>
+                                                <ComboBox ItemsSource="{Binding Categories}"
+                                                          SelectedItem="{Binding EditCategory}"
+                                                          Width="150">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+
+                                            <!-- 按钮 -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <Button Content="保存"
+                                                        Command="{Binding SaveEditCommand}"
+                                                        Width="100"
+                                                        Margin="5"
+                                                        Padding="16,8"
+                                                        FontSize="{StaticResource FontSizeMedium}"
+                                                        FontWeight="SemiBold"
+                                                        VerticalContentAlignment="Center"
+                                                        HorizontalAlignment="Left"/>
+                                                <Button Content="取消"
+                                                        Command="{Binding CancelEditCommand}"
+                                                        Style="{StaticResource DeleteButton}"
+                                                        Width="100"
+                                                        Margin="5"
+                                                        Padding="16,8"
+                                                        FontSize="{StaticResource FontSizeMedium}"
+                                                        FontWeight="SemiBold"
+                                                        VerticalContentAlignment="Center"
+                                                        HorizontalAlignment="Left"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
                         </DataTemplate>
 
                         <!-- 每周回顾页面 -->
