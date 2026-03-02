@@ -28,6 +28,12 @@ public class NoteManager
         return _repository.GetAll();
     }
 
+    public void Update(Note note)
+    {
+        note.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        _repository.Update(note);
+    }
+
     public void Delete(string id)
     {
         _repository.Delete(id);

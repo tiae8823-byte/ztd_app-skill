@@ -53,6 +53,20 @@
         "ZtdApp/Styles/BrandColors.xaml"
       ],
       "notes": "WPF 按钮高度由多个属性共同决定，使用 BasedOn 继承样式时，子样式会覆盖部分属性但保留其他属性。要确保两个不同样式的按钮高度一致，必须在 XAML 中显式覆盖所有影响高度的属性：Margin、Padding、FontSize、FontWeight、VerticalContentAlignment。设置固定 Height 或 MinHeight 都不是正确方案，会导致文字被遮挡或仍然不一致。"
+    },
+    {
+      "id": "env-001",
+      "title": "Windows 智能应用控制阻止本地编译的 exe",
+      "type": "environment",
+      "priority": "high",
+      "status": "resolved",
+      "feature": "全局",
+      "description": "Windows 11 的智能应用控制（Smart App Control）会阻止所有未签名的本地编译程序，导致 dotnet build 生成的 exe 无法运行",
+      "rootCause": "智能应用控制处于评估模式（VerifiedAndReputablePolicyState=1），会拦截未经 Microsoft 认证的可执行文件。火绒安全接管了 Windows Defender，导致 UI 中看不到智能应用控制的设置入口",
+      "solution": "通过注册表关闭智能应用控制：\npowershell: Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CI\\Policy' -Name 'VerifiedAndReputablePolicyState' -Value 0\n\n值说明：0=关闭，1=评估，2=强制\n修改后需要重启电脑生效",
+      "createdAt": "2026-03-02",
+      "resolvedAt": "2026-03-02",
+      "notes": "智能应用控制一旦关闭无法通过 UI 重新打开（需重装系统）。对开发者来说关闭是合理的。安装第三方杀毒软件（如火绒）后，Windows Defender 被禁用，UI 中不显示智能应用控制设置，只能通过注册表操作。"
     }
   ]
 }

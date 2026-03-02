@@ -55,6 +55,23 @@ public class NoteRepository
         return notes;
     }
 
+    public void Update(Note note)
+    {
+        using var connection = _dbService.CreateConnection();
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE Notes
+            SET Content = @content, Category = @category, UpdatedAt = @updatedAt
+            WHERE Id = @id";
+        command.Parameters.AddWithValue("@id", note.Id);
+        command.Parameters.AddWithValue("@content", note.Content);
+        command.Parameters.AddWithValue("@category", note.Category ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@updatedAt", note.UpdatedAt);
+        command.ExecuteNonQuery();
+    }
+
     public void Delete(string id)
     {
         using var connection = _dbService.CreateConnection();

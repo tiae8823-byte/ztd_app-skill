@@ -136,8 +136,9 @@ public class TodayViewModelTests : IDisposable
         Assert.NotNull(_viewModel.SelectPresetCommand);
         Assert.NotNull(_viewModel.ConfirmStartTomatoCommand);
         Assert.NotNull(_viewModel.CancelDialogCommand);
-        Assert.NotNull(_viewModel.StartBreakCommand);
-        Assert.NotNull(_viewModel.SkipBreakCommand);
+        // 休息功能已移除，改为系统级锁屏
+        // Assert.NotNull(_viewModel.StartBreakCommand);
+        // Assert.NotNull(_viewModel.SkipBreakCommand);
     }
 
     // === 自定义时长对话框 ===
@@ -212,23 +213,24 @@ public class TodayViewModelTests : IDisposable
     }
 
     // === 遮罩层 ===
+    // 注意：休息功能已移除，改为系统级锁屏，以下测试已废弃
 
-    [Fact]
-    public void IsOverlayVisible_InitialState_ShouldBeFalse()
-    {
-        Assert.False(_viewModel.IsOverlayVisible);
-    }
+    // [Fact]
+    // public void IsOverlayVisible_InitialState_ShouldBeFalse()
+    // {
+    //     Assert.False(_viewModel.IsOverlayVisible);
+    // }
 
-    [Fact]
-    public void SkipBreak_ShouldHideOverlay()
-    {
-        // 手动设置遮罩可见（模拟番茄钟完成）
-        _viewModel.GetType().GetProperty("IsOverlayVisible")?.SetValue(_viewModel, true);
-
-        _viewModel.SkipBreakCommand.Execute(null);
-
-        Assert.False(_viewModel.IsOverlayVisible);
-    }
+    // [Fact]
+    // public void SkipBreak_ShouldHideOverlay()
+    // {
+    //     // 手动设置遮罩可见（模拟番茄钟完成）
+    //     _viewModel.GetType().GetProperty("IsOverlayVisible")?.SetValue(_viewModel, true);
+    //
+    //     _viewModel.SkipBreakCommand.Execute(null);
+    //
+    //     Assert.False(_viewModel.IsOverlayVisible);
+    // }
 
     // === TodayTaskItem ===
 
@@ -284,7 +286,7 @@ public class TomatoServiceTests : IDisposable
     [Fact]
     public void Start_ShouldCreateRunningTomato()
     {
-        _tomatoService.Start("task-1", 25);
+        _tomatoService.Start("task-1", 25 * 60);
 
         Assert.True(_tomatoService.IsRunning);
         Assert.NotNull(_tomatoService.CurrentTomato);
