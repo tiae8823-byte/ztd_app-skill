@@ -133,6 +133,101 @@ public class TodayViewModelTests : IDisposable
         Assert.NotNull(_viewModel.StartTomatoCommand);
         Assert.NotNull(_viewModel.PauseTomatoCommand);
         Assert.NotNull(_viewModel.AbandonTomatoCommand);
+        Assert.NotNull(_viewModel.SelectPresetCommand);
+        Assert.NotNull(_viewModel.ConfirmStartTomatoCommand);
+        Assert.NotNull(_viewModel.CancelDialogCommand);
+        Assert.NotNull(_viewModel.StartBreakCommand);
+        Assert.NotNull(_viewModel.SkipBreakCommand);
+    }
+
+    // === 自定义时长对话框 ===
+
+    [Fact]
+    public void StartTomato_NewTimer_ShouldShowDialog()
+    {
+        _taskManager.Create("今日任务", TodoTaskStatus.Today, ">30分钟");
+        _viewModel.LoadTasks();  // 重新加载任务
+        var taskId = _viewModel.TodayTasks[0].Task.Id;
+
+        _viewModel.StartTomatoCommand.Execute(taskId);
+
+        Assert.True(_viewModel.IsDialogVisible);
+        Assert.Equal(taskId, _viewModel.CurrentTaskIdForDialog);
+        Assert.Equal(25, _viewModel.SelectedPresetMinutes);
+    }
+
+    [Fact]
+    public void SelectPreset_ShouldUpdateSelectedMinutes()
+    {
+        _viewModel.SelectPresetCommand.Execute("45");
+
+        Assert.Equal(45, _viewModel.SelectedPresetMinutes);
+        Assert.Empty(_viewModel.CustomMinutesInput);
+    }
+
+    [Fact]
+    public void ConfirmStartTomato_WithPreset_ShouldStartTimer()
+    {
+        _taskManager.Create("今日任务", TodoTaskStatus.Today, ">30分钟");
+        _viewModel.LoadTasks();
+        var taskId = _viewModel.TodayTasks[0].Task.Id;
+
+        _viewModel.StartTomatoCommand.Execute(taskId);
+        _viewModel.SelectPresetCommand.Execute("15");
+        _viewModel.ConfirmStartTomatoCommand.Execute(null);
+
+        Assert.False(_viewModel.IsDialogVisible);
+        Assert.True(_tomatoService.IsRunning);
+        Assert.Equal(15 * 60, _tomatoService.CurrentTomato?.TargetDuration);
+    }
+
+    [Fact]
+    public void ConfirmStartTomato_WithCustomInput_ShouldUseCustomValue()
+    {
+        _taskManager.Create("今日任务", TodoTaskStatus.Today, ">30分钟");
+        _viewModel.LoadTasks();
+        var taskId = _viewModel.TodayTasks[0].Task.Id;
+
+        _viewModel.StartTomatoCommand.Execute(taskId);
+        _viewModel.CustomMinutesInput = "30";
+        _viewModel.ConfirmStartTomatoCommand.Execute(null);
+
+        Assert.False(_viewModel.IsDialogVisible);
+        Assert.True(_tomatoService.IsRunning);
+        Assert.Equal(30 * 60, _tomatoService.CurrentTomato?.TargetDuration);
+    }
+
+    [Fact]
+    public void CancelDialog_ShouldHideDialog()
+    {
+        _taskManager.Create("今日任务", TodoTaskStatus.Today, ">30分钟");
+        _viewModel.LoadTasks();
+        var taskId = _viewModel.TodayTasks[0].Task.Id;
+
+        _viewModel.StartTomatoCommand.Execute(taskId);
+        _viewModel.CancelDialogCommand.Execute(null);
+
+        Assert.False(_viewModel.IsDialogVisible);
+        Assert.False(_tomatoService.IsRunning);
+    }
+
+    // === 遮罩层 ===
+
+    [Fact]
+    public void IsOverlayVisible_InitialState_ShouldBeFalse()
+    {
+        Assert.False(_viewModel.IsOverlayVisible);
+    }
+
+    [Fact]
+    public void SkipBreak_ShouldHideOverlay()
+    {
+        // 手动设置遮罩可见（模拟番茄钟完成）
+        _viewModel.GetType().GetProperty("IsOverlayVisible")?.SetValue(_viewModel, true);
+
+        _viewModel.SkipBreakCommand.Execute(null);
+
+        Assert.False(_viewModel.IsOverlayVisible);
     }
 
     // === TodayTaskItem ===

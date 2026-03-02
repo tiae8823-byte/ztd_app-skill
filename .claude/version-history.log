@@ -155,3 +155,20 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - workflow-overview.md 新增常见问题 FAQ（跨项目使用、UI优化、/prd vs /feat）
 
 Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260301-202610 - docs: TDD 技能重构 + 知识文档沉淀
+
+- 新增 skills-tdd/ TDD 版技能（DTBRVC 循环），含 5 项改进
+- 备份现有 DBTVC 技能到 skills-backup/
+- 新增知识文档：技能搭建经验、TDD 重构报告
+- 更新 CLAUDE.md 项目说明
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+20260302-200017 - feat: 今日待办 - 番茄钟 + 按钮动画
+
+- 新增 Tomato 模型和 TomatoRepository
+- 新增 TomatoService 番茄钟计时服务
+- 更新 TodayViewModel 支持番茄钟功能
+- 添加按钮 hover/pressed 动画效果 (150ms Ease-Out)
+- 新增今日待办测试 (98 个测试全部通过)
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>

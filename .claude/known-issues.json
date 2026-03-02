@@ -23,6 +23,36 @@
         "ZtdApp/Styles/BrandColors.xaml"
       ],
       "relatedCommit": "e2cdf27"
+    },
+    {
+      "id": "ui-002",
+      "title": "对话框按钮高度不一致（反复出现）",
+      "type": "ui",
+      "priority": "medium",
+      "status": "resolved",
+      "feature": "番茄钟自定义时长对话框",
+      "description": "开始按钮和取消按钮竖向高度不一致，问题反复出现多次",
+      "rootCause": "两个按钮使用不同样式（默认 Button vs DeleteButton），即使覆盖了 Padding 和 FontSize，仍有其他属性差异：Margin、FontWeight。WPF 按钮的实际渲染高度由多个属性共同决定：Margin + BorderThickness + Padding + FontSize + FontWeight + LineHeight",
+      "impact": "视觉不统一，用户体验差，问题反复出现导致开发效率低",
+      "attemptedSolutions": [
+        "设置固定 Height=40 → 文字被遮挡（已知问题 ui-001 记录过）",
+        "只设置相同 Padding=16,8 → 仍不一致（FontSize 差异未解决）",
+        "设置 Padding + FontSize → 仍不一致（Margin 和 FontWeight 差异未解决）",
+        "设置 MinHeight=40 → 仍不一致（最小高度不能强制统一实际高度）"
+      ],
+      "solution": "必须同时覆盖所有影响高度的属性，确保两个按钮完全一致：\n- Margin='5'\n- Padding='16,8'\n- FontSize='{StaticResource FontSizeMedium}' (14px)\n- FontWeight='SemiBold'\n- VerticalContentAlignment='Center'\n\n关键点：不能只覆盖部分属性，必须覆盖全部，包括 Margin 和 FontWeight",
+      "references": [
+        "https://stackoverflow.com/questions/4284513/wpf-change-fontsize-of-button-with-style-fails",
+        "https://wpf.2000things.com/2012/02/17/497-use-a-uniformgrid-to-make-a-group-of-buttons-the-same-size/",
+        "https://stackoverflow.com/questions/72292271/wpf-xaml-styles-not-applying-properly-net-5"
+      ],
+      "createdAt": "2026-03-02",
+      "resolvedAt": "2026-03-02",
+      "relatedFiles": [
+        "ZtdApp/Views/MainWindow.xaml",
+        "ZtdApp/Styles/BrandColors.xaml"
+      ],
+      "notes": "WPF 按钮高度由多个属性共同决定，使用 BasedOn 继承样式时，子样式会覆盖部分属性但保留其他属性。要确保两个不同样式的按钮高度一致，必须在 XAML 中显式覆盖所有影响高度的属性：Margin、Padding、FontSize、FontWeight、VerticalContentAlignment。设置固定 Height 或 MinHeight 都不是正确方案，会导致文字被遮挡或仍然不一致。"
     }
   ]
 }
