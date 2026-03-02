@@ -436,7 +436,8 @@
 
                         <!-- 今日待办页面 -->
                         <DataTemplate DataType="{x:Type viewModels:TodayViewModel}">
-                            <StackPanel>
+                            <Grid>
+                                <StackPanel>
                                 <TextBlock Text="今日待办"
                                            Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Style="{StaticResource PageDescriptionTextBlock}">
@@ -596,6 +597,143 @@
                                     </TextBlock.Style>
                                 </TextBlock>
                             </StackPanel>
+
+                            <!-- 自定义时长对话框 -->
+                            <Grid Visibility="{Binding IsDialogVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                                  Background="#80000000">
+                                <Border Style="{StaticResource CardBorder}"
+                                        Width="400"
+                                        Padding="24"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                    <StackPanel>
+                                        <TextBlock Text="设置番茄钟时长"
+                                                   Style="{StaticResource PageTitleTextBlock}"
+                                                   Margin="0,0,0,20"/>
+
+                                        <!-- 预设时长按钮 -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    Margin="0,0,0,16">
+                                            <Button Content="15分钟"
+                                                    Command="{Binding SelectPresetCommand}"
+                                                    CommandParameter="15"
+                                                    Width="72"
+                                                    Margin="0,0,6,0">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SelectedPresetMinutes}" Value="15">
+                                                                <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource BrandLight}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Content="25分钟"
+                                                    Command="{Binding SelectPresetCommand}"
+                                                    CommandParameter="25"
+                                                    Width="72"
+                                                    Margin="0,0,6,0">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SelectedPresetMinutes}" Value="25">
+                                                                <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource BrandLight}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Content="45分钟"
+                                                    Command="{Binding SelectPresetCommand}"
+                                                    CommandParameter="45"
+                                                    Width="72"
+                                                    Margin="0,0,6,0">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SelectedPresetMinutes}" Value="45">
+                                                                <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource BrandLight}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Content="60分钟"
+                                                    Command="{Binding SelectPresetCommand}"
+                                                    CommandParameter="60"
+                                                    Width="72"
+                                                    Margin="0,0,6,0">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SelectedPresetMinutes}" Value="60">
+                                                                <Setter Property="Background" Value="{StaticResource BrandOrange}"/>
+                                                                <Setter Property="Foreground" Value="{StaticResource BrandLight}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </StackPanel>
+
+                                        <!-- 自定义输入：分钟 + 秒 -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    Margin="0,0,0,20">
+                                            <TextBlock Text="自定义:"
+                                                       FontSize="{StaticResource FontSizeMedium}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,0"/>
+                                            <TextBox Text="{Binding CustomMinutesInput, UpdateSourceTrigger=PropertyChanged}"
+                                                     Width="60"
+                                                     Padding="8,6"
+                                                     Margin="0,0,4,0"/>
+                                            <TextBlock Text="分"
+                                                       FontSize="{StaticResource FontSizeMedium}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,0"/>
+                                            <TextBox Text="{Binding CustomSecondsInput, UpdateSourceTrigger=PropertyChanged}"
+                                                     Width="60"
+                                                     Padding="8,6"
+                                                     Margin="0,0,4,0"/>
+                                            <TextBlock Text="秒"
+                                                       FontSize="{StaticResource FontSizeMedium}"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <!-- 操作按钮 -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center">
+                                            <Button Content="开始"
+                                                    Command="{Binding ConfirmStartTomatoCommand}"
+                                                    Width="100"
+                                                    Margin="5"
+                                                    Padding="16,8"
+                                                    FontSize="{StaticResource FontSizeMedium}"
+                                                    FontWeight="SemiBold"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Left"/>
+                                            <Button Content="取消"
+                                                    Command="{Binding CancelDialogCommand}"
+                                                    Style="{StaticResource DeleteButton}"
+                                                    Width="100"
+                                                    Margin="5"
+                                                    Padding="16,8"
+                                                    FontSize="{StaticResource FontSizeMedium}"
+                                                    FontWeight="SemiBold"
+                                                    VerticalContentAlignment="Center"
+                                                    HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            </Grid>
                         </DataTemplate>
 
                         <!-- 笔记库页面 -->

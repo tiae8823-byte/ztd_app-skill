@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZtdApp.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+58d44b206b70af8dc0c7997c3589c01023739499")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04007b71583fe645ebed57c736e83158b8c18a75")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZtdApp.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZtdApp.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

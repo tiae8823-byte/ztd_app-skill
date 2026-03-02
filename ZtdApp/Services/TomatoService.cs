@@ -29,8 +29,8 @@ public class TomatoService : IDisposable
     /// 开始番茄钟计时
     /// </summary>
     /// <param name="taskId">关联的任务ID</param>
-    /// <param name="durationMinutes">目标时长（分钟），默认25分钟</param>
-    public void Start(string? taskId, int durationMinutes = 25)
+    /// <param name="durationSeconds">目标时长（秒）</param>
+    public void Start(string? taskId, int durationSeconds = 25 * 60)
     {
         // 停止之前的计时
         Stop();
@@ -38,7 +38,7 @@ public class TomatoService : IDisposable
         _currentTomato = new Tomato
         {
             TaskId = taskId,
-            TargetDuration = durationMinutes * 60,
+            TargetDuration = durationSeconds,
             StartTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             IsRunning = true,
             IsPaused = false,
