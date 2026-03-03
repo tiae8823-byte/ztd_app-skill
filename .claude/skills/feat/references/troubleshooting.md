@@ -1,0 +1,58 @@
+# 问题排查策略
+
+AI 遇到问题时参考此文件。
+
+## 何时搜索
+
+| 场景 | 是否搜索 |
+|------|---------|
+| 简单语法错误、拼写错误 | ❌ 自己修复 |
+| 明确的编译错误 | ❌ 错误信息已明确 |
+| **尝试 2 次仍未解决** | ✅ 立即搜索 |
+| **框架/库的 Bug** | ✅ 搜索社区方案 |
+| **UI 渲染异常** | ✅ 通常是已知问题 |
+| **第三方库使用问题** | ✅ 查官方文档 |
+
+核心原则：尝试 2 次仍未解决 → 立即搜索，避免盲目试错。
+
+## 搜索优先级
+
+1. **GitHub Issues**（最优先）
+   - 真实案例、有解决方案、官方确认的 Bug
+   - 搜索：`site:github.com [技术栈] [问题关键词]`
+
+2. **官方文档**
+   - 使用 `mcp__context7__query-docs`
+   - 权威、准确、最新
+
+3. **Stack Overflow**
+   - 搜索：`site:stackoverflow.com [问题关键词]`
+   - 关注高赞和被采纳的答案
+
+## 处理流程
+
+```
+阅读多个方案（至少 3 个）
+  ↓
+对比优缺点（适用性、副作用、社区反馈）
+  ↓
+优先选择：官方推荐 > 高赞 > 最新
+  ↓
+理解原理后应用（不盲目复制）
+  ↓
+测试验证
+  ↓
+记录到 .claude/known-issues.json
+```
+
+## known-issues.json 格式
+
+```json
+{
+  "id": "ui-001",
+  "title": "WPF Button 文字底部被遮挡",
+  "solution": "设置 Padding='0' + UseLayoutRounding='True'",
+  "reason": "DPI 缩放时 Padding 计算有问题",
+  "reference": "https://github.com/microsoft/microsoft-ui-xaml/issues/9543"
+}
+```

@@ -24,6 +24,25 @@
         "PYTHONIOENCODING": "utf-8"
       }
     },
+    "exa": {
+      "type": "http",
+      "url": "https://mcp.exa.ai/mcp",
+      "headers": {
+        "x-api-key": "f06aacf0-3c1d-4583-a027-b0e0b2f8223d"
+      }
+    },
+    "gradio": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "mcp-remote", "https://phoenixdna-sogou-search.ms.show/gradio_api/mcp/sse", "--transport", "sse-only"]
+    },
+    "google-search": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@mcp-for-dev/mcp-google-search"],
+      "env": {
+        "GOOGLE_API_KEY": "AIzaSyC2PvHuc6ciEZ5vsHe-pZ8VvT-nhY_kUJI",
+        "GOOGLE_SEARCH_ENGINE_ID": "f2cc1b8e12cbb4ba4"
+      }
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
