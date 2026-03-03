@@ -4,7 +4,7 @@
         xmlns:viewModels="clr-namespace:ZtdApp.ViewModels.Pages"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         Style="{StaticResource MainWindowStyle}"
-        Title="ZTD - 个人生产力管理"
+        Title="ZTD - 我的生产力工具"
         Width="1000"
         Height="700"
         WindowStartupLocation="CenterScreen">
@@ -57,6 +57,7 @@
                                            Style="{StaticResource PageDescriptionTextBlock}"/>
                                 <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
                                          KeyDown="OnKeyDown"
+                                         Height="160"
                                          Margin="0,0,0,10"/>
                                 <Button Content="添加想法"
                                         Command="{Binding AddIdeaCommand}"
@@ -91,7 +92,7 @@
                                                                 Content="删除"
                                                                 Command="{Binding DataContext.DeleteIdeaCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                 CommandParameter="{Binding Id}"
-                                                                Style="{StaticResource DeleteButton}"/>
+                                                                Style="{StaticResource CardDeleteButtonHover}"/>
                                                     </Grid>
 
                                                     <!-- 操作按钮区域（展开且未选标签时显示） -->
@@ -171,18 +172,12 @@
                                                                     </StackPanel>
                                                                 </Border>
 
-                                                                <!-- 确认/取消（等宽，不设置固定Height让Padding撑开） -->
-                                                                <UniformGrid Columns="2" MaxWidth="300" HorizontalAlignment="Left">
-                                                                    <Button Content="✓ 确认转为待办"
-                                                                            Command="{Binding DataContext.ConfirmTagSelectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                            CommandParameter="{Binding Id}"
-                                                                            Margin="0,0,4,0"/>
-                                                                    <Button Content="取消"
-                                                                            Command="{Binding DataContext.CancelTagSelectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                            CommandParameter="{Binding Id}"
-                                                                            Style="{StaticResource SecondaryButton}"
-                                                                            Margin="4,0,0,0"/>
-                                                                </UniformGrid>
+                                                                <!-- 确认按钮 -->
+                                                                <Button Content="✓ 确认转为待办"
+                                                                        Command="{Binding DataContext.ConfirmTagSelectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding Id}"
+                                                                        MaxWidth="300"
+                                                                        HorizontalAlignment="Left"/>
                                                             </StackPanel>
                                                         </Border>
                                                     </StackPanel>
@@ -355,7 +350,7 @@
                                                                 <Button Content="删除"
                                                                         Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardDeleteButton}"/>
+                                                                        Style="{StaticResource CardDeleteButtonHover}"/>
                                                             </UniformGrid>
                                                         </Grid>
                                                     </Border>
@@ -403,7 +398,7 @@
                                                                 <Button Content="删除"
                                                                         Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardDeleteButton}"
+                                                                        Style="{StaticResource CardDeleteButtonHover}"
                                                                         Margin="4,0,0,0"/>
                                                             </UniformGrid>
                                                         </Grid>
@@ -820,12 +815,12 @@
                                                                 <Button Content="编辑"
                                                                         Command="{Binding DataContext.OpenEditDialogCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardActionButton}"
+                                                                        Style="{StaticResource CardActionButtonHover}"
                                                                         Margin="0,0,4,0"/>
                                                                 <Button Content="删除"
                                                                         Command="{Binding DataContext.DeleteNoteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                         CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardDeleteButton}"
+                                                                        Style="{StaticResource CardDeleteButtonHover}"
                                                                         Margin="4,0,0,0"/>
                                                             </StackPanel>
                                                         </Grid>
@@ -979,7 +974,7 @@
                                                                     Content="删除"
                                                                     Command="{Binding DataContext.DeleteCompletedTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                     CommandParameter="{Binding Id}"
-                                                                    Style="{StaticResource CardDeleteButton}"/>
+                                                                    Style="{StaticResource CardDeleteButtonHover}"/>
                                                         </Grid>
                                                     </Border>
                                                 </DataTemplate>
