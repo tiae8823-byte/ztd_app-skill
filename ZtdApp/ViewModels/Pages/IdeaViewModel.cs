@@ -41,6 +41,14 @@ public partial class IdeaViewModel : ObservableObject
     [RelayCommand]
     private void ToggleExpand(Idea idea)
     {
+        // 如果在二级菜单,先退回一级菜单
+        if (idea.IsSelectingTags)
+        {
+            idea.ResetTagSelection();
+            return;
+        }
+
+        // 否则正常切换展开/收起
         idea.IsExpanded = !idea.IsExpanded;
     }
 
