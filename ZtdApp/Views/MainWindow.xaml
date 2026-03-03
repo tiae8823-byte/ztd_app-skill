@@ -58,7 +58,7 @@
                                 <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
                                          KeyDown="OnKeyDown"
                                          Height="160"
-                                         Margin="0,0,0,10"/>
+                                         Margin="32,0,32,10"/>
                                 <Button Content="添加想法"
                                         Command="{Binding AddIdeaCommand}"
                                         Height="44"
