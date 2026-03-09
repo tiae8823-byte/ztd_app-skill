@@ -33,6 +33,7 @@ public partial class App : Application
         services.AddSingleton<TaskManager>();
         services.AddSingleton<NoteManager>();
         services.AddSingleton<TomatoService>();
+        services.AddSingleton<HotKeyService>();
 
         // ViewModel 层
         services.AddSingleton<IdeaViewModel>();
@@ -41,6 +42,7 @@ public partial class App : Application
         services.AddSingleton<NotesViewModel>();
         services.AddSingleton<WeeklyReviewViewModel>();
         services.AddSingleton<MainWindowViewModel>();
+        services.AddTransient<QuickAddViewModel>();
 
         return services.BuildServiceProvider();
     }
@@ -55,7 +57,8 @@ public partial class App : Application
 
         // 创建主窗口
         var viewModel = Services.GetRequiredService<MainWindowViewModel>();
-        var mainWindow = new MainWindow(viewModel);
+        var hotKeyService = Services.GetRequiredService<HotKeyService>();
+        var mainWindow = new MainWindow(viewModel, hotKeyService, Services);
 
         mainWindow.Show();
     }
