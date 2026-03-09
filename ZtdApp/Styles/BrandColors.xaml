@@ -540,24 +540,78 @@
         </Setter>
     </Style>
 
-    <!-- Hover Reveal: 删除按钮（次操作，默认隐藏，悬停卡片时显示） -->
+    <!-- Hover Reveal: 删除按钮（次操作，默认隐藏，悬停卡片时淡入淡出） -->
     <Style x:Key="CardDeleteButtonHover" TargetType="Button" BasedOn="{StaticResource CardDeleteButton}">
-        <Setter Property="Visibility" Value="Hidden"/>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}"
                          Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="IsHitTestVisible" Value="True"/>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="0:0:0.15">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
-    <!-- Hover Reveal: 操作按钮（次操作，默认隐藏，悬停卡片时显示） -->
+    <!-- Hover Reveal: 操作按钮（次操作，默认隐藏，悬停卡片时淡入淡出） -->
     <Style x:Key="CardActionButtonHover" TargetType="Button" BasedOn="{StaticResource CardActionButton}">
-        <Setter Property="Visibility" Value="Hidden"/>
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}"
                          Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="IsHitTestVisible" Value="True"/>
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="0:0:0.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="0:0:0.15">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseIn"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
             </DataTrigger>
         </Style.Triggers>
     </Style>
