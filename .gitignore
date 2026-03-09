@@ -32,9 +32,16 @@ nul
 
 # MCP configuration (personal settings)
 .mcp.json
+.mcp.json.local
 
 # Claude 临时报告
 .claude/*报告.md
 .claude/*方案.md
 .claude/*总结.md
 .claude/backups/
+
+# 本地开发文件
+check_animation.xaml
+clean.bat
+publish.bat
+docs/MCP-参考文档.md
