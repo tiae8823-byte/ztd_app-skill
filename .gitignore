@@ -32,3 +32,9 @@ nul
 
 # MCP configuration (personal settings)
 .mcp.json
+
+# Claude 临时报告
+.claude/*报告.md
+.claude/*方案.md
+.claude/*总结.md
+.claude/backups/

@@ -10,8 +10,8 @@
 
 | 操作 | 命令 |
 |------|------|
-| 构建（Release） | `dotnet build ZtdApp --configuration Release` |
-| 运行 | `ZtdApp/bin/Release/net8.0-windows/win-x64/ZtdApp.exe` |
+| 构建 | `dotnet build ZtdApp` |
+| 运行 | `ZtdApp/bin/Debug/net8.0-windows/ZtdApp.exe` |
 | 单元测试 | `dotnet test ZtdApp.Tests` |
 | 指定测试类 | `dotnet test ZtdApp.Tests --filter "FullyQualifiedName~类名"` |
 | UI 自动化测试 | `dotnet test ZtdApp.Tests --filter "FullyQualifiedName~UITests"` |
