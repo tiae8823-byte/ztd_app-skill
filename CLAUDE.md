@@ -6,9 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository serves two purposes:
 1. **Claude Code skills** (`/prd` and `/feat`) that guide the development workflow
-2. **ZTD App** - a WPF desktop productivity app built with .NET 8
+2. **ZTD App** - a WPF desktop productivity app built with .NET 10
 
 The `/prd` skill generates PRDs through conversation. The `/feat` skill implements features one at a time using a Design-Build-Test-Commit cycle with progress tracking in `.claude/feat-progress.json`.
+
+## Development Environment
+
+- **.NET SDK**: 10.0 or later
+- **NuGet Source**: Must configure official NuGet source
+
+```bash
+# Check .NET version
+dotnet --version  # Should be 10.0.x
+
+# Configure NuGet source (if not already configured)
+dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org
+```
 
 ## Build & Test Commands
 
@@ -17,7 +30,7 @@ The `/prd` skill generates PRDs through conversation. The `/feat` skill implemen
 dotnet build ZtdApp --configuration Release
 
 # Run the app
-ZtdApp/bin/Release/net8.0-windows/win-x64/ZtdApp.exe
+ZtdApp/bin/Release/net10.0-windows/win-x64/ZtdApp.exe
 
 # Run all unit tests
 dotnet test ZtdApp.Tests
@@ -35,7 +48,7 @@ No `.sln` file exists - use project paths directly with `dotnet` commands. The a
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | WPF, .NET 8 (`net8.0-windows`) |
+| Framework | WPF, .NET 10 (`net10.0-windows`) |
 | MVVM | CommunityToolkit.Mvvm 8.4.0 (`[ObservableProperty]`, `[RelayCommand]`) |
 | Database | SQLite via Microsoft.Data.Sqlite 9.0.0 |
 | DI | Microsoft.Extensions.DependencyInjection 9.0.0 |

@@ -63,7 +63,8 @@
                                         Command="{Binding AddIdeaCommand}"
                                         Height="44"
                                         Width="120"
-                                        HorizontalAlignment="Left"/>
+                                        HorizontalAlignment="Left"
+                                        Margin="32,0,32,0"/>
                                 <ItemsControl ItemsSource="{Binding Ideas}" Margin="0,20,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
