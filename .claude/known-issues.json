@@ -67,6 +67,29 @@
       "createdAt": "2026-03-02",
       "resolvedAt": "2026-03-02",
       "notes": "智能应用控制一旦关闭无法通过 UI 重新打开（需重装系统）。对开发者来说关闭是合理的。安装第三方杀毒软件（如火绒）后，Windows Defender 被禁用，UI 中不显示智能应用控制设置，只能通过注册表操作。"
+    },
+    {
+      "id": "ui-004",
+      "title": "WPF 按钮文字遮挡（反复出现）",
+      "type": "ui",
+      "priority": "high",
+      "status": "resolved",
+      "feature": "全局",
+      "description": "设置固定 Height 后按钮文字被遮挡。此问题已出现 3+ 次：想法操作按钮、快捷键对话框清空/添加按钮",
+      "impact": "文字显示不完整，用户体验差",
+      "attemptedSolutions": [
+        "设置固定 Height → 文字被遮挡",
+        "只设置 Padding → 仍被遮挡",
+        "只设置部分属性 → 仍不一致"
+      ],
+      "solution": "【必须同时覆盖所有属性，缺一不可】：\n- Margin=\"5\"\n- Padding=\"16,8\"\n- FontSize=\"{StaticResource FontSizeMedium}\" (14px)\n- FontWeight=\"SemiBold\"\n- VerticalContentAlignment=\"Center\"\n- UseLayoutRounding=\"True\"（可选，提升渲染）\n\n【禁止使用】：Height=\"固定值\"",
+      "warning": "此问题反复出现，任何新按钮都必须遵循此规则！",
+      "createdAt": "2026-03-09",
+      "resolvedAt": "2026-03-09",
+      "relatedFiles": [
+        "ZtdApp/Styles/BrandColors.xaml",
+        "ZtdApp/Views/QuickAddDialog.xaml"
+      ]
     }
   ]
 }

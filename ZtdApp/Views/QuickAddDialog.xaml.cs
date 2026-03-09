@@ -19,13 +19,23 @@ public partial class QuickAddDialog : Window
 
         // 订阅关闭请求事件
         _viewModel.RequestClose += (s, e) => Close();
+    }
 
-        // 窗口加载时聚焦输入框
-        Loaded += (s, e) =>
-        {
-            ContentTextBox.Focus();
-            ContentTextBox.SelectAll();
-        };
+    /// <summary>
+    /// 设置窗口位置：屏幕下 1/3 处
+    /// </summary>
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        // 获取屏幕尺寸
+        var screenWidth = SystemParameters.PrimaryScreenWidth;
+        var screenHeight = SystemParameters.PrimaryScreenHeight;
+
+        // 设置位置：水平居中，垂直方向在屏幕下 1/3 处（66% 位置）
+        Left = (screenWidth - ActualWidth) / 2;
+        Top = screenHeight * 0.66;
+
+        // 聚焦输入框
+        ContentTextBox.Focus();
     }
 
     /// <summary>
@@ -39,6 +49,36 @@ public partial class QuickAddDialog : Window
             Close();
             e.Handled = true;
         }
+        // Tab 清空内容
+        else if (e.Key == Key.Tab)
+        {
+            ContentTextBox.Text = string.Empty;
+            _viewModel.Content = string.Empty;
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// 文本框键盘事件处理
+    /// </summary>
+    private void TextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        // Enter 添加想法
+        if (e.Key == Key.Enter && !Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+        {
+            _viewModel.AddIdeaCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>
+    /// 文本变化时控制 placeholder 显示
+    /// </summary>
+    private void ContentTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        PlaceholderText.Visibility = string.IsNullOrEmpty(ContentTextBox.Text)
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     /// <summary>
