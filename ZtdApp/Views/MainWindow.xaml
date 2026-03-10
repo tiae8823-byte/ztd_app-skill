@@ -45,7 +45,7 @@
 
         <!-- 内容区域 -->
         <Border Grid.Column="1" Background="{StaticResource BrandLight}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0">
                 <ContentControl Content="{Binding CurrentPage}">
                     <ContentControl.Resources>
                         <!-- 想法收集页面 -->
@@ -55,16 +55,18 @@
                                            Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="快速记录你的想法"
                                            Style="{StaticResource PageDescriptionTextBlock}"/>
-                                <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
-                                         KeyDown="OnKeyDown"
-                                         Height="160"
-                                         Margin="32,0,32,10"/>
-                                <Button Content="添加想法"
-                                        Command="{Binding AddIdeaCommand}"
-                                        Height="44"
-                                        Width="120"
-                                        HorizontalAlignment="Left"
-                                        Margin="32,0,32,0"/>
+                                <Grid>
+                                    <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
+                                             KeyDown="OnKeyDown"
+                                             Height="166"
+                                             Margin="157,0,157,0"/>
+                                    <Button Content="添加想法"
+                                            Command="{Binding AddIdeaCommand}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Margin="165,0,0,8"
+                                            Padding="8,4"/>
+                                </Grid>
                                 <ItemsControl ItemsSource="{Binding Ideas}" Margin="0,20,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
