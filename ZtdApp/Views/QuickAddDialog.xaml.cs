@@ -19,6 +19,9 @@ public partial class QuickAddDialog : Window
 
         // 订阅关闭请求事件
         _viewModel.RequestClose += (s, e) => Close();
+
+        // 记录日志
+        System.Diagnostics.Debug.WriteLine("QuickAddDialog 已初始化");
     }
 
     /// <summary>
@@ -61,10 +64,12 @@ public partial class QuickAddDialog : Window
     /// <summary>
     /// 文本框键盘事件处理
     /// </summary>
-    private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    private void ContentTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        // Enter 添加想法
-        if (e.Key == Key.Enter && !Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+        // Enter 添加想法（不包含 Shift+Enter）
+        if (e.Key == Key.Enter &&
+            !e.KeyboardDevice.IsKeyDown(Key.LeftShift) &&
+            !e.KeyboardDevice.IsKeyDown(Key.RightShift))
         {
             _viewModel.AddIdeaCommand.Execute(null);
             e.Handled = true;
@@ -79,6 +84,15 @@ public partial class QuickAddDialog : Window
         PlaceholderText.Visibility = string.IsNullOrEmpty(ContentTextBox.Text)
             ? Visibility.Visible
             : Visibility.Collapsed;
+    }
+
+    /// <summary>
+    /// 快速添加对话框关闭后的处理
+    /// </summary>
+    private void OnQuickAddDialogClosed(object? sender, EventArgs e)
+    {
+        // 从 MainWindow 移除事件监听
+        // 这里不需要做特殊处理，因为每次都是新的 ViewModel 实例
     }
 
     /// <summary>

@@ -45,13 +45,13 @@
                              Background="Transparent"
                              BorderThickness="0"
                              FontSize="14"
-                             AcceptsReturn="False"
+                             AcceptsReturn="True"
                              TextWrapping="Wrap"
                              MaxHeight="120"
                              VerticalScrollBarVisibility="Auto"
                              Padding="8,6"
                              Margin="0,0,0,0"
-                             KeyDown="TextBox_KeyDown"
+                             PreviewKeyDown="ContentTextBox_PreviewKeyDown"
                              TextChanged="ContentTextBox_TextChanged">
                         <TextBox.Style>
                             <Style TargetType="TextBox">

@@ -14,6 +14,7 @@ public partial class MainWindow : Window
     private readonly IServiceProvider _serviceProvider;
     private readonly TrayService _trayService;
     private readonly AppConfigService _configService;
+    private static bool _isQuickAddDialogOpen = false; // 防止快捷键堆叠
 
     public MainWindow(MainWindowViewModel viewModel, HotKeyService hotKeyService, IServiceProvider serviceProvider, TrayService trayService, AppConfigService configService)
     {
@@ -139,13 +140,44 @@ public partial class MainWindow : Window
     /// </summary>
     private void ShowQuickAddDialog()
     {
+        // 检查对话框是否已在显示，防止堆叠
+        if (_isQuickAddDialogOpen)
+        {
+            System.Diagnostics.Debug.WriteLine("快速添加对话框已在显示，忽略快捷键");
+            return;
+        }
+
         // 在主线程上执行
         Dispatcher.Invoke(() =>
         {
-            // 每次创建新的 ViewModel 实例（因为对话框关闭后 ViewModel 可能被清理）
-            var quickAddVm = _serviceProvider.GetRequiredService<QuickAddViewModel>();
-            QuickAddDialog.ShowDialog(quickAddVm);
+            // 标记对话框为已打开
+            _isQuickAddDialogOpen = true;
+
+            try
+            {
+                // 创建新的 ViewModel 实例（因为对话框关闭后 ViewModel 可能被清理）
+                var quickAddVm = _serviceProvider.GetRequiredService<QuickAddViewModel>();
+
+                // 监听对话框关闭事件
+                quickAddVm.RequestClose += OnQuickAddDialogClosed;
+
+                QuickAddDialog.ShowDialog(quickAddVm);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"显示快速添加对话框时出错: {ex.Message}");
+                _isQuickAddDialogOpen = false;
+            }
         });
+    }
+
+    /// <summary>
+    /// 快速添加对话框关闭后的处理
+    /// </summary>
+    private void OnQuickAddDialogClosed(object? sender, EventArgs e)
+    {
+        _isQuickAddDialogOpen = false;
+        System.Diagnostics.Debug.WriteLine("快速添加对话框已关闭，可以响应下次快捷键");
     }
 
     private void OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
