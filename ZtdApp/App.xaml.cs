@@ -5,6 +5,7 @@ using ZtdApp.Services;
 using ZtdApp.ViewModels;
 using ZtdApp.ViewModels.Pages;
 using ZtdApp.Views;
+using Application = System.Windows.Application;
 
 namespace ZtdApp;
 
@@ -34,6 +35,8 @@ public partial class App : Application
         services.AddSingleton<NoteManager>();
         services.AddSingleton<TomatoService>();
         services.AddSingleton<HotKeyService>();
+        services.AddSingleton<TrayService>();
+        services.AddSingleton<AppConfigService>();
 
         // ViewModel 层
         services.AddSingleton<IdeaViewModel>();
@@ -58,7 +61,9 @@ public partial class App : Application
         // 创建主窗口
         var viewModel = Services.GetRequiredService<MainWindowViewModel>();
         var hotKeyService = Services.GetRequiredService<HotKeyService>();
-        var mainWindow = new MainWindow(viewModel, hotKeyService, Services);
+        var trayService = Services.GetRequiredService<TrayService>();
+        var configService = Services.GetRequiredService<AppConfigService>();
+        var mainWindow = new MainWindow(viewModel, hotKeyService, Services, trayService, configService);
 
         mainWindow.Show();
     }

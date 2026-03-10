@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,16 +12,20 @@ public partial class MainWindow : Window
     public MainWindowViewModel ViewModel { get; }
     private readonly HotKeyService _hotKeyService;
     private readonly IServiceProvider _serviceProvider;
+    private readonly TrayService _trayService;
+    private readonly AppConfigService _configService;
 
-    public MainWindow(MainWindowViewModel viewModel, HotKeyService hotKeyService, IServiceProvider serviceProvider)
+    public MainWindow(MainWindowViewModel viewModel, HotKeyService hotKeyService, IServiceProvider serviceProvider, TrayService trayService, AppConfigService configService)
     {
         ViewModel = viewModel;
         DataContext = ViewModel;
         _hotKeyService = hotKeyService;
         _serviceProvider = serviceProvider;
+        _trayService = trayService;
+        _configService = configService;
         InitializeComponent();
 
-        // 窗口加载时注册热键
+        // 窗口加载时注册热键和托盘
         Loaded += MainWindow_Loaded;
         // 窗口关闭时清理热键
         Closed += MainWindow_Closed;
@@ -42,6 +47,86 @@ public partial class MainWindow : Window
         {
             System.Diagnostics.Debug.WriteLine($"全局热键 Ctrl+Alt+I 注册成功，ID: {hotKeyId}");
         }
+
+        // 初始化托盘服务（传入配置服务）
+        _trayService.Initialize(this, _hotKeyService, _configService);
+    }
+
+    /// <summary>
+    /// 重写关闭事件，处理关闭确认对话框
+    /// </summary>
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        // 如果托盘图标已经可见（已经在托盘模式），只隐藏主窗口，不退出应用
+        if (_trayService.IsIconVisible)
+        {
+            e.Cancel = true;  // 取消关闭操作
+            Hide();          // 只隐藏主窗口，保持托盘图标可见
+            return;
+        }
+
+        // 获取保存的用户偏好
+        var closeBehavior = _configService.GetCloseBehavior();
+
+        // 如果用户已设置偏好，直接执行对应操作
+        if (closeBehavior != AppConfigService.CloseBehavior.Ask)
+        {
+            e.Cancel = true;
+            switch (closeBehavior)
+            {
+                case AppConfigService.CloseBehavior.MinimizeToTray:
+                    _trayService.HideToTray();
+                    break;
+                case AppConfigService.CloseBehavior.ExitApplication:
+                    e.Cancel = false;
+                    _trayService.Dispose();
+                    base.OnClosing(e);
+                    break;
+            }
+            return;
+        }
+
+        // 取消默认关闭行为
+        e.Cancel = true;
+
+        // 显示关闭确认对话框
+        var dialog = new CloseConfirmationDialog
+        {
+            Owner = this
+        };
+
+        var result = dialog.ShowDialog();
+
+        if (result == true)
+        {
+            // 如果用户勾选了"记住选择"，保存偏好
+            if (dialog.RememberChoice)
+            {
+                var behavior = dialog.SelectedAction switch
+                {
+                    CloseConfirmationDialog.CloseAction.MinimizeToTray => AppConfigService.CloseBehavior.MinimizeToTray,
+                    CloseConfirmationDialog.CloseAction.ExitApplication => AppConfigService.CloseBehavior.ExitApplication,
+                    _ => AppConfigService.CloseBehavior.Ask
+                };
+                _configService.SetCloseBehavior(behavior);
+            }
+
+            switch (dialog.SelectedAction)
+            {
+                case CloseConfirmationDialog.CloseAction.MinimizeToTray:
+                    // 最小化到托盘
+                    _trayService.HideToTray();
+                    break;
+
+                case CloseConfirmationDialog.CloseAction.ExitApplication:
+                    // 完全退出应用
+                    e.Cancel = false; // 允许关闭
+                    _trayService.Dispose();
+                    base.OnClosing(e);
+                    break;
+            }
+        }
+        // 如果对话框被取消（result == false），则不做任何事，保持窗口打开
     }
 
     private void MainWindow_Closed(object? sender, EventArgs e)
@@ -63,7 +148,7 @@ public partial class MainWindow : Window
         });
     }
 
-    private void OnKeyDown(object sender, KeyEventArgs e)
+    private void OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == Key.Enter)
         {

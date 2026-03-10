@@ -41,7 +41,7 @@ public partial class QuickAddDialog : Window
     /// <summary>
     /// 键盘事件处理
     /// </summary>
-    private void Window_KeyDown(object sender, KeyEventArgs e)
+    private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         // Esc 关闭窗口
         if (e.Key == Key.Escape)
@@ -61,7 +61,7 @@ public partial class QuickAddDialog : Window
     /// <summary>
     /// 文本框键盘事件处理
     /// </summary>
-    private void TextBox_KeyDown(object sender, KeyEventArgs e)
+    private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         // Enter 添加想法
         if (e.Key == Key.Enter && !Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))

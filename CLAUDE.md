@@ -56,7 +56,7 @@ No `.sln` file exists - use project paths directly with `dotnet` commands. The a
 
 ## Architecture
 
-MVVM with 4-layer separation. All services registered as singletons in `App.xaml.cs`.
+MVVM with 4-layer separation. All services registered in `App.xaml.cs`: data repositories and managers as singletons, `QuickAddViewModel` as transient.
 
 ```
 Views (XAML)  →  ViewModels  →  Services (*Manager)  →  Data (*Repository)  →  SQLite
@@ -64,8 +64,8 @@ Views (XAML)  →  ViewModels  →  Services (*Manager)  →  Data (*Repository)
 
 - **Models** (`ZtdApp/Models/`): Plain C# classes with `INotifyPropertyChanged` for UI-bound properties. IDs are GUIDs, timestamps are Unix milliseconds.
 - **Data** (`ZtdApp/Data/`): Repository pattern with raw SQL via `Microsoft.Data.Sqlite`. `DatabaseService` manages connection string and schema creation.
-- **Services** (`ZtdApp/Services/`): `*Manager` classes encapsulate business logic, one per model.
-- **ViewModels** (`ZtdApp/ViewModels/`): Use CommunityToolkit.Mvvm source generators. `MainWindowViewModel` handles sidebar navigation by swapping `CurrentPage` between page ViewModels.
+- **Services** (`ZtdApp/Services/`): `*Manager` classes encapsulate business logic, one per model. `HotKeyService` handles global hotkey registration for the quick add dialog.
+- **ViewModels** (`ZtdApp/ViewModels/`): Use CommunityToolkit.Mvvm source generators. `MainWindowViewModel` handles sidebar navigation by swapping `CurrentPage` between page ViewModels (`IdeaViewModel`, `TodoViewModel`, `TodayViewModel`, `NotesViewModel`, `WeeklyReviewViewModel`). `QuickAddViewModel` is registered as transient (per dialog instance).
 - **Views**: Single-window app (`MainWindow.xaml`) with `ContentControl` + `DataTemplate` per page ViewModel for navigation. All page templates are inline in MainWindow.xaml.
 
 ### Navigation Pattern
@@ -74,7 +74,7 @@ Views (XAML)  →  ViewModels  →  Services (*Manager)  →  Data (*Repository)
 
 ### Database
 
-SQLite stored at `%LOCALAPPDATA%/ZtdApp/ztd.db`. Schema created in `DatabaseService.Initialize()`. Tables: `Ideas`, `Tasks`, `Notes`.
+SQLite stored at `%LOCALAPPDATA%/ZtdApp/ztd.db`. Schema created in `DatabaseService.Initialize()`. Tables: `Ideas`, `Tasks`, `Notes`, `Tomatoes`.
 
 ## Styling
 
@@ -84,13 +84,35 @@ All styles defined in `ZtdApp/Styles/BrandColors.xaml` (loaded as merged resourc
 |-------------|-------|
 | `BrandOrange` (#d97757) | Primary buttons, accents |
 | `BrandBlue` (#6a9bcc) | Secondary buttons (e.g., idea action buttons) |
+| `BrandGreen` (#788c5d) | Status indicators |
 | `BrandLight` (#faf9f5) | Background |
 | `BrandDark` (#141413) | Text |
 | `BrandLightGray` (#e8e6dc) | Borders, sidebar background |
+| `BrandMidGray` (#b0aea5) | Disabled state, subtext |
 
-Named styles: `CardBorder`, `NavButton`, `NavButtonActive`, `DeleteButton`, `IdeaActionButton`, `SecondaryButton`, `HeadingTextBlock`, `SubheadingTextBlock`, `SidebarBorder`, `MainWindowStyle`.
+Named styles: `CardBorder`, `NavButton`, `NavButtonActive`, `DeleteButton`, `IdeaActionButton`, `SecondaryButton`, `HeadingTextBlock`, `SubheadingTextBlock`, `SidebarBorder`, `MainWindowStyle`, `PageTitleTextBlock`, `PageDescriptionTextBlock`, `FilterChipButton`, `CardActionButton`, `CardDeleteButton`, `GroupHeaderTextBlock`, `CardContentTextBlock`, `CardTagTextBlock`, `CardDateTextBlock`, `CardDeleteButtonHover`, `CardActionButtonHover`.
+
+**Hover reveal pattern**: Use `CardDeleteButtonHover`/`CardActionButtonHover` styles for buttons that should only appear on card hover. These use `DataTrigger` with `RelativeSource={RelativeSource AncestorType=Border}` and fade in/out via `Opacity` animations (200ms enter, 150ms exit).
 
 **Always use existing BrandColors.xaml styles** - never define new colors inline.
+
+## WPF Button Height Control
+
+**CRITICAL**: Never use `Height` with fixed values on buttons - it causes text clipping.
+
+To ensure multiple buttons have consistent height, ALL of the following properties must be specified together:
+
+```xml
+<Style TargetType="Button">
+    <Setter Property="Margin" Value="5"/>
+    <Setter Property="Padding" Value="16,8"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+</Style>
+```
+
+WPF button height is determined by: `Margin + BorderThickness + Padding + FontSize + FontWeight`. Even when using `BasedOn` styles, you must explicitly override all these properties to ensure consistency. This pattern is tracked as a recurring issue in `known-issues.json` (ui-001, ui-002, ui-004).
 
 ## Testing Patterns
 

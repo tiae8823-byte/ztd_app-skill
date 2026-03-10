@@ -1,0 +1,39 @@
+{
+  "feature": "系统托盘后台运行",
+  "status": "verify",
+  "level": "NON-CRITICAL",
+  "testIntent": [
+    "关闭确认对话框显示",
+    "最小化到托盘",
+    "托盘图标呼出主窗口",
+    "后台快捷键仍可用",
+    "直接退出应用",
+    "托盘右键菜单退出"
+  ],
+  "research": {
+    "github": [
+      "https://github.com/WPFDevelopersOrg/WPFDevelopers",
+      "https://github.com/lobotomy-x/WPF-NotifyIcon-Minimal"
+    ],
+    "blogs": [
+      "https://stackoverflow.com/questions/27265139",
+      "https://randombitsandbytes.com/2018/06/22/wpf-bring-closing-event-to-mvvm/"
+    ]
+  },
+  "implementation": {
+    "files": [
+      "ZtdApp/Services/TrayService.cs",
+      "ZtdApp/Views/CloseConfirmationDialog.xaml",
+      "ZtdApp/Views/CloseConfirmationDialog.xaml.cs",
+      "ZtdApp/Views/MainWindow.xaml.cs",
+      "ZtdApp/App.xaml.cs"
+    ],
+    "components": [
+      "TrayService - 托盘图标管理",
+      "CloseConfirmationDialog - 关闭确认对话框",
+      "MainWindow.OnClosing - 关闭事件处理"
+    ]
+  },
+  "createdAt": "2026-03-10T11:45:00",
+  "lastUpdate": "2026-03-10T12:00:00"
+}
