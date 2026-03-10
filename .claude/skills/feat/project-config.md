@@ -10,8 +10,8 @@
 
 | 操作 | 命令 |
 |------|------|
-| 构建 | `dotnet build ZtdApp` |
-| 运行 | `ZtdApp/bin/Debug/net8.0-windows/ZtdApp.exe` |
+| 构建 | `dotnet build ZtdApp --configuration Release` |
+| 运行 | `ZtdApp/bin/Release/net10.0-windows/win-x64/ZtdApp.exe` |
 | 单元测试 | `dotnet test ZtdApp.Tests` |
 | 指定测试类 | `dotnet test ZtdApp.Tests --filter "FullyQualifiedName~类名"` |
 | UI 自动化测试 | `dotnet test ZtdApp.Tests --filter "FullyQualifiedName~UITests"` |
@@ -22,10 +22,10 @@
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 框架 | WPF + .NET 8 | 桌面应用 |
+| 框架 | WPF + .NET 10 | 桌面应用 (`net10.0-windows`) |
 | MVVM | CommunityToolkit.Mvvm 8.4.0 | `[ObservableProperty]`, `[RelayCommand]` |
-| 数据库 | SQLite (Microsoft.Data.Sqlite) | 本地持久化 |
-| 依赖注入 | Microsoft.Extensions.DependencyInjection | .NET 内置 |
+| 数据库 | SQLite (Microsoft.Data.Sqlite 9.0.0) | 本地持久化 |
+| 依赖注入 | Microsoft.Extensions.DependencyInjection 9.0.0 | .NET 内置 |
 | 测试 | xUnit 2.9.2 + FlaUI.UIA3 4.0.0 | 单元测试 + UI 自动化 |
 
 ---

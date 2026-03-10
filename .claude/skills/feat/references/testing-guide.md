@@ -30,17 +30,13 @@
 
 ## CRITICAL 功能测试流程
 
-### 1. 编译检查
+### 1. Intent 阶段：生成测试代码（TDD 红灯）
 
-```bash
-dotnet build ZtdApp --configuration Release
-```
-
-### 2. AI 生成冒烟测试（基于测试意图）
-
-**输入**：Intent 阶段的 Given-When-Then
+**输入**：Design 阶段的 Given-When-Then
 
 **输出**：5分钟冒烟测试代码
+
+**关键**：测试代码在实现代码**之前**生成（TDD 先写测试）
 
 ```csharp
 // 示例：番茄钟计时
@@ -92,18 +88,33 @@ public void Smoke_Timer_Completes()
 }
 ```
 
-**关键**：
-- AI 只实现测试代码，不修改测试意图
-- 测试代码基于 Intent 阶段的 Given-When-Then
-- 只测核心流程（5分钟内完成）
-
-### 3. 运行测试
+**运行测试**：此时应该失败（代码还没实现）🔴
 
 ```bash
 dotnet test ZtdApp.Tests --filter "FullyQualifiedName~Smoke"
 ```
 
-### 4. 变异测试（可选，严格模式）
+### 2. Build 阶段：实现代码
+
+根据测试意图实现功能代码，使测试通过。
+
+### 3. Verify 阶段：运行测试（TDD 绿灯）
+
+### 3.1 编译检查
+
+```bash
+dotnet build ZtdApp --configuration Release
+```
+
+### 3.2 运行冒烟测试
+
+**此时应该通过** 🟢
+
+```bash
+dotnet test ZtdApp.Tests --filter "FullyQualifiedName~Smoke"
+```
+
+### 3.3 变异测试（可选，严格模式）
 
 **目的**：验证测试真的能发现 bug
 
@@ -131,9 +142,9 @@ dotnet stryker --threshold-high 70 --threshold-break 40
 - 实验性功能
 - UI 交互优化
 
-### 5. 手动测试完整流程
+### 3.4 手动测试完整流程
 
-使用 Intent 阶段的测试意图作为检查清单：
+使用 Design 阶段的测试意图作为检查清单：
 
 ```markdown
 - [ ] 场景1: 开始计时 - 点击开始，倒计时启动
@@ -144,7 +155,7 @@ dotnet stryker --threshold-high 70 --threshold-break 40
 - [ ] 边界条件: 暂停超过30分钟自动结束
 ```
 
-### 6. UI 一致性检查
+### 3.5 UI 一致性检查
 
 使用 `project-config.md` 的检查清单：
 
@@ -261,12 +272,14 @@ jobs:
 
 ## 关键原则
 
-1. **测试意图先行** - Intent 阶段定义，人工确认
-2. **AI 只实现测试代码** - 不修改测试意图
-3. **CRITICAL 冒烟测试** - 5分钟核心流程
-4. **NON-CRITICAL 手动测试** - 快速验证
-5. **变异测试可选** - 生产级严格验证
-6. **Given-When-Then 格式** - 结构化测试场景
+1. **测试意图先行** - Design 阶段定义，人工确认
+2. **Intent 阶段生成测试** - CRITICAL 功能在 Intent 阶段生成测试代码（TDD）
+3. **TDD 红灯绿灯** - Intent 阶段测试失败 🔴，Verify 阶段测试通过 🟢
+4. **AI 只实现测试代码** - 不修改测试意图
+5. **CRITICAL 冒烟测试** - 5分钟核心流程
+6. **NON-CRITICAL 手动测试** - 快速验证
+7. **变异测试可选** - 生产级严格验证
+8. **Given-When-Then 格式** - 结构化测试场景
 
 ---
 

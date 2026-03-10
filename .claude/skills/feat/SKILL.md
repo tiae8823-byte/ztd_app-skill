@@ -108,8 +108,8 @@ Design → Intent → Build → Verify → Commit
 
 ```markdown
 1. 编译检查
-2. AI 生成冒烟测试（基于测试意图）
-3. 运行测试
+2. 运行冒烟测试（Intent 阶段生成的，应该通过 🟢）
+3. 变异测试（可选）
 4. 手动测试完整流程
 5. UI 一致性检查（使用 project-config.md 检查清单）
 ```

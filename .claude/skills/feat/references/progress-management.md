@@ -19,14 +19,23 @@
   "currentFeature": {
     "name": "功能名称",
     "status": "design",
+    "level": "CRITICAL",
     "createdAt": "2026-02-27T14:30:00Z",
     "description": "开始实现功能",
+    "testIntent": [
+      {
+        "scenario": "开始计时",
+        "given": "番茄钟未启动，剩余时间 = 25:00",
+        "when": "用户点击开始按钮",
+        "then": "倒计时启动，每秒更新显示"
+      }
+    ],
     "designLayout": "垂直布局",
     "designComponents": ["Button", "TextBox", "Card"],
     "designSketch": "[简单的ASCII布局图]",
     "filesCreated": [],
     "testsCreated": [],
-    "lastCheckpoint": "UI 设计完成，等待用户确认"
+    "lastCheckpoint": "UI 设计完成，等待用户确认测试意图"
   }
 }
 ```
@@ -37,12 +46,11 @@
 
 | Status | 说明 | 已完成阶段 |
 |--------|------|-----------|
-| `design` | 正在进行 UI 设计 | - |
-| `build` | 设计完成，正在编写代码 | design |
-| `test` | 已完成代码，正在写测试 | design, build |
-| `verify` | 已完成测试，正在编译验证 | design, build, test |
-| `commit` | 已完成验证，准备提交 | design, build, test, verify |
-| `completed` | 功能完成 | 全部 |
+| `design` | 正在进行 UI 设计和测试意图定义 | - |
+| `intent` | 设计完成，CRITICAL 功能生成测试代码 | design |
+| `build` | 测试意图确认，正在编写代码 | design, intent |
+| `verify` | 代码完成，正在编译验证 | design, intent, build |
+| `commit` | 验证完成，准备提交 | design, intent, build, verify |
 
 ---
 
@@ -51,9 +59,9 @@
 | 阶段 | 操作 | 文件变更 |
 |------|------|---------|
 | 开始功能 | 创建进度文件 | status: design |
-| Design 完成 | 更新进度 | status: build, designLayout, designComponents |
-| Build 完成 | 更新进度 | status: test, filesCreated |
-| Test 完成 | 更新进度 | status: verify, testsCreated |
+| Design 完成 | 更新进度 | status: intent, testIntent, designLayout, designComponents |
+| Intent 完成（仅CRITICAL） | 更新进度 | status: build, testsCreated |
+| Build 完成 | 更新进度 | status: verify, filesCreated |
 | Verify 完成 | 更新进度 | status: commit |
 | Commit 完成 | 删除进度文件 | 清除 |
 
@@ -72,10 +80,14 @@
 ```markdown
 📋 检测到未完成的功能：
 
-当前功能: 想法收集
-状态: verify（已完成: design, build, test）
+当前功能: 番茄钟计时
+功能级别: CRITICAL
+状态: build（已完成: design, intent）
+测试意图:
+  1. 开始计时: 点击开始 → 倒计时启动
+  2. 暂停功能: 点击暂停 → 倒计时停止
 设计方案: 垂直布局, Button, TextBox, CardBorder
-最后记录: Test阶段完成，等待编译验证
+最后记录: Intent 阶段完成，已生成测试代码
 创建时间: 2026-02-27 14:30
 
 是否继续？
@@ -101,17 +113,31 @@
 ```
 用户: /feat
 → 选择功能
-→ Design 阶段，确认布局后
+→ Design 阶段，确认布局和测试意图后
 → 用户关闭终端
 
 下次 /feat:
 → 检测到 status: design
-→ 提示："正在设计阶段，已确认布局，是否继续编码？"
-→ Y: 进入 Build 阶段
+→ 提示："正在设计阶段，已确认布局和测试意图，是否进入 Intent 阶段？"
+→ Y: 进入 Intent 阶段（CRITICAL 生成测试代码）
 → N: 清除进度，重新开始
 ```
 
-### 场景2：编码阶段中断
+### 场景2：Intent 阶段中断
+
+```
+用户: /feat
+→ Intent 阶段，已生成测试代码
+→ 用户有事离开
+
+下次 /feat:
+→ 检测到 status: intent
+→ 提示："Intent 阶段完成，已生成测试代码，是否继续编码？"
+→ Y: 进入 Build 阶段
+→ N: 清除进度（已创建测试文件保留，可手动删除）
+```
+
+### 场景3：编码阶段中断
 
 ```
 用户: /feat
@@ -125,11 +151,11 @@
 → N: 清除进度（已创建文件保留，可手动删除）
 ```
 
-### 场景3：验证失败中断
+### 场景4：验证失败中断
 
 ```
 用户: /feat
-→ Verify 阶段，编译失败
+→ Verify 阶段，编译失败或测试未通过
 → 尝试修复 1 次仍未解决
 → 用户决定明天再处理
 

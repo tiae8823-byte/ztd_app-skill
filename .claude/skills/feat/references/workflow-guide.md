@@ -159,7 +159,8 @@
 1. 用户再次审查测试意图
 2. 确认不可修改（AI 不能改）
 3. AI 根据意图生成冒烟测试代码
-4. 运行测试（应该失败，因为还没实现）
+4. 运行测试（应该失败 🔴，因为还没实现）← TDD 红灯
+5. 保存进度，进入 Build 阶段
 
 **NON-CRITICAL 功能**：
 - 跳过此阶段，直接 Build
@@ -230,7 +231,7 @@
    dotnet build ZtdApp --configuration Release
    ```
 
-2. 运行冒烟测试（Intent 阶段生成的）
+2. 运行冒烟测试（Intent 阶段生成的，应该通过 🟢）← TDD 绿灯
    ```bash
    dotnet test ZtdApp.Tests --filter "FullyQualifiedName~Smoke"
    ```
