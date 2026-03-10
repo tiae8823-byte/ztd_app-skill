@@ -296,7 +296,13 @@ git add .
 git commit -m "feat: [功能名称]"
 ```
 
-### 步骤 5.2：更新 PRD.md
+### 步骤 5.2：推送到远程
+
+```bash
+git push origin main
+```
+
+### 步骤 5.3：更新 PRD.md
 
 ```markdown
 ### MVP 功能（必须实现）
@@ -304,13 +310,13 @@ git commit -m "feat: [功能名称]"
 - [x] 番茄钟计时 ✅ commit: a1b2c3d
 ```
 
-### 步骤 5.3：清理进度
+### 步骤 5.4：清理进度
 
 ```bash
 rm .claude/feat-progress.json
 ```
 
-### 步骤 5.4：清理上下文
+### 步骤 5.5：清理上下文
 
 ```
 /compact
@@ -358,7 +364,7 @@ rm .claude/feat-progress.json
 5. **必须使用共享样式** - 禁止内联
 6. **一次一个功能** - 不并行
 7. **及时保存进度** - 每个阶段后更新 feat-progress.json
-8. **完成清理** - commit 后删除进度，运行 /compact
+8. **完成清理** - commit + push 后删除进度，运行 /compact
 
 ---
 

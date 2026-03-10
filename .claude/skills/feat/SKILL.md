@@ -30,7 +30,7 @@ Design → Intent → Build → Verify → Commit
 | **Intent** | 测试意图确认（仅 CRITICAL） | **必须**人工确认 |
 | **Build** | 调研方案 → 编码实现 | **必须**告知参考来源 |
 | **Verify** | 编译 + 分层测试 | **必须**运行检查清单 |
-| **Commit** | 提交代码 | **必须**更新PRD + 清理进度 |
+| **Commit** | 提交代码 + 推送远程 | **必须**更新PRD + 清理进度 |
 
 详细流程: [references/workflow-guide.md](references/workflow-guide.md)
 
@@ -133,7 +133,7 @@ Design → Intent → Build → Verify → Commit
 5. **Given-When-Then 格式** - 结构化测试场景（强制）
 6. **分层测试** - CRITICAL 冒烟测试，NON-CRITICAL 手动测试
 7. **及时保存进度** - 每个阶段后更新 feat-progress.json
-8. **完成清理** - commit 后删除进度文件，运行 /compact
+8. **完成清理** - commit + push 后删除进度文件，运行 /compact
 
 ## 文件结构
 
