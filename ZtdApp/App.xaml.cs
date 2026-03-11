@@ -58,11 +58,14 @@ public partial class App : Application
         var dbService = Services.GetRequiredService<DatabaseService>();
         dbService.Initialize();
 
+        // 每次启动重置关闭行为偏好（确保显示关闭确认对话框）
+        var configService = Services.GetRequiredService<AppConfigService>();
+        configService.ClearCloseBehavior();
+
         // 创建主窗口
         var viewModel = Services.GetRequiredService<MainWindowViewModel>();
         var hotKeyService = Services.GetRequiredService<HotKeyService>();
         var trayService = Services.GetRequiredService<TrayService>();
-        var configService = Services.GetRequiredService<AppConfigService>();
         var mainWindow = new MainWindow(viewModel, hotKeyService, Services, trayService, configService);
 
         mainWindow.Show();

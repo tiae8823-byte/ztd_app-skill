@@ -29,6 +29,7 @@ public partial class CloseConfirmationDialog : Window
     public CloseConfirmationDialog()
     {
         InitializeComponent();
+        System.Diagnostics.Debug.WriteLine("[DEBUG] CloseConfirmationDialog constructor called");
     }
 
     /// <summary>
