@@ -196,4 +196,13 @@ public partial class MainWindow : Window
             e.Handled = true;
         }
     }
+
+    /// <summary>
+    /// 复选框点击事件处理 - 阻止事件冒泡，防止触发卡片展开
+    /// </summary>
+    private void OnCheckBoxClick(object sender, RoutedEventArgs e)
+    {
+        // 阻止事件冒泡，防止触发卡片的 MouseBinding
+        e.Handled = true;
+    }
 }

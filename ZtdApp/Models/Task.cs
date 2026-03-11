@@ -40,6 +40,21 @@ public class TodoTask : INotifyPropertyChanged
         }
     }
 
+    // 卡片展开状态（用于点击展开操作按钮）
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            if (_isExpanded != value)
+            {
+                _isExpanded = value;
+                OnPropertyChanged(nameof(IsExpanded));
+            }
+        }
+    }
+
     // WPF 数据绑定显示属性
     public string CreatedAtDisplay => FormatTime(CreatedAt);
     public string CompletedAtDisplay => CompletedAt.HasValue ? FormatTime(CompletedAt.Value) : "";

@@ -94,6 +94,13 @@ public partial class TodoViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void CompleteTask(string id)
+    {
+        _taskManager?.Complete(id);
+        LoadTodos();
+    }
+
+    [RelayCommand]
     private void BatchComplete()
     {
         if (_taskManager == null) return;
@@ -109,6 +116,43 @@ public partial class TodoViewModel : ObservableObject
         }
 
         LoadTodos();
+    }
+
+    [RelayCommand]
+    private void ToggleTaskExpand(TodoTask task)
+    {
+        if (task == null)
+        {
+            System.Diagnostics.Debug.WriteLine("ToggleTaskExpand: task is null");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"ToggleTaskExpand: {task.Id}, IsExpanded: {task.IsExpanded}");
+
+        try
+        {
+            // 互斥展开：收起其他所有卡片
+            foreach (var t in ShortTimeTasks)
+            {
+                if (t != task && t.IsExpanded)
+                    t.IsExpanded = false;
+            }
+            foreach (var t in LongTimeTasks)
+            {
+                if (t != task && t.IsExpanded)
+                    t.IsExpanded = false;
+            }
+
+            // 切换当前卡片状态
+            task.IsExpanded = !task.IsExpanded;
+
+            System.Diagnostics.Debug.WriteLine($"ToggleTaskExpand: After toggle, IsExpanded: {task.IsExpanded}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ToggleTaskExpand Error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack: {ex.StackTrace}");
+        }
     }
 
     public void LoadTodos()
