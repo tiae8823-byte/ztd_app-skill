@@ -193,6 +193,10 @@ public partial class MainWindow : Window
             {
                 notesVM.AddNoteCommand.Execute(null);
             }
+            else if (ViewModel.CurrentPage is ViewModels.Pages.TestViewModel testVM)
+            {
+                testVM.AddTestItemCommand.Execute(null);
+            }
             e.Handled = true;
         }
     }

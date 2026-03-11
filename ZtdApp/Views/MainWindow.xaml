@@ -1177,16 +1177,32 @@
                                            Style="{StaticResource PageTitleTextBlock}"/>
                                 <TextBlock Text="在此处测试和设计你的 UI 组件"
                                            Style="{StaticResource PageDescriptionTextBlock}"/>
-                                <Grid>
+                                <Grid Margin="157,0,157,0">
+                                    <!-- 输入框 -->
                                     <TextBox Text="{Binding InputContent, UpdateSourceTrigger=PropertyChanged}"
+                                             KeyDown="OnKeyDown"
                                              Height="166"
-                                             Margin="157,0,157,0"/>
-                                    <Button Content="添加测试"
-                                            Command="{Binding AddTestItemCommand}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Bottom"
-                                            Margin="165,0,0,8"
-                                            Padding="8,4"/>
+                                             FontSize="18"
+                                             Padding="10">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                                <Style.Resources>
+                                                    <VisualBrush x:Key="CueBannerBrush" AlignmentX="Center" AlignmentY="Center" Stretch="None">
+                                                        <VisualBrush.Visual>
+                                                            <TextBlock Text="请输入内容..." 
+                                                                       Foreground="Gray" 
+                                                                       FontSize="16"/>
+                                                        </VisualBrush.Visual>
+                                                    </VisualBrush>
+                                                </Style.Resources>
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="">
+                                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
                                 </Grid>
                                 <ItemsControl ItemsSource="{Binding TestCards}" Margin="0,20,0,0">
                                     <ItemsControl.ItemTemplate>
@@ -1225,8 +1241,8 @@
                                                     <Border x:Name="ExpandPanel"
                                                             BorderBrush="{StaticResource BrandLightGray}"
                                                             BorderThickness="0,1,0,0"
-                                                            Margin="0,12,0,0"
-                                                            Padding="0,12,0,0"
+                                                            Margin="0,4,0,0"
+                                                            Padding="0,4,0,0"
                                                             Opacity="0"
                                                             Height="0"
                                                             ClipToBounds="True">
@@ -1238,7 +1254,7 @@
                                                                             <BeginStoryboard>
                                                                                 <Storyboard>
                                                                                     <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                                                     From="0" To="56"
+                                                                                                     From="0" To="35"
                                                                                                      Duration="0:0:0.25">
                                                                                         <DoubleAnimation.EasingFunction>
                                                                                             <CubicEase EasingMode="EaseOut"/>
@@ -1258,7 +1274,7 @@
                                                                             <BeginStoryboard>
                                                                                 <Storyboard>
                                                                                     <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                                                     From="56" To="0"
+                                                                                                     From="35" To="0"
                                                                                                      Duration="0:0:0.2">
                                                                                         <DoubleAnimation.EasingFunction>
                                                                                             <CubicEase EasingMode="EaseIn"/>
@@ -1282,7 +1298,15 @@
                                                             <Button Content="删除"
                                                                     Command="{Binding DataContext.DeleteTestCardCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                     CommandParameter="{Binding Id}"
-                                                                    Style="{StaticResource CardDeleteButton}"/>
+                                                                    Padding="2,0"
+                                                                    Margin="0"
+                                                                    Background="#FFDDDDDD"
+                                                                    BorderBrush="#FF999999"
+                                                                    BorderThickness="1"
+                                                                    FontSize="12"
+                                                                    HorizontalAlignment="Left"
+                                                                    VerticalAlignment="Center"
+                                                                    Height="Auto"/>
                                                         </StackPanel>
                                                     </Border>
                                                 </StackPanel>
