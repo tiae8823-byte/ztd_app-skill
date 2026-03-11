@@ -44,18 +44,7 @@
 
 ## UI 一致性检查
 
-Verify 阶段使用此清单：
-
-- [ ] 页面标题使用 `PageTitleTextBlock` 样式
-- [ ] 页面说明使用 `PageDescriptionTextBlock` 样式
-- [ ] 卡片容器使用 `CardBorder` 样式
-- [ ] 卡片内文本使用 `CardContentTextBlock` / `CardTagTextBlock` / `CardDateTextBlock`
-- [ ] 卡片内按钮使用 `CardActionButton` / `CardDeleteButton`
-- [ ] 筛选按钮使用 `FilterChipButton` 为基础样式
-- [ ] 按钮颜色符合品牌规范（主按钮橙色，次要按钮蓝色）
-- [ ] **无内联 FontSize/Padding/Color** — 所有属性引用共享样式或资源键
-- [ ] 新增组件的交互状态（hover/pressed/focused/disabled）符合 design-guide.md 状态规则
-- [ ] 整体风格与已有页面一致
+Verify 阶段使用 [design-guide.md](design-guide.md) 中的 UI 一致性检查清单。
 
 ---
 

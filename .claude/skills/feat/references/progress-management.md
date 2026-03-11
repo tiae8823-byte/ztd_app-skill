@@ -46,11 +46,10 @@
 
 | Status | 说明 | 已完成阶段 |
 |--------|------|-----------|
-| `design` | 正在进行 UI 设计和测试意图定义 | - |
-| `intent` | 设计完成，CRITICAL 功能生成测试代码 | design |
-| `build` | 测试意图确认，正在编写代码 | design, intent |
-| `verify` | 代码完成，正在编译验证 | design, intent, build |
-| `commit` | 验证完成，准备提交 | design, intent, build, verify |
+| `design` | 设计 + 测试意图 + 生成测试代码 | - |
+| `build` | 编码实现（让测试通过） | design |
+| `verify` | 编译 + 自动测试 + 人工验收 | design, build |
+| `commit` | 准备提交 | design, build, verify |
 
 ---
 
@@ -59,8 +58,7 @@
 | 阶段 | 操作 | 文件变更 |
 |------|------|---------|
 | 开始功能 | 创建进度文件 | status: design |
-| Design 完成 | 更新进度 | status: intent, testIntent, designLayout, designComponents |
-| Intent 完成（仅CRITICAL） | 更新进度 | status: build, testsCreated |
+| Design 完成 | 更新进度 | status: build, testIntent, testsCreated, designLayout, designComponents |
 | Build 完成 | 更新进度 | status: verify, filesCreated |
 | Verify 完成 | 更新进度 | status: commit |
 | Commit 完成 | 删除进度文件 | 清除 |
@@ -113,31 +111,17 @@
 ```
 用户: /feat
 → 选择功能
-→ Design 阶段，确认布局和测试意图后
+→ Design 阶段，确认测试意图并生成测试代码后
 → 用户关闭终端
 
 下次 /feat:
 → 检测到 status: design
-→ 提示："正在设计阶段，已确认布局和测试意图，是否进入 Intent 阶段？"
-→ Y: 进入 Intent 阶段（CRITICAL 生成测试代码）
+→ 提示："设计阶段完成，已生成测试代码，是否进入 Build 阶段？"
+→ Y: 进入 Build 阶段
 → N: 清除进度，重新开始
 ```
 
-### 场景2：Intent 阶段中断
-
-```
-用户: /feat
-→ Intent 阶段，已生成测试代码
-→ 用户有事离开
-
-下次 /feat:
-→ 检测到 status: intent
-→ 提示："Intent 阶段完成，已生成测试代码，是否继续编码？"
-→ Y: 进入 Build 阶段
-→ N: 清除进度（已创建测试文件保留，可手动删除）
-```
-
-### 场景3：编码阶段中断
+### 场景2：编码阶段中断
 
 ```
 用户: /feat
@@ -151,7 +135,7 @@
 → N: 清除进度（已创建文件保留，可手动删除）
 ```
 
-### 场景4：验证失败中断
+### 场景3：验证失败中断
 
 ```
 用户: /feat

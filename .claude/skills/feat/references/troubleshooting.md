@@ -22,7 +22,7 @@ AI 遇到问题时参考此文件。
    - 搜索：`site:github.com [技术栈] [问题关键词]`
 
 2. **官方文档**
-   - 使用 `mcp__context7__query-docs`
+   - 使用 `mcp__context7-mcp__query-docs`
    - 权威、准确、最新
 
 3. **Stack Overflow**

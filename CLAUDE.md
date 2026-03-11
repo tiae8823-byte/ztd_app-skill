@@ -38,6 +38,9 @@ dotnet test ZtdApp.Tests
 # Run a specific test class
 dotnet test ZtdApp.Tests --filter "FullyQualifiedName~IdeaTests"
 
+# Run a specific test method
+dotnet test ZtdApp.Tests --filter "FullyQualifiedName~IdeaTests.AddIdea_SavesToDatabase"
+
 # Run UI automation tests (requires Release build first)
 dotnet test ZtdApp.Tests --filter "FullyQualifiedName~UITests"
 ```
@@ -70,7 +73,13 @@ Views (XAML)  →  ViewModels  →  Services (*Manager)  →  Data (*Repository)
 
 ### Navigation Pattern
 
-`MainWindow.xaml` uses `ContentControl.Content` bound to `MainWindowViewModel.CurrentPage`. Each page ViewModel type gets a `DataTemplate` in `ContentControl.Resources`. Navigation commands on `MainWindowViewModel` set `CurrentPage` and `CurrentTitle`.
+`MainWindow.xaml` (`ZtdApp/Views/MainWindow.xaml`) uses `ContentControl.Content` bound to `MainWindowViewModel.CurrentPage`. Each page ViewModel type gets a `DataTemplate` in `ContentControl.Resources`. Navigation commands on `MainWindowViewModel` set `CurrentPage` and `CurrentTitle`.
+
+To add a new page:
+1. Create ViewModel in `ZtdApp/ViewModels/Pages/`
+2. Register as singleton in `App.xaml.cs`
+3. Add navigation command in `MainWindowViewModel`
+4. Add `DataTemplate` in `MainWindow.xaml` within the `ContentControl.Resources`
 
 ### Database
 
@@ -92,7 +101,15 @@ All styles defined in `ZtdApp/Styles/BrandColors.xaml` (loaded as merged resourc
 
 Named styles: `CardBorder`, `NavButton`, `NavButtonActive`, `DeleteButton`, `IdeaActionButton`, `SecondaryButton`, `HeadingTextBlock`, `SubheadingTextBlock`, `SidebarBorder`, `MainWindowStyle`, `PageTitleTextBlock`, `PageDescriptionTextBlock`, `FilterChipButton`, `CardActionButton`, `CardDeleteButton`, `GroupHeaderTextBlock`, `CardContentTextBlock`, `CardTagTextBlock`, `CardDateTextBlock`, `CardDeleteButtonHover`, `CardActionButtonHover`.
 
-**Hover reveal pattern**: Use `CardDeleteButtonHover`/`CardActionButtonHover` styles for buttons that should only appear on card hover. These use `DataTrigger` with `RelativeSource={RelativeSource AncestorType=Border}` and fade in/out via `Opacity` animations (200ms enter, 150ms exit).
+**Hover reveal pattern**: Use `CardDeleteButtonHover`/`CardActionButtonHover` styles for buttons that should only appear on card hover:
+
+```xml
+<Button Style="{StaticResource CardActionButtonHover}"
+        Content="操作"
+        Command="{Binding SomeCommand}" />
+```
+
+These styles use `DataTrigger` with `RelativeSource={RelativeSource AncestorType=Border}` and fade in/out via `Opacity` animations (200ms enter, 150ms exit). The button must be inside a `Border` for the ancestor binding to work.
 
 **Always use existing BrandColors.xaml styles** - never define new colors inline.
 
@@ -114,11 +131,19 @@ To ensure multiple buttons have consistent height, ALL of the following properti
 
 WPF button height is determined by: `Margin + BorderThickness + Padding + FontSize + FontWeight`. Even when using `BasedOn` styles, you must explicitly override all these properties to ensure consistency. This pattern is tracked as a recurring issue in `known-issues.json` (ui-001, ui-002, ui-004).
 
+**When using BasedOn styles**: Always explicitly set all five properties (Margin, Padding, FontSize, FontWeight, VerticalContentAlignment) even if the base style already defines them. Inheritance does not guarantee consistent rendering height.
+
 ## Testing Patterns
 
 Unit tests use a `SharedMemoryDatabase` class that extends `DatabaseService` with `Mode=Memory;Cache=Shared` SQLite connections. Each test class creates its own named in-memory DB and disposes it. Multiple `SharedMemoryDatabase` variants exist across test files (e.g., `SharedMemoryDatabase`, `SharedMemoryDatabase3`) - when adding a new test file, create a new variant or reuse an appropriate one.
 
-UI tests use FlaUI (UIA3) to launch the compiled `.exe` and interact with the window. They require a Release build before running.
+UI tests use FlaUI (UIA3) to launch the compiled `.exe` and interact with the window. They require a Release build before running. UI tests must have `[Collection("UITests")]` attribute to prevent parallel execution (only one UI test can run at a time since they interact with the actual application window).
+
+Test class naming conventions:
+- `*Tests` - Unit tests (e.g., `IdeaTests`, `TaskTests`)
+- `*UITests` - UI automation tests (e.g., `QuickAddUITests`)
+
+When creating a new test file, define a new `SharedMemoryDatabase` variant class at the bottom of the file (e.g., `SharedMemoryDatabase4`, `SharedMemoryDatabase5`). Each variant uses a unique connection string to isolate tests from other test classes.
 
 ## Key Conventions
 
