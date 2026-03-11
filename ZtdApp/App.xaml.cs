@@ -44,6 +44,7 @@ public partial class App : Application
         services.AddSingleton<TodayViewModel>();
         services.AddSingleton<NotesViewModel>();
         services.AddSingleton<WeeklyReviewViewModel>();
+        services.AddSingleton<TestViewModel>();
         services.AddSingleton<MainWindowViewModel>();
         services.AddTransient<QuickAddViewModel>();
 

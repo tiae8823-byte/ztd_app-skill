@@ -17,19 +17,22 @@ public partial class MainWindowViewModel : ObservableObject
     public TodayViewModel TodayViewModel { get; }
     public NotesViewModel NotesViewModel { get; }
     public WeeklyReviewViewModel WeeklyReviewViewModel { get; }
+    public TestViewModel TestViewModel { get; }
 
     public MainWindowViewModel(
         IdeaViewModel ideaViewModel,
         TodoViewModel todoViewModel,
         TodayViewModel todayViewModel,
         NotesViewModel notesViewModel,
-        WeeklyReviewViewModel weeklyReviewViewModel)
+        WeeklyReviewViewModel weeklyReviewViewModel,
+        TestViewModel testViewModel)
     {
         IdeaViewModel = ideaViewModel;
         TodoViewModel = todoViewModel;
         TodayViewModel = todayViewModel;
         NotesViewModel = notesViewModel;
         WeeklyReviewViewModel = weeklyReviewViewModel;
+        TestViewModel = testViewModel;
 
         // 默认显示想法收集页面
         CurrentPage = IdeaViewModel;
@@ -73,5 +76,12 @@ public partial class MainWindowViewModel : ObservableObject
         WeeklyReviewViewModel.RefreshData();
         CurrentPage = WeeklyReviewViewModel;
         CurrentTitle = "每周回顾";
+    }
+
+    [RelayCommand]
+    private void NavigateToTest()
+    {
+        CurrentPage = TestViewModel;
+        CurrentTitle = "测试界面";
     }
 }
