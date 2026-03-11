@@ -234,7 +234,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource BrandLightGray}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Padding" Value="16,16,16,12"/>
         <Setter Property="Margin" Value="157,0,157,10"/>
         <!-- 浅阴影效果 -->
         <Setter Property="Effect">
@@ -438,15 +438,22 @@
 
     <!-- Card Action Button (small button inside cards: 6,6 padding, 12pt) -->
     <Style x:Key="CardActionButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
-        <Setter Property="Padding" Value="6,6"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="MinHeight" Value="32"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
         <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
     <!-- Card Delete Button (small delete inside cards: 6,6 padding, 12pt, gray) -->
     <Style x:Key="CardDeleteButton" TargetType="Button" BasedOn="{StaticResource DeleteButton}">
-        <Setter Property="Padding" Value="6,6"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="MinHeight" Value="32"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeSmall}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
     <!-- Group Header (15pt, semibold, gray) -->

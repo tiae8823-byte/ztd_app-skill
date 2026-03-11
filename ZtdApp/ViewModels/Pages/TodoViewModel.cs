@@ -191,6 +191,7 @@ public partial class TodoViewModel : ObservableObject
             {
                 if (SelectedTimeFilter == null || SelectedTimeFilter == ">30分钟")
                 {
+                    task.PropertyChanged += OnTaskPropertyChanged;
                     LongTimeTasks.Add(task);
                 }
             }

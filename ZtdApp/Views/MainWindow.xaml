@@ -333,43 +333,65 @@
                                                                           Command="{Binding DataContext.ToggleTaskExpandCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                           CommandParameter="{Binding}"/>
                                                         </Border.InputBindings>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <!-- 复选框 -->
-                                                            <CheckBox Grid.Column="0"
-                                                                      IsChecked="{Binding IsChecked}"
-                                                                      VerticalAlignment="Center"
-                                                                      Margin="0,0,12,0"
-                                                                      Click="OnCheckBoxClick"/>
-                                                            <!-- 任务内容 -->
-                                                            <TextBlock Grid.Column="1"
-                                                                       Text="{Binding Content}"
-                                                                       FontSize="16"
-                                                                       TextWrapping="Wrap"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
-                                                            <!-- 操作按钮区（点击展开） -->
-                                                            <StackPanel x:Name="ActionButtons"
-                                                                        Grid.Column="2"
-                                                                        Orientation="Horizontal"
-                                                                        Margin="0,0,12,0">
-                                                                <StackPanel.Style>
-                                                                    <Style TargetType="StackPanel">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        <Setter Property="Opacity" Value="0"/>
+                                                        <StackPanel>
+                                                            <!-- 卡片头部：复选框 + 内容 + 右侧元信息 -->
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <!-- 复选框 -->
+                                                                <CheckBox Grid.Column="0"
+                                                                          IsChecked="{Binding IsChecked}"
+                                                                          VerticalAlignment="Center"
+                                                                          Margin="0,0,12,0"
+                                                                          Click="OnCheckBoxClick"/>
+                                                                <!-- 任务内容 -->
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="{Binding Content}"
+                                                                           Style="{StaticResource CardContentTextBlock}"
+                                                                           VerticalAlignment="Center"/>
+                                                                <!-- 右侧元信息 -->
+                                                                <StackPanel Grid.Column="2"
+                                                                            Orientation="Vertical"
+                                                                            HorizontalAlignment="Right"
+                                                                            VerticalAlignment="Center"
+                                                                            Margin="12,0,0,0">
+                                                                    <TextBlock Text="{Binding CategoryTagDisplay}"
+                                                                               Style="{StaticResource CardTagTextBlock}"
+                                                                               HorizontalAlignment="Right"/>
+                                                                    <TextBlock Text="{Binding CreatedAtDisplay}"
+                                                                               Style="{StaticResource CardDateTextBlock}"
+                                                                               HorizontalAlignment="Right"/>
+                                                                </StackPanel>
+                                                            </Grid>
+
+                                                            <!-- 展开操作区域（卡片内部） -->
+                                                            <Border x:Name="ExpandPanel"
+                                                                    BorderBrush="{StaticResource BrandLightGray}"
+                                                                    BorderThickness="0,1,0,0"
+                                                                    Margin="0,12,0,0"
+                                                                    Padding="0,12,0,0"
+                                                                    Opacity="0"
+                                                                    Height="0"
+                                                                    ClipToBounds="True">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
                                                                                 <DataTrigger.EnterActions>
                                                                                     <BeginStoryboard>
                                                                                         <Storyboard>
+                                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                                                             From="0" To="56"
+                                                                                                             Duration="0:0:0.25">
+                                                                                                <DoubleAnimation.EasingFunction>
+                                                                                                    <CubicEase EasingMode="EaseOut"/>
+                                                                                                </DoubleAnimation.EasingFunction>
+                                                                                            </DoubleAnimation>
                                                                                             <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                                             To="1"
+                                                                                                             From="0" To="1"
                                                                                                              Duration="0:0:0.2">
                                                                                                 <DoubleAnimation.EasingFunction>
                                                                                                     <CubicEase EasingMode="EaseOut"/>
@@ -381,8 +403,15 @@
                                                                                 <DataTrigger.ExitActions>
                                                                                     <BeginStoryboard>
                                                                                         <Storyboard>
+                                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                                                             From="56" To="0"
+                                                                                                             Duration="0:0:0.2">
+                                                                                                <DoubleAnimation.EasingFunction>
+                                                                                                    <CubicEase EasingMode="EaseIn"/>
+                                                                                                </DoubleAnimation.EasingFunction>
+                                                                                            </DoubleAnimation>
                                                                                             <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                                             To="0"
+                                                                                                             From="1" To="0"
                                                                                                              Duration="0:0:0.15">
                                                                                                 <DoubleAnimation.EasingFunction>
                                                                                                     <CubicEase EasingMode="EaseIn"/>
@@ -394,32 +423,20 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </StackPanel.Style>
-                                                                <!-- 完成按钮 -->
-                                                                <Button Content="完成"
-                                                                        Command="{Binding DataContext.CompleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                        CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardActionButton}"/>
-                                                                <!-- 删除按钮 -->
-                                                                <Button Content="删除"
-                                                                        Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                        CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardDeleteButton}"
-                                                                        Margin="8,0,0,0"/>
-                                                            </StackPanel>
-                                                            <!-- 右侧元信息（纵向排列） -->
-                                                            <StackPanel Grid.Column="3"
-                                                                        Orientation="Vertical"
-                                                                        HorizontalAlignment="Right"
-                                                                        VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding CategoryTagDisplay}"
-                                                                           Style="{StaticResource CardTagTextBlock}"
-                                                                           HorizontalAlignment="Right"/>
-                                                                <TextBlock Text="{Binding CreatedAtDisplay}"
-                                                                           Style="{StaticResource CardDateTextBlock}"
-                                                                           HorizontalAlignment="Right"/>
-                                                            </StackPanel>
-                                                        </Grid>
+                                                                </Border.Style>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Button Content="完成"
+                                                                            Command="{Binding DataContext.CompleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                            CommandParameter="{Binding Id}"
+                                                                            Style="{StaticResource CardActionButton}"/>
+                                                                    <Button Content="删除"
+                                                                            Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                            CommandParameter="{Binding Id}"
+                                                                            Style="{StaticResource CardDeleteButton}"
+                                                                            Margin="8,0,0,0"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </StackPanel>
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
@@ -435,7 +452,7 @@
                                             <Run Text="{Binding LongTimeCount, Mode=OneWay}"/>
                                             <Run Text=")"/>
                                         </TextBlock>
-                                        <ItemsControl ItemsSource="{Binding LongTimeTasks}">
+                                        <ItemsControl ItemsSource="{Binding LongTimeTasks}" Margin="0,8,0,0">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border Style="{StaticResource CardBorder}" Cursor="Hand">
@@ -444,36 +461,58 @@
                                                                           Command="{Binding DataContext.ToggleTaskExpandCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                           CommandParameter="{Binding}"/>
                                                         </Border.InputBindings>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <!-- 任务内容 -->
-                                                            <TextBlock Grid.Column="0"
-                                                                       Text="{Binding Content}"
-                                                                       FontSize="16"
-                                                                       TextWrapping="Wrap"
-                                                                       VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
-                                                            <!-- 操作按钮区（点击展开） -->
-                                                            <StackPanel x:Name="ActionButtons"
-                                                                        Grid.Column="1"
-                                                                        Orientation="Horizontal"
-                                                                        Margin="0,0,12,0">
-                                                                <StackPanel.Style>
-                                                                    <Style TargetType="StackPanel">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        <Setter Property="Opacity" Value="0"/>
+                                                        <StackPanel>
+                                                            <!-- 卡片头部：内容 + 右侧元信息 -->
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <!-- 任务内容 -->
+                                                                <TextBlock Grid.Column="0"
+                                                                           Text="{Binding Content}"
+                                                                           Style="{StaticResource CardContentTextBlock}"
+                                                                           VerticalAlignment="Center"/>
+                                                                <!-- 右侧元信息 -->
+                                                                <StackPanel Grid.Column="1"
+                                                                            Orientation="Vertical"
+                                                                            HorizontalAlignment="Right"
+                                                                            VerticalAlignment="Center"
+                                                                            Margin="12,0,0,0">
+                                                                    <TextBlock Text="{Binding CategoryTagDisplay}"
+                                                                               Style="{StaticResource CardTagTextBlock}"
+                                                                               HorizontalAlignment="Right"/>
+                                                                    <TextBlock Text="{Binding CreatedAtDisplay}"
+                                                                               Style="{StaticResource CardDateTextBlock}"
+                                                                               HorizontalAlignment="Right"/>
+                                                                </StackPanel>
+                                                            </Grid>
+
+                                                            <!-- 展开操作区域（卡片内部） -->
+                                                            <Border x:Name="ExpandPanel"
+                                                                    BorderBrush="{StaticResource BrandLightGray}"
+                                                                    BorderThickness="0,1,0,0"
+                                                                    Margin="0,12,0,0"
+                                                                    Padding="0,12,0,0"
+                                                                    Opacity="0"
+                                                                    Height="0"
+                                                                    ClipToBounds="True">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsExpanded}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
                                                                                 <DataTrigger.EnterActions>
                                                                                     <BeginStoryboard>
                                                                                         <Storyboard>
+                                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                                                             From="0" To="56"
+                                                                                                             Duration="0:0:0.25">
+                                                                                                <DoubleAnimation.EasingFunction>
+                                                                                                    <CubicEase EasingMode="EaseOut"/>
+                                                                                                </DoubleAnimation.EasingFunction>
+                                                                                            </DoubleAnimation>
                                                                                             <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                                             To="1"
+                                                                                                             From="0" To="1"
                                                                                                              Duration="0:0:0.2">
                                                                                                 <DoubleAnimation.EasingFunction>
                                                                                                     <CubicEase EasingMode="EaseOut"/>
@@ -485,8 +524,15 @@
                                                                                 <DataTrigger.ExitActions>
                                                                                     <BeginStoryboard>
                                                                                         <Storyboard>
+                                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                                                             From="56" To="0"
+                                                                                                             Duration="0:0:0.2">
+                                                                                                <DoubleAnimation.EasingFunction>
+                                                                                                    <CubicEase EasingMode="EaseIn"/>
+                                                                                                </DoubleAnimation.EasingFunction>
+                                                                                            </DoubleAnimation>
                                                                                             <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                                                             To="0"
+                                                                                                             From="1" To="0"
                                                                                                              Duration="0:0:0.15">
                                                                                                 <DoubleAnimation.EasingFunction>
                                                                                                     <CubicEase EasingMode="EaseIn"/>
@@ -498,32 +544,20 @@
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </StackPanel.Style>
-                                                                <!-- 加入今日按钮 -->
-                                                                <Button Content="加入今日"
-                                                                        Command="{Binding DataContext.MoveToTodayCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                        CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardActionButton}"/>
-                                                                <!-- 删除按钮 -->
-                                                                <Button Content="删除"
-                                                                        Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                        CommandParameter="{Binding Id}"
-                                                                        Style="{StaticResource CardDeleteButton}"
-                                                                        Margin="8,0,0,0"/>
-                                                            </StackPanel>
-                                                            <!-- 右侧元信息（纵向排列） -->
-                                                            <StackPanel Grid.Column="2"
-                                                                        Orientation="Vertical"
-                                                                        HorizontalAlignment="Right"
-                                                                        VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding CategoryTagDisplay}"
-                                                                           Style="{StaticResource CardTagTextBlock}"
-                                                                           HorizontalAlignment="Right"/>
-                                                                <TextBlock Text="{Binding CreatedAtDisplay}"
-                                                                           Style="{StaticResource CardDateTextBlock}"
-                                                                           HorizontalAlignment="Right"/>
-                                                            </StackPanel>
-                                                        </Grid>
+                                                                </Border.Style>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Button Content="加入今日"
+                                                                            Command="{Binding DataContext.MoveToTodayCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                            CommandParameter="{Binding Id}"
+                                                                            Style="{StaticResource CardActionButton}"/>
+                                                                    <Button Content="删除"
+                                                                            Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                            CommandParameter="{Binding Id}"
+                                                                            Style="{StaticResource CardDeleteButton}"
+                                                                            Margin="8,0,0,0"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </StackPanel>
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
