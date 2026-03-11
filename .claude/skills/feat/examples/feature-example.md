@@ -93,6 +93,39 @@ AI: 📦 Commit 阶段
     git push origin <当前分支>
 
     ✅ 番茄钟计时 完成
+
+AI: 📖 教学回顾：番茄钟计时
+
+    1. 文件变更
+       - TomatoTimer.cs（新建）→ 计时器核心逻辑，封装 DispatcherTimer
+       - TodayViewModel.cs（修改）→ "今日"页面增加计时控制命令
+       - TomatoRepository.cs（修改）→ 增加计时记录的存储方法
+       - MainWindow.xaml（修改）→ 添加计时器 UI 模板
+
+    2. 核心实现
+       ```csharp
+       [RelayCommand]  // 源码生成器，自动生成 StartTimerCommand 供 XAML 绑定
+       private void StartTimer()
+       {
+           _timer = new DispatcherTimer();  // WPF 专用定时器，回调在 UI 线程执行
+           _timer.Interval = TimeSpan.FromSeconds(1);
+           _timer.Tick += OnTimerTick;  // 每秒触发 OnTimerTick
+           _timer.Start();
+       }
+       ```
+
+    3. 数据流
+       点击[开始] → ViewModel.StartTimerCommand
+         → DispatcherTimer 每秒触发 OnTimerTick
+           → RemainingSeconds--（[ObservableProperty]，UI 自动更新）
+             → 到 0 时 → Repository.Insert(记录) → SQLite
+
+    4. 关键概念
+       - DispatcherTimer：WPF 的 UI 线程定时器，可直接更新界面
+       - [ObservableProperty]：CommunityToolkit 源码生成器，自动实现属性变更通知
+       - TimeSpan：.NET 时间间隔类型
+
+    有不清楚的地方直接问。
 ```
 
 ---
@@ -148,6 +181,27 @@ AI: 📦 Commit 阶段
     git push origin <当前分支>
 
     ✅ 修改想法卡片颜色 完成
+
+AI: 📖 教学回顾：修改想法卡片颜色
+
+    1. 文件变更
+       - BrandColors.xaml（修改）→ 全局样式文件，管理所有颜色和组件样式
+
+    2. 核心实现
+       ```xml
+       <Style x:Key="CardBorder" TargetType="Border">
+           <!-- StaticResource 引用全局颜色定义，改一处全局生效 -->
+           <Setter Property="Background"
+                   Value="{StaticResource BrandLightGray}"/>
+           <Setter Property="CornerRadius" Value="8"/>
+       </Style>
+       ```
+
+    3. 关键概念
+       - StaticResource：XAML 资源引用，编译时绑定到全局定义的值
+       - Style + Setter：WPF 样式系统，类似 CSS class
+
+    有不清楚的地方直接问。
 ```
 
 ---

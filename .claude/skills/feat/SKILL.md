@@ -14,8 +14,8 @@ Design → Build → Verify → Commit
   │        │        │        │
   ├ 读代码   ├ 按需调研  ├ 编译     ├ 更新PRD
   ├ 设计UI   ├ 编码实现  ├ 自动测试  ├ 提交推送
-  ├ 测试意图  │         ├ 人工验收  └ 记录经验
-  ├ 用户确认  │         └ UI检查
+  ├ 测试意图  │         ├ 人工验收  ├ 提交推送
+  ├ 用户确认  │         └ UI检查   └ 教学回顾
   └ 生成测试  │
     → 🔴     │→ 让测试通过 🟢
 ```
@@ -25,7 +25,7 @@ Design → Build → Verify → Commit
 | **Design** | 读代码 + UI设计 + 测试意图 + 生成测试代码 | 用户确认测试意图后生成测试，运行应失败 🔴 |
 | **Build** | 按需调研 + 编码实现 | 参考测试意图逐步实现，让测试通过 |
 | **Verify** | 编译 + 自动测试 + 人工验收 + UI检查 | 测试全部通过 🟢 → 用户运行应用确认 |
-| **Commit** | 更新PRD + 提交 + 推送 + 记录经验 | PRD 标记完成，推送到远程 |
+| **Commit** | 更新PRD + 提交 + 推送 + 教学回顾 | PRD 标记完成，用户理解实现 |
 
 详细操作: [references/workflow-phases.md](references/workflow-phases.md)
 

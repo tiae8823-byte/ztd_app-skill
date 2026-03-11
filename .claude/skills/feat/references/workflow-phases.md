@@ -204,7 +204,49 @@ git push origin <当前分支>
 - 记录到 `.claude/known-issues.json`（技术问题）
 - 更新项目记忆（反复出现的模式）
 
-### 步骤 4.5：清理进度
+### 步骤 4.5：教学回顾（Teach）
+
+**目的**：帮助用户理解刚才实现了什么，保持对项目的掌控力。
+
+**假设用户有编程基础，但不熟悉 C#/WPF/本项目**，直接讲实现：
+
+```markdown
+📖 教学回顾：[功能名称]
+
+1. 文件变更（创建/修改了什么，各自职责）
+   - XxxViewModel.cs → 处理界面交互逻辑
+   - XxxRepository.cs → 读写数据库
+   - MainWindow.xaml → 界面布局定义
+
+2. 核心实现（挑 1-2 个关键方法，讲清楚做了什么）
+   ```csharp
+   [RelayCommand]              // CommunityToolkit 源码生成器，自动生成 ICommand 供 XAML 按钮绑定
+   private void AddItem()
+   {
+       var item = new Item();
+       _repository.Insert(item); // 写入 SQLite
+       Items.Add(item);         // ObservableCollection，添加后界面自动刷新
+   }
+   ```
+
+3. 数据流
+   按钮点击 → ViewModel.AddItemCommand
+     → Repository.Insert() → SQLite
+     → ObservableCollection.Add() → UI 更新
+
+4. 涉及的关键概念
+   - [ObservableProperty]：源码生成器，自动实现 INotifyPropertyChanged
+   - [RelayCommand]：源码生成器，自动生成 ICommand 属性
+   - DataTemplate：XAML 根据绑定的 ViewModel 类型自动选择对应模板渲染
+
+有不清楚的地方直接问。
+```
+
+**要求**：
+- 直接讲实现，不用类比
+- 代码注释解释 WPF/C# 特有的机制，通用编程概念不解释
+- 聚焦本次实现的核心，不展开无关知识
+- 用户不懂会自己追问
 
 ```bash
 rm .claude/feat-progress.json
