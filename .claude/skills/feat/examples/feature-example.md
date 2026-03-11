@@ -1,6 +1,6 @@
 # 功能实现对话示例
 
-展示 /feat 的完整交互流程。
+展示 /feat 的完整交互流程。示例中的文件名和代码为假设项目，实际开发时根据 project-config.md 和 design-guide.md 使用对应技术栈。
 
 ---
 
@@ -18,11 +18,11 @@ AI: 📋 当前功能清单：
 
 AI: 🎨 Design 阶段: 番茄钟计时
 
-    [读取现有代码: TomatoRepository.cs, TodayViewModel.cs...]
+    [读取现有代码: 相关模型、服务、页面文件...]
 
     布局: 垂直布局
     组件: TimerDisplay, Button x3
-    复用样式: CardBorder, PageTitleTextBlock
+    复用样式: CardBorder, PageTitle
 
     ┌─────────────────────────┐
     │  番茄钟                 │
@@ -76,7 +76,7 @@ AI: ✅ Verify 阶段
     2. 自动测试: 🟢 4 passed
 
     请运行应用验收：
-    ZtdApp/bin/Release/net10.0-windows/win-x64/ZtdApp.exe
+    [project-config.md 中的运行命令]
 
     验收清单：
     - [ ] 场景1: 开始计时
@@ -97,33 +97,22 @@ AI: 📦 Commit 阶段
 AI: 📖 教学回顾：番茄钟计时
 
     1. 文件变更
-       - TomatoTimer.cs（新建）→ 计时器核心逻辑，封装 DispatcherTimer
-       - TodayViewModel.cs（修改）→ "今日"页面增加计时控制命令
-       - TomatoRepository.cs（修改）→ 增加计时记录的存储方法
-       - MainWindow.xaml（修改）→ 添加计时器 UI 模板
+       - TimerService（新建）→ 计时器核心逻辑
+       - TodayViewModel（修改）→ "今日"页面增加计时控制
+       - TomatoRepository（修改）→ 增加计时记录的存储方法
+       - 页面模板（修改）→ 添加计时器 UI
 
     2. 核心实现
-       ```csharp
-       [RelayCommand]  // 源码生成器，自动生成 StartTimerCommand 供 XAML 绑定
-       private void StartTimer()
-       {
-           _timer = new DispatcherTimer();  // WPF 专用定时器，回调在 UI 线程执行
-           _timer.Interval = TimeSpan.FromSeconds(1);
-           _timer.Tick += OnTimerTick;  // 每秒触发 OnTimerTick
-           _timer.Start();
-       }
-       ```
+       // 用项目实际语言展示 1-2 个关键方法
+       // 注释解释该技术栈特有的机制
 
     3. 数据流
-       点击[开始] → ViewModel.StartTimerCommand
-         → DispatcherTimer 每秒触发 OnTimerTick
-           → RemainingSeconds--（[ObservableProperty]，UI 自动更新）
-             → 到 0 时 → Repository.Insert(记录) → SQLite
+       点击[开始] → ViewModel 启动定时器
+         → 每秒更新剩余时间 → UI 自动刷新
+           → 到 0 时 → 存储记录到数据库
 
     4. 关键概念
-       - DispatcherTimer：WPF 的 UI 线程定时器，可直接更新界面
-       - [ObservableProperty]：CommunityToolkit 源码生成器，自动实现属性变更通知
-       - TimeSpan：.NET 时间间隔类型
+       - [技术栈特有概念]：[解释]
 
     有不清楚的地方直接问。
 ```
@@ -133,22 +122,22 @@ AI: 📖 教学回顾：番茄钟计时
 ## NON-CRITICAL 功能流程
 
 ```
-用户: /feat → 修改想法卡片颜色
+用户: /feat → 修改卡片颜色
 
-AI: 🎨 Design 阶段: 修改想法卡片颜色
+AI: 🎨 Design 阶段: 修改卡片颜色
 
-    [读取现有代码: BrandColors.xaml, MainWindow.xaml 想法模板...]
+    [读取现有代码: 样式文件, 页面模板...]
 
-    修改: CardBorder 背景色
+    修改: 卡片背景色
 
     🧪 复杂度评估: NON-CRITICAL（UI 调整）
 
     📝 测试意图（请确认）：
 
     1. ✅ 颜色正确
-       Given: 想法卡片存在
+       Given: 卡片存在
        When: 页面加载
-       Then: 背景色为 BrandLightGray
+       Then: 背景色为指定颜色
 
     这些场景对吗？
 
@@ -156,14 +145,14 @@ AI: 🎨 Design 阶段: 修改想法卡片颜色
 
 AI: ✅ 测试意图已确认，生成测试代码...
 
-    // Test_想法卡片颜色正确
+    // Test_卡片颜色正确
 
     运行测试: 🔴 1 failed（预期）
     进入 Build 阶段...
 
 AI: 🔨 Build 阶段
 
-    修改 BrandColors.xaml...
+    修改样式文件...
 
 AI: ✅ Verify 阶段
 
@@ -177,29 +166,22 @@ AI: ✅ Verify 阶段
 
 AI: 📦 Commit 阶段
 
-    git commit -m "feat: 修改想法卡片颜色"
+    git commit -m "feat: 修改卡片颜色"
     git push origin <当前分支>
 
-    ✅ 修改想法卡片颜色 完成
+    ✅ 修改卡片颜色 完成
 
-AI: 📖 教学回顾：修改想法卡片颜色
+AI: 📖 教学回顾：修改卡片颜色
 
     1. 文件变更
-       - BrandColors.xaml（修改）→ 全局样式文件，管理所有颜色和组件样式
+       - 样式文件（修改）→ 全局样式，管理所有颜色和组件样式
 
     2. 核心实现
-       ```xml
-       <Style x:Key="CardBorder" TargetType="Border">
-           <!-- StaticResource 引用全局颜色定义，改一处全局生效 -->
-           <Setter Property="Background"
-                   Value="{StaticResource BrandLightGray}"/>
-           <Setter Property="CornerRadius" Value="8"/>
-       </Style>
-       ```
+       // 展示样式定义的关键修改
+       // 注释解释该技术栈的样式系统机制
 
     3. 关键概念
-       - StaticResource：XAML 资源引用，编译时绑定到全局定义的值
-       - Style + Setter：WPF 样式系统，类似 CSS class
+       - [样式引用机制]：全局定义 → 组件引用，改一处全局生效
 
     有不清楚的地方直接问。
 ```
@@ -219,7 +201,7 @@ AI: 📋 检测到未完成的功能：
     测试意图:
       1. 开始计时: 点击开始 → 倒计时启动
       2. 暂停功能: 点击暂停 → 倒计时停止
-    已生成测试: TomatoTimerTests.cs
+    已生成测试: TimerTests
     创建时间: 2026-02-27 14:30
 
     是否继续？
@@ -250,7 +232,7 @@ Verify 阶段
     │ 人工验收
     ↓
 Commit 阶段
-    │ 更新PRD + 提交 + 推送
+    │ 同步PRD + 提交 + 推送 + 教学回顾
     ↓
 完成
 ```

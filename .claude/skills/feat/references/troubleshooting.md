@@ -50,9 +50,9 @@ AI 遇到问题时参考此文件。
 ```json
 {
   "id": "ui-001",
-  "title": "WPF Button 文字底部被遮挡",
-  "solution": "设置 Padding='0' + UseLayoutRounding='True'",
-  "reason": "DPI 缩放时 Padding 计算有问题",
-  "reference": "https://github.com/microsoft/microsoft-ui-xaml/issues/9543"
+  "title": "[问题描述]",
+  "solution": "[解决方案]",
+  "reason": "[根本原因]",
+  "reference": "[参考链接]"
 }
 ```

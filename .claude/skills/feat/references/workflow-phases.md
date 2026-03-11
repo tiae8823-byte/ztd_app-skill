@@ -20,9 +20,9 @@
 ### 步骤 1.1：Explore - 读现有代码
 
 **必须先理解再设计**。读取与功能相关的现有文件：
-- 相关的 ViewModel、Model、Service、Repository
-- 现有页面 XAML 的布局模式
-- BrandColors.xaml 中可复用的样式
+- 相关的业务逻辑、数据模型、服务层代码
+- 现有页面/组件的布局模式
+- design-guide.md 中可复用的样式
 
 ### 步骤 1.2：设计 UI + 复杂度评估
 
@@ -70,10 +70,9 @@ public void Test_场景名()
 }
 ```
 
-**运行测试**：
-```bash
-dotnet test ZtdApp.Tests --filter "FullyQualifiedName~[测试类名]"
-```
+> 以上为示例格式。实际测试代码使用 project-config.md 中指定的测试框架和语言。
+
+**运行测试**：使用 project-config.md 中的测试命令运行。
 
 此时应全部失败 🔴（代码未实现）。这是正确的 TDD 红灯状态。
 
@@ -117,10 +116,10 @@ dotnet test ZtdApp.Tests --filter "FullyQualifiedName~[测试类名]"
 - 目标：让所有测试通过
 
 **UI 实现规则**：
-- 必须使用 BrandColors.xaml 共享样式
-- 禁止内联 FontSize/Padding/Color
-- 新样式先在 BrandColors.xaml 定义再引用
-- 按钮高度控制：Margin + Padding + FontSize + FontWeight + VerticalContentAlignment，禁止固定 Height
+- 必须使用 design-guide.md 中定义的共享样式
+- 禁止内联写死颜色、字号、间距等视觉属性
+- 新样式先在样式文件中定义再引用
+- 新增共享样式后，更新 design-guide.md 的样式清单
 
 ### 步骤 2.3：保存进度
 
@@ -132,17 +131,13 @@ dotnet test ZtdApp.Tests --filter "FullyQualifiedName~[测试类名]"
 
 ### 步骤 3.1：编译检查
 
-```bash
-dotnet build ZtdApp --configuration Release
-```
+使用 project-config.md 中的构建命令编译项目。
 
 编译失败 → 返回 Build 修复。
 
 ### 步骤 3.2：运行自动测试（TDD 绿灯）
 
-```bash
-dotnet test ZtdApp.Tests --filter "FullyQualifiedName~[测试类名]"
-```
+使用 project-config.md 中的测试命令运行测试。
 
 此时应全部通过 🟢。失败 → 返回 Build 修复。
 
@@ -154,7 +149,7 @@ dotnet test ZtdApp.Tests --filter "FullyQualifiedName~[测试类名]"
 ✅ 自动测试全部通过
 
 请运行应用验收：
-ZtdApp/bin/Release/net10.0-windows/win-x64/ZtdApp.exe
+[使用 project-config.md 中的运行命令]
 
 验收清单（基于测试意图）：
 - [ ] 场景1: [描述]
@@ -179,11 +174,17 @@ ZtdApp/bin/Release/net10.0-windows/win-x64/ZtdApp.exe
 
 ## 阶段 4：Commit
 
-### 步骤 4.1：更新 PRD.md
+### 步骤 4.1：同步 PRD.md
+
+更新 `docs/PRD.md` 中的功能状态：
 
 ```markdown
 - [x] 功能名称 ✅ commit: [hash]
 ```
+
+同时检查是否需要同步以下内容：
+- **已知问题**：开发中发现的 bug 或限制 → 更新 PRD 的「已知问题」章节
+- **新增后续功能**：开发中发现的衍生需求 → 添加到 PRD 的「后续功能」清单
 
 ### 步骤 4.2：提交代码
 
@@ -208,43 +209,32 @@ git push origin <当前分支>
 
 **目的**：帮助用户理解刚才实现了什么，保持对项目的掌控力。
 
-**假设用户有编程基础，但不熟悉 C#/WPF/本项目**，直接讲实现：
+**假设用户有编程基础，但不熟悉当前项目的技术栈**，直接讲实现：
 
 ```markdown
 📖 教学回顾：[功能名称]
 
 1. 文件变更（创建/修改了什么，各自职责）
-   - XxxViewModel.cs → 处理界面交互逻辑
-   - XxxRepository.cs → 读写数据库
-   - MainWindow.xaml → 界面布局定义
+   - [文件名]（新建/修改）→ [职责说明]
 
 2. 核心实现（挑 1-2 个关键方法，讲清楚做了什么）
-   ```csharp
-   [RelayCommand]              // CommunityToolkit 源码生成器，自动生成 ICommand 供 XAML 按钮绑定
-   private void AddItem()
-   {
-       var item = new Item();
-       _repository.Insert(item); // 写入 SQLite
-       Items.Add(item);         // ObservableCollection，添加后界面自动刷新
-   }
+   ```
+   // 用项目实际语言展示关键代码
+   // 注释解释该技术栈特有的机制，通用编程概念不解释
    ```
 
 3. 数据流
-   按钮点击 → ViewModel.AddItemCommand
-     → Repository.Insert() → SQLite
-     → ObservableCollection.Add() → UI 更新
+   用户操作 → 业务逻辑 → 数据持久化 → UI 更新
 
 4. 涉及的关键概念
-   - [ObservableProperty]：源码生成器，自动实现 INotifyPropertyChanged
-   - [RelayCommand]：源码生成器，自动生成 ICommand 属性
-   - DataTemplate：XAML 根据绑定的 ViewModel 类型自动选择对应模板渲染
+   - [该技术栈特有的概念]：[解释]
 
 有不清楚的地方直接问。
 ```
 
 **要求**：
 - 直接讲实现，不用类比
-- 代码注释解释 WPF/C# 特有的机制，通用编程概念不解释
+- 代码注释解释该技术栈特有的机制，通用编程概念不解释
 - 聚焦本次实现的核心，不展开无关知识
 - 用户不懂会自己追问
 
@@ -258,27 +248,15 @@ rm .claude/feat-progress.json
 
 ### 测试类组织
 
-```csharp
-// 文件: ZtdApp.Tests/[功能名]Tests.cs
-public class [功能名]Tests
-{
-    [Fact]
-    public void Test_场景1() { /* Given-When-Then */ }
-
-    [Fact]
-    public void Test_场景2() { /* Given-When-Then */ }
-}
-```
+测试文件和类命名遵循 project-config.md 中的测试约定。每个功能一个测试文件，测试方法使用 Given-When-Then 结构。
 
 ### 数据库测试
 
-使用 `SharedMemoryDatabase` 变体（SQLite 内存模式），每个测试文件独立命名。详见 [../project-config.md](../project-config.md) 测试约定。
+如涉及数据库，使用 project-config.md 中定义的测试数据库方案（如内存数据库），确保测试间隔离。
 
 ### UI 测试
 
-- 需 `[Collection("UITests")]` 防止并行
-- 需先 Release 构建
-- 使用 FlaUI.UIA3 交互
+如涉及 UI 自动化测试，使用 project-config.md 中指定的 UI 测试框架。注意 UI 测试通常需要串行执行。
 
 ### 测试深度参考
 

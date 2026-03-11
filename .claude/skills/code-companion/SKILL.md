@@ -49,13 +49,14 @@ CS 背景，用 AI（/feat）构建项目，不熟悉具体技术栈语法。
 
 ## Quick Wins（可以直接做的事）
 
+查阅项目的 CLAUDE.md 和 design-guide.md 确定具体文件路径，以下为通用模式：
+
 | 想做的事 | 去哪里 | 等级 |
 |----------|--------|------|
-| 换颜色 | `Styles/BrandColors.xaml` | 🟢 |
-| 改按钮文字 | `Views/MainWindow.xaml` 对应 Button | 🟢 |
-| 调间距/大小 | `Views/MainWindow.xaml` Margin/Width | 🟢 |
-| 调侧边栏宽度 | `MainWindow.xaml` ColumnDefinition | 🟢 |
-| 改窗口标题 | `MainWindow.xaml` Title 属性 | 🟢 |
+| 换颜色 | 样式/主题文件 | 🟢 |
+| 改按钮文字 | 对应的视图/模板文件 | 🟢 |
+| 调间距/大小 | 视图/模板文件中的布局属性 | 🟢 |
+| 改窗口/页面标题 | 主视图文件的标题属性 | 🟢 |
 
 ## AI 行为规则
 
